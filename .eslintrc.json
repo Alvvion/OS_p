@@ -38,7 +38,8 @@
           "*.config.ts",
           "e2e/**",
           "__tests__/**",
-          "*.setup.js"
+          "*.setup.js",
+          "lib/**"
         ]
       }
     ],

@@ -4,7 +4,7 @@ import type { Processes } from "@/types/contexts/process";
 
 const processDir: Processes = {
   HelloWorld: {
-    Component: dynamic(() => import("@/components/HelloWorld")),
+    Component: dynamic(() => import("@/components/apps/HelloWorld")),
   },
 };
 

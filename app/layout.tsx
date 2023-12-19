@@ -1,5 +1,3 @@
-import "@/styles/globals.scss";
-
 import type { Metadata } from "next";
 
 import packageJson from "@/package.json";
