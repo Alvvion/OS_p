@@ -5,7 +5,7 @@ import { useContext } from "react";
 
 import { ProcessContext } from "@/contexts/process";
 
-const WindowManager: FC = () => {
+const ProcessLoader: FC = () => {
   const { processes } = useContext(ProcessContext);
 
   return (
@@ -17,4 +17,4 @@ const WindowManager: FC = () => {
   );
 };
 
-export default WindowManager;
+export default ProcessLoader;
