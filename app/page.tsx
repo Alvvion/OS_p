@@ -1,3 +1,10 @@
+import WindowManager from "@/components/system/WindowManager";
+import { ProcessProvider } from "@/contexts/process";
+
 export default function Home() {
-  return <h1>Hello World</h1>;
+  return (
+    <ProcessProvider>
+      <WindowManager />
+    </ProcessProvider>
+  );
 }

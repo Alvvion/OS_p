@@ -2,11 +2,11 @@ import "@/styles/globals.scss";
 
 import type { Metadata } from "next";
 
-import { description, name } from "@/package.json";
+import packageJson from "@/package.json";
 
 export const metadata: Metadata = {
-  title: name,
-  description,
+  title: packageJson.name,
+  description: packageJson.description,
 };
 
 export default function RootLayout({

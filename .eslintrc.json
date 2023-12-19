@@ -25,15 +25,28 @@
     "React": "readonly"
   },
   "rules": {
+    "comma-dangle": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
       { "ts": "never", "tsx": "never" }
     ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "*.config.ts",
+          "e2e/**",
+          "__tests__/**",
+          "*.setup.js"
+        ]
+      }
+    ],
     "indent": ["error", 2],
     "linebreak-style": ["error", "windows"],
     "max-lines": ["error", 80],
     "quotes": ["error", "double"],
+    "react/function-component-definition": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
     "react/jsx-props-no-spreading": "off",
     "semi": ["error", "always"],
