@@ -1,18 +1,29 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import type { FC } from "react";
 import { useContext } from "react";
 
 import { ProcessContext } from "@/contexts/process";
+
+// import Window from "./Window";
+
+const Window = dynamic(() => import("@/components/system/Window"));
 
 const ProcessLoader: FC = () => {
   const { processes } = useContext(ProcessContext);
 
   return (
     <>
-      {Object.entries(processes).map(([id, { Component }]) => (
-        <Component key={id} />
-      ))}
+      {Object.entries(processes).map(([id, { Component, hasWindow = false }]) =>
+        hasWindow ? (
+          <Window key={id}>
+            <Component />
+          </Window>
+        ) : (
+          <Component key={id} />
+        )
+      )}
     </>
   );
 };

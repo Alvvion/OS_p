@@ -1,5 +1,7 @@
-import type { ReactNode } from "react";
+import { ReactNode } from "react";
+import { DefaultTheme } from "styled-components";
 
-export type StyledAppProps = {
+export type StyledAppProp = {
   children: ReactNode;
+  currentTheme: DefaultTheme;
 };
