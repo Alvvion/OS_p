@@ -5,17 +5,21 @@ import type { FC } from "react";
 import { createContext } from "react";
 
 import useProcessContextState from "@/hooks/useProcessContextState";
-import type { ProcessContextType } from "@/types/contexts/process";
-import type { ChildrenProp } from "@/types/genric/ChildrenAsProps";
+import type {
+  ProcessContextType,
+  ProcessProviderProps,
+} from "@/types/contexts/process";
 import { initalProcessState } from "@/utils/intialContextStates";
-import processDir from "@/utils/processDir";
 
 export const ProcessContext =
   createContext<ProcessContextType>(initalProcessState);
 
-export const ProcessProvider: FC<ChildrenProp> = ({ children }) => (
+export const ProcessProvider: FC<ProcessProviderProps> = ({
+  children,
+  startupProcesses,
+}) => (
   // eslint-disable-next-line react/jsx-no-constructed-context-values
-  <ProcessContext.Provider value={useProcessContextState(processDir)}>
+  <ProcessContext.Provider value={useProcessContextState(startupProcesses)}>
     {children}
   </ProcessContext.Provider>
 );

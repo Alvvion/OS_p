@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 export type Process = {
   Component: ComponentType;
@@ -11,4 +11,9 @@ export type Processes = {
 
 export type ProcessContextType = {
   processes: Processes | Record<string, never>;
+};
+
+export type ProcessProviderProps = {
+  children: ReactNode;
+  startupProcesses: Processes;
 };
