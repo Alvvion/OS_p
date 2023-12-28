@@ -1,24 +1,11 @@
-"use client";
-
-// eslint-disable-next-line object-curly-newline
-import { createContext } from "react";
-
 import useProcessContextState from "@/hooks/useProcessContextState";
-import type {
-  ProcessContextType,
-  ProcessProviderProps,
-} from "@/types/contexts/process";
+import type { ProcessContextType } from "@/types/contexts/process";
+import contextFactory from "@/utils/contextFactory";
 import { initalProcessState } from "@/utils/intialContextStates";
 
-export const ProcessContext =
-  createContext<ProcessContextType>(initalProcessState);
-
-export const ProcessProvider: React.FC<ProcessProviderProps> = ({
-  children,
-  startupProcesses,
-}) => (
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
-  <ProcessContext.Provider value={useProcessContextState(startupProcesses)}>
-    {children}
-  </ProcessContext.Provider>
+const { context, Provider } = contextFactory<ProcessContextType>(
+  initalProcessState,
+  useProcessContextState
 );
+
+export { context as ProcessContext, Provider as ProcessProvider };

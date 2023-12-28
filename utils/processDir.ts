@@ -18,8 +18,8 @@ export const processDir: Processes = {
 
 export const getStartupProcess = (): Processes =>
   STARTUP_PROCESSES.reduce(
-    (acc, id) => ({
-      ...acc,
+    (processes, id) => ({
+      ...processes,
       [id]: processDir[id],
     }),
     {}

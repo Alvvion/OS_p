@@ -3,14 +3,17 @@ import { ThemeProvider } from "styled-components";
 
 import { SessionContext } from "@/contexts/sessions";
 import GlobalStyle from "@/styles/GlobalStyles";
-import { StyledAppProp } from "@/types/components/pages/StyledApp";
+import themes from "@/styles/themes";
+import { ChildrenProp } from "@/types/genric/ChildrenAsProps";
 
-const StyledApp: React.FC<StyledAppProp> = ({ children, currentTheme }) => {
-  const { theme } = useContext(SessionContext);
+const StyledApp: React.FC<ChildrenProp> = ({ children }) => {
+  const { themeName } = useContext(SessionContext);
   return (
     <>
       <GlobalStyle />
-      <ThemeProvider theme={theme || currentTheme}>{children}</ThemeProvider>
+      <ThemeProvider theme={themes[themeName] || themes.default}>
+        {children}
+      </ThemeProvider>
     </>
   );
 };

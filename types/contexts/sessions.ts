@@ -1,5 +1,4 @@
-import type { DefaultTheme } from "styled-components/dist/types";
-
 export type SessionContextType = {
-  theme?: DefaultTheme;
+  themeName: string;
+  setThemeName: React.Dispatch<React.SetStateAction<string>>;
 };
