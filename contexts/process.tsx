@@ -1,7 +1,6 @@
 "use client";
 
 // eslint-disable-next-line object-curly-newline
-import type { FC } from "react";
 import { createContext } from "react";
 
 import useProcessContextState from "@/hooks/useProcessContextState";
@@ -14,7 +13,7 @@ import { initalProcessState } from "@/utils/intialContextStates";
 export const ProcessContext =
   createContext<ProcessContextType>(initalProcessState);
 
-export const ProcessProvider: FC<ProcessProviderProps> = ({
+export const ProcessProvider: React.FC<ProcessProviderProps> = ({
   children,
   startupProcesses,
 }) => (

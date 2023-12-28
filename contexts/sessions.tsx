@@ -1,7 +1,6 @@
 "use client";
 
 // eslint-disable-next-line object-curly-newline
-import type { FC, ReactNode } from "react";
 import { createContext } from "react";
 
 import useSessionContextState from "@/hooks/useSessionContextState";
@@ -11,7 +10,9 @@ import { initialSessionState } from "@/utils/intialContextStates";
 export const SessionContext =
   createContext<SessionContextType>(initialSessionState);
 
-export const SessionProvider: FC<{ children: ReactNode }> = ({ children }) => (
+export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => (
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   <SessionContext.Provider value={useSessionContextState()}>
     {children}

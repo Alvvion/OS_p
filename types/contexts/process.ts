@@ -1,7 +1,5 @@
-import type { ComponentType, ReactNode } from "react";
-
 export type Process = {
-  Component: ComponentType;
+  Component: React.ComponentType;
   hasWindow?: boolean;
 };
 
@@ -14,6 +12,6 @@ export type ProcessContextType = {
 };
 
 export type ProcessProviderProps = {
-  children: ReactNode;
+  children: React.ReactNode;
   startupProcesses: Processes;
 };
