@@ -46,7 +46,6 @@
     ],
     "indent": ["error", 2],
     "linebreak-style": ["error", "windows"],
-    "max-lines": ["error", 80],
     "quotes": ["error", "double"],
     "react/function-component-definition": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],

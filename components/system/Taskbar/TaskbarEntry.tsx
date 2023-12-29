@@ -1,4 +1,4 @@
-import StyledTaskbarEntry from "@/styles/components/system/StyledTaskbarEntry";
+import { StyledTaskbarEntry } from "@/styles/components/system/StyledTaskbar";
 
 const TaskbarEntry: React.FC = () => (
   <StyledTaskbarEntry>Entry</StyledTaskbarEntry>
