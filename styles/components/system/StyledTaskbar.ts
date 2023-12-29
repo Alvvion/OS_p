@@ -68,7 +68,11 @@ const StyledSearch = styled.input`
   font-size: 14px;
 `;
 
-const StyledTaskbarEntries = styled.ol`
+const StyledTaskbarEntries = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   height: 100%;
 `;
 

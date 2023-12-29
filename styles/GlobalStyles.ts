@@ -18,7 +18,7 @@ ol, ul {
 }
 
 button {
-  background-color: unset;
+  background-color: transparent;
 }
 `;
 

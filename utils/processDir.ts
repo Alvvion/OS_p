@@ -1,24 +1,22 @@
-// import dynamic from "next/dynamic";
+import dynamic from "next/dynamic";
 
-import Taskbar from "@/components/system/Taskbar";
 import type { Processes } from "@/types/contexts/process";
 
-const STARTUP_PROCESSES: string[] = ["Taskbar"];
-
 export const processDir: Processes = {
-  Taskbar: {
-    Component: Taskbar,
-    hasWindow: false,
+  HelloWorld: {
+    Component: dynamic(() => import("@/components/apps/HelloWorld")),
+    icon: "/assets/portfolio.png",
   },
 };
 
-export const getStartupProcess = (): Processes =>
-  STARTUP_PROCESSES.reduce(
-    (processes, id) => ({
-      ...processes,
+export const getProcess = (processes: string[]): Processes =>
+  processes.reduce(
+    (acc, id) => ({
+      ...acc,
       [id]: processDir[id],
     }),
     {}
   );
 
-export const pinnedApps = () => {};
+export const STARTUP_PROCESSES: string[] = [];
+export const PINNED_PROCESSES: string[] = ["HelloWorld", ...STARTUP_PROCESSES];

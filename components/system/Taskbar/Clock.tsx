@@ -5,7 +5,7 @@ import useSyncedClock from "@/hooks/useSyncedClock";
 import { StyledClock } from "@/styles/components/system/StyledTaskbar";
 
 const Clock: React.FC = () => {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState<Date>(new Date());
   const { date, time, datetime, tooltip } = useLocaleDateTime(now);
 
   useSyncedClock(useCallback(() => setNow(new Date()), []));

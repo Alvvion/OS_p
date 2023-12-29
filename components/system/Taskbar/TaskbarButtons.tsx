@@ -10,7 +10,7 @@ const TaskbarButtons: React.FC<TaskbarButtonType> = ({
   name,
 }) => (
   <StyledStartButton>
-    <Image src={src} width={width} height={height} alt={name} />
+    <Image priority src={src} width={width} height={height} alt={name} />
   </StyledStartButton>
 );
 
