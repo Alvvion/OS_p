@@ -6,6 +6,13 @@ export const processDir: Processes = {
   HelloWorld: {
     Component: dynamic(() => import("@/components/apps/HelloWorld")),
     icon: "/assets/portfolio.png",
+    hasWindow: true,
+    isPinned: true,
+  },
+  HelloAnotherWorld: {
+    Component: dynamic(() => import("@/components/apps/HelloAnotherWorld")),
+    icon: "/assets/win-file-explorer.ico",
+    hasWindow: true,
   },
 };
 

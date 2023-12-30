@@ -20,7 +20,8 @@ import Clock from "./Clock";
 import TaskbarButtons from "./TaskbarButtons";
 
 const Taskbar = () => {
-  const { pinnedProcesses } = useContext(ProcessContext);
+  const { openProcess, closeProcess, processes, pinnedProcesses } =
+    useContext(ProcessContext);
   return (
     <StyledTaskbar>
       <div />
@@ -30,6 +31,8 @@ const Taskbar = () => {
           width={32}
           height={32}
           name="Start Button"
+          onClick={() => openProcess("HelloAnotherWorld")}
+          onDoubleClick={() => closeProcess("HelloAnotherWorld")}
         />
         <StyledSearchContainer>
           <Image
@@ -49,8 +52,23 @@ const Taskbar = () => {
               width={32}
               height={32}
               name={id}
+              onClick={() => openProcess(id)}
+              onDoubleClick={() => closeProcess(id)}
             />
           ))}
+          {Object.entries(processes).map(([id, process]) =>
+            !process.isPinned ? (
+              <TaskbarButtons
+                key={id}
+                src={process.icon}
+                width={32}
+                height={32}
+                name={id}
+                onClick={() => openProcess(id)}
+                onDoubleClick={() => closeProcess(id)}
+              />
+            ) : null
+          )}
         </StyledTaskbarEntries>
       </StyledInnerContainer>
       <StyledSideMenu>

@@ -1,8 +1,12 @@
 import type { ProcessContextType } from "@/types/contexts/process";
 import type { SessionContextType } from "@/types/contexts/sessions";
-import { FileSystemStateType } from "@/types/hooks/FileSystemState";
+import type { FileSystemStateType } from "@/types/hooks/FileSystemState";
 
 export const initalProcessState: ProcessContextType = {
+  closeProcess: () => undefined,
+  closePinnedProcess: () => undefined,
+  openProcess: () => undefined,
+  openPinnedProcess: () => undefined,
   processes: {},
   pinnedProcesses: {},
 };

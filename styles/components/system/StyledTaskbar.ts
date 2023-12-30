@@ -74,11 +74,13 @@ const StyledTaskbarEntries = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+  position: relative;
 `;
 
-const StyledTaskbarEntry = styled.li`
+const StyledTaskbarEntry = styled.div`
   height: 100%;
-  width: ${({ theme }) => theme.sizes.taskbar.entry.width};
+  position: absolute;
+  left: 50px;
   ${centered}
 `;
 
