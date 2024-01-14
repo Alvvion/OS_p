@@ -1,10 +1,9 @@
 import Image from "next/image";
-import { useContext } from "react";
 import { AiOutlineWifi } from "react-icons/ai";
 import { GiSpeaker } from "react-icons/gi";
 import { TbBattery4 } from "react-icons/tb";
 
-import { ProcessContext } from "@/contexts/process";
+import { useProcesses } from "@/contexts/process";
 import {
   StyledInnerContainer,
   StyledLanguageButton,
@@ -21,7 +20,7 @@ import TaskbarButtons from "./TaskbarButtons";
 
 const Taskbar = () => {
   const { openProcess, closeProcess, processes, pinnedProcesses } =
-    useContext(ProcessContext);
+    useProcesses();
   return (
     <StyledTaskbar>
       <div />
@@ -56,8 +55,9 @@ const Taskbar = () => {
               onDoubleClick={() => closeProcess(id)}
             />
           ))}
-          {Object.entries(processes).map(([id, process]) =>
-            !process.isPinned ? (
+          {Object.entries(processes).map(([id, process]) => {
+            const isPinned = Object.keys(pinnedProcesses).includes(id);
+            return !isPinned ? (
               <TaskbarButtons
                 key={id}
                 src={process.icon}
@@ -67,8 +67,8 @@ const Taskbar = () => {
                 onClick={() => openProcess(id)}
                 onDoubleClick={() => closeProcess(id)}
               />
-            ) : null
-          )}
+            ) : null;
+          })}
         </StyledTaskbarEntries>
       </StyledInnerContainer>
       <StyledSideMenu>

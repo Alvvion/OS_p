@@ -27,9 +27,7 @@ const useProcessContextState = (): ProcessContextType => {
   const [processes, setProcesses] = useState<Processes>(
     getProcess(STARTUP_PROCESSES)
   );
-  const [pinnedProcesses, setPinnedProcesses] = useState<Processes>(
-    getProcess(PINNED_PROCESSES)
-  );
+  const [pinnedProcesses] = useState<Processes>(getProcess(PINNED_PROCESSES));
 
   const closeProcess = useCallback(
     (processId: string) => setProcesses(closingProcess(processId)),
@@ -40,15 +38,10 @@ const useProcessContextState = (): ProcessContextType => {
     (processId: string) => setProcesses(openingProcess(processId)),
     []
   );
-  const closePinnedProcess = useCallback(
-    (processId: string) => setPinnedProcesses(closingProcess(processId)),
-    []
-  );
+  const closePinnedProcess = () => {};
 
-  const openPinnedProcess = useCallback(
-    (processId: string) => setPinnedProcesses(openingProcess(processId)),
-    []
-  );
+  const openPinnedProcess = () => {};
+
   return {
     closeProcess,
     closePinnedProcess,

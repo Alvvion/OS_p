@@ -9,6 +9,11 @@ export type Processes = {
   [id: string]: Process;
 };
 
+export type ProcessMap = (
+  callback: ([id, process]: [string, Process]) => React.FC,
+  processesObj: Processes
+) => React.FC[];
+
 export type ProcessContextType = {
   processes: Processes | Record<string, never>;
   pinnedProcesses: Processes | Record<string, never>;

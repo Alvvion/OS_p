@@ -3,9 +3,9 @@ import type { FileSystemStateType } from "@/types/hooks/FileSystemState";
 import contextFactory from "@/utils/contextFactory";
 import { initalFileSystemState } from "@/utils/intialContextStates";
 
-const { context, Provider } = contextFactory<FileSystemStateType>(
+const { Provider, useContext } = contextFactory<FileSystemStateType>(
   initalFileSystemState,
   useFileSystemState
 );
 
-export { context as FileSystemContext, Provider as FileSystemProvider };
+export { Provider as FileSystemProvider, useContext as useFileSystem };
