@@ -1,8 +1,8 @@
 import { BFSRequire, configure } from "browserfs";
-import { FSModule } from "browserfs/dist/node/core/FS";
+import type { FSModule } from "browserfs/dist/node/core/FS";
 import { useEffect, useState } from "react";
 
-import { FileSystemStateType } from "@/types/hooks/FileSystemState";
+import type { FileSystemStateType } from "@/types/hooks/FileSystemState";
 import FileSystemConfig from "@/utils/FileSystemConfig";
 
 const useFileSystemState = (): FileSystemStateType => {

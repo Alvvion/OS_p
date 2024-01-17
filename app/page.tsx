@@ -2,6 +2,7 @@
 
 import StyledApp from "@/components/pages/StyledApp";
 import Desktop from "@/components/system/Desktop";
+import FileManager from "@/components/system/FileManager";
 import ProcessLoader from "@/components/system/ProcessLoader";
 import Taskbar from "@/components/system/Taskbar";
 import { FileSystemProvider } from "@/contexts/fileSystem";
@@ -15,6 +16,7 @@ export default function Home() {
         <StyledApp>
           <Desktop>
             <ProcessProvider>
+              <FileManager directory="/desktop" />
               <Taskbar />
               <ProcessLoader />
             </ProcessProvider>

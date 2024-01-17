@@ -12,7 +12,7 @@ const FileSystemConfig: FileSystemConfiguration = {
       },
     },
     writable: {
-      fs: "IndexedDb",
+      fs: "IndexedDB",
       options: {
         storeName: "browser-fs-cache",
       },
