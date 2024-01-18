@@ -1,4 +1,4 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import { basename, extname, resolve } from "path";
 import { useCallback } from "react";
 
@@ -23,7 +23,7 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
     <StyledFileEntry>
       <button type="button" onClick={onActivate}>
         <figure>
-          <Image src={icon} alt={name} width={20} height={20} />
+          <img src={icon} alt={name} />
           <figcaption>{name}</figcaption>
         </figure>
       </button>

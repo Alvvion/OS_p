@@ -21,6 +21,14 @@ import TaskbarButtons from "./TaskbarButtons";
 const Taskbar = () => {
   const { openProcess, closeProcess, processes, pinnedProcesses } =
     useProcesses();
+
+  const isBottomNotch = (id: string) => {
+    if (Object.keys(processes).includes(id)) {
+      return "true";
+    }
+    return "false";
+  };
+
   return (
     <StyledTaskbar>
       <div />
@@ -30,8 +38,6 @@ const Taskbar = () => {
           width={32}
           height={32}
           name="Start Button"
-          onClick={() => openProcess("HelloAnotherWorld")}
-          onDoubleClick={() => closeProcess("HelloAnotherWorld")}
         />
         <StyledSearchContainer>
           <Image
@@ -53,6 +59,7 @@ const Taskbar = () => {
               name={id}
               onClick={() => openProcess(id)}
               onDoubleClick={() => closeProcess(id)}
+              bottomnotch={isBottomNotch(id)}
             />
           ))}
           {Object.entries(processes).map(([id, process]) => {
@@ -66,6 +73,7 @@ const Taskbar = () => {
                 name={id}
                 onClick={() => openProcess(id)}
                 onDoubleClick={() => closeProcess(id)}
+                bottomnotch="true"
               />
             ) : null;
           })}

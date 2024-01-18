@@ -12,4 +12,5 @@ export interface TaskbarButtonType extends ComponentPropsWithoutRef<"button"> {
   width: number;
   height: number;
   name: string;
+  bottomnotch?: string;
 }

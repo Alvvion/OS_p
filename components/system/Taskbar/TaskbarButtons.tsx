@@ -8,9 +8,10 @@ const TaskbarButtons: React.FC<TaskbarButtonType> = ({
   width,
   height,
   name,
+  bottomnotch = "false",
   ...buttonProps
 }) => (
-  <StyledStartButton {...buttonProps}>
+  <StyledStartButton $bottomnotch={bottomnotch} {...buttonProps}>
     <Image priority src={src} width={width} height={height} alt={name} />
   </StyledStartButton>
 );

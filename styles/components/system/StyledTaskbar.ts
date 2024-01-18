@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const centered = `
   display: flex;
@@ -25,12 +25,15 @@ const StyledInnerContainer = styled.div`
   ${centered}
 `;
 
-const StyledStartButton = styled.button.attrs({ type: "button" })`
+const StyledStartButton = styled.button.attrs({ type: "button" })<{
+  $bottomnotch: string;
+}>`
   height: 88%;
   max-width: ${({ theme }) => theme.sizes.taskbar.startButton.width};
   margin: 5px;
   padding: 5px;
   border-radius: 0.25rem;
+  position: relative;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
@@ -41,6 +44,21 @@ const StyledStartButton = styled.button.attrs({ type: "button" })`
       transform: scale(0.85);
     }
   }
+  ${(props) =>
+    props.$bottomnotch === "true"
+      ? css`
+  &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 16px;
+        height: 4px;
+        border-radius: 10px;
+        background-color: gray;
+        bottom: -2px;
+        left: 12px;
+  `
+      : undefined}
 
   ${centered}
 `;
