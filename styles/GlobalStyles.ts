@@ -20,6 +20,7 @@ ol, ul {
 
 button {
   background-color: transparent;
+  font-family: inherit;
 }
 `;
 

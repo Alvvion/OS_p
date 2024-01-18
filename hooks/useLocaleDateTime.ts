@@ -1,6 +1,6 @@
 import { useTheme } from "styled-components";
 
-import { LocaleDateTime } from "@/types/hooks/LocaleDateTime";
+import type { LocaleDateTime } from "@/types/hooks/LocaleDateTime";
 
 const useLocaleDateTime = (now: Date): LocaleDateTime => {
   const { formats } = useTheme();

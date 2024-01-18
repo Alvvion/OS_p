@@ -1,4 +1,5 @@
-import { RefObject, useEffect } from "react";
+import type { RefObject } from "react";
+import { useEffect } from "react";
 import * as THREE from "three";
 // @ts-expect-error No types defined
 import WAVES from "vanta/dist/vanta.waves.min.js";

@@ -2,3 +2,5 @@
 /lib
 /node_modules
 /.swc
+/postcss.config.js
+/tailwind.config.js
