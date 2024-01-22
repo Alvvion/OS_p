@@ -9,6 +9,8 @@ export const initalProcessState: ProcessContextType = {
   openPinnedProcess: () => undefined,
   processes: {},
   pinnedProcesses: {},
+  maximize: () => undefined,
+  minimize: () => undefined,
 };
 
 export const initialSessionState: SessionContextType = {

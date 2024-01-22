@@ -3,6 +3,7 @@ import { basename, extname, resolve } from "path";
 import { useCallback } from "react";
 
 import { useProcesses } from "@/contexts/process";
+import useDoubleClick from "@/hooks/useDoubleClick";
 import useFileInfo from "@/hooks/useFileInfo";
 import useFiles from "@/hooks/useFiles";
 import {
@@ -21,7 +22,7 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
 
   return (
     <StyledFileEntry>
-      <button type="button" onClick={onActivate}>
+      <button type="button" onClick={useDoubleClick(onActivate)}>
         <figure>
           <img src={icon} alt={name} />
           <figcaption>{name}</figcaption>

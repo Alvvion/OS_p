@@ -19,7 +19,7 @@ import Clock from "./Clock";
 import TaskbarButtons from "./TaskbarButtons";
 
 const Taskbar = () => {
-  const { openProcess, closeProcess, processes, pinnedProcesses } =
+  const { openProcess, closeProcess, processes, pinnedProcesses, minimize } =
     useProcesses();
 
   const isBottomNotch = (id: string) => {
@@ -58,7 +58,7 @@ const Taskbar = () => {
               height={32}
               name={id}
               onClick={() => openProcess(id)}
-              onDoubleClick={() => closeProcess(id)}
+              onDoubleClick={() => minimize(id)}
               bottomnotch={isBottomNotch(id)}
             />
           ))}

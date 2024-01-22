@@ -1,8 +1,12 @@
+import type { ComponentProps } from "../components/system/Window";
+
 export type Process = {
-  Component: React.ComponentType;
+  Component: React.ComponentType<ComponentProps>;
   hasWindow?: boolean;
   icon: string;
-  isPinned?: boolean;
+  maximized?: boolean;
+  minimized?: boolean;
+  title: string;
 };
 
 export type Processes = {
@@ -21,6 +25,8 @@ export type ProcessContextType = {
   closeProcess: (processId: string) => void;
   closePinnedProcess: (processId: string) => void;
   openPinnedProcess: (processId: string) => void;
+  maximize: (id: string) => void;
+  minimize: (id: string) => void;
 };
 
 export type ProcessProviderProps = {

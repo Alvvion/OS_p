@@ -7,12 +7,14 @@ export const processDir: Processes = {
     Component: dynamic(() => import("@/components/apps/HelloWorld")),
     icon: "/assets/portfolio.png",
     hasWindow: true,
-    isPinned: true,
+    title: "Hello World",
+    minimized: false,
   },
   HelloAnotherWorld: {
     Component: dynamic(() => import("@/components/apps/HelloAnotherWorld")),
     icon: "/assets/win-file-explorer.ico",
     hasWindow: true,
+    title: "Hello Another World",
   },
 };
 
