@@ -8,7 +8,6 @@ export const processDir: Processes = {
     icon: "/assets/portfolio.png",
     hasWindow: true,
     title: "Hello World",
-    minimized: false,
   },
   HelloAnotherWorld: {
     Component: dynamic(() => import("@/components/apps/HelloAnotherWorld")),

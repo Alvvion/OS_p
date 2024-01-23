@@ -6,11 +6,11 @@ import {
   StyledTitlebar,
   StyledTitlebarButton,
 } from "@/styles/components/system/StyledWindow";
-import type { ComponentProps } from "@/types/components/system/Window";
+import type { TitlebarProps } from "@/types/components/system/Window";
 
 import { CloseIcon, MaximizeIcon, MinimizeIcon } from "./Icons";
 
-const Titlebar: React.FC<ComponentProps> = ({ id }) => {
+const Titlebar: React.FC<TitlebarProps> = ({ id, showBar = true }) => {
   const {
     minimize,
     maximize,
@@ -25,7 +25,7 @@ const Titlebar: React.FC<ComponentProps> = ({ id }) => {
   const onClose = useCallback(() => closeProcess(id), [id, closeProcess]);
 
   return (
-    <StyledTitlebar className="handle">
+    <StyledTitlebar $show={showBar} className="handle">
       <h1>
         <figure>
           <img src={icon} alt={title} />
@@ -39,7 +39,7 @@ const Titlebar: React.FC<ComponentProps> = ({ id }) => {
         <StyledTitlebarButton type="button" onClick={onMaximize}>
           <MaximizeIcon />
         </StyledTitlebarButton>
-        <StyledTitlebarButton type="button" onClick={onClose}>
+        <StyledTitlebarButton className="close" type="button" onClick={onClose}>
           <CloseIcon />
         </StyledTitlebarButton>
       </nav>

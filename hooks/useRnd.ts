@@ -34,10 +34,12 @@ const useRnd = (maximized = false) => {
   );
 
   return {
-    height: maximized ? `calc(100% - ${sizes.taskbar.height})` : height,
+    height: maximized
+      ? `${window.innerWidth - parseInt(sizes.taskbar.height, 10)}px`
+      : height,
     updatePosition,
     updateSize,
-    width: maximized ? "100%" : width,
+    width: maximized ? window.innerWidth : width,
     x,
     y,
   };

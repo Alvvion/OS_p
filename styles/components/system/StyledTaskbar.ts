@@ -9,6 +9,7 @@ const centered = `
 const StyledTaskbar = styled.nav`
   background-color: ${({ theme }) => theme.colors.taskbar};
   position: absolute;
+  z-index: 10;
   bottom: 0;
   height: ${({ theme }) => theme.sizes.taskbar.height};
   width: 100vw;
@@ -44,19 +45,21 @@ const StyledStartButton = styled.button.attrs({ type: "button" })<{
       transform: scale(0.85);
     }
   }
-  ${(props) =>
-    props.$bottomnotch === "true"
+  ${({ $bottomnotch }) =>
+    $bottomnotch === "true" || $bottomnotch === "minimized"
       ? css`
   &::after {
         content: "";
         position: absolute;
         bottom: 0;
-        width: 16px;
+        width: ${$bottomnotch === "minimized" ? "6px" : "16px"};
         height: 4px;
         border-radius: 10px;
         background-color: gray;
-        bottom: -2px;
-        left: 12px;
+        margin: -3px auto;
+        left: 0;
+        right: 0;
+        transition: width 1 ease-in-out;
   `
       : undefined}
 

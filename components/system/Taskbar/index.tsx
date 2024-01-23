@@ -17,17 +17,34 @@ import {
 
 import Clock from "./Clock";
 import TaskbarButtons from "./TaskbarButtons";
+import { useCallback } from "react";
 
 const Taskbar = () => {
   const { openProcess, closeProcess, processes, pinnedProcesses, minimize } =
     useProcesses();
 
-  const isBottomNotch = (id: string) => {
-    if (Object.keys(processes).includes(id)) {
-      return "true";
-    }
-    return "false";
-  };
+  const isBottomNotch = useCallback(
+    (id: string) => {
+      if (Object.keys(processes).includes(id)) {
+        if (processes[id].minimized) {
+          return "minimized";
+        }
+        return "true";
+      }
+      return "false";
+    },
+    [processes]
+  );
+
+  const onButtonClick = useCallback(
+    (id: string) => {
+      if (Object.keys(processes).includes(id)) {
+        return () => minimize(id);
+      }
+      return () => openProcess(id);
+    },
+    [processes, minimize, openProcess]
+  );
 
   return (
     <StyledTaskbar>
@@ -57,8 +74,7 @@ const Taskbar = () => {
               width={32}
               height={32}
               name={id}
-              onClick={() => openProcess(id)}
-              onDoubleClick={() => minimize(id)}
+              onClick={onButtonClick(id)}
               bottomnotch={isBottomNotch(id)}
             />
           ))}
@@ -71,9 +87,8 @@ const Taskbar = () => {
                 width={32}
                 height={32}
                 name={id}
-                onClick={() => openProcess(id)}
-                onDoubleClick={() => closeProcess(id)}
-                bottomnotch="true"
+                onClick={onButtonClick(id)}
+                bottomnotch={isBottomNotch(id)}
               />
             ) : null;
           })}

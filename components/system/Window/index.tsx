@@ -23,7 +23,7 @@ const Window: React.FC<WindowComponentProps> = ({ id, children }) => {
       size={{ height, width }}
       enableResizing={!maximized}
       onResize={updateSize}
-      style={{ backgroundColor: "red" }}
+      style={{ zIndex: 2 }}
       position={{ x, y }}
       onDragStop={updatePosition}
       {...rndDefaults}
