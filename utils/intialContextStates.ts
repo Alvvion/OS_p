@@ -21,3 +21,13 @@ export const initialSessionState: SessionContextType = {
 export const initalFileSystemState: FileSystemStateType = {
   fs: null,
 };
+
+export const defaultWindowSize = {
+  height: "400px",
+  width: "450px",
+};
+
+export const defaultWindowPosition = {
+  x: 0,
+  y: 0,
+};
