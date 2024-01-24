@@ -47,6 +47,11 @@ export const StyledFileEntry = styled.li`
         0 2px 1px rgba(0, 0, 0, 75%), 0 2px 2px rgba(0, 0, 0, 50%),
         0 2px 3px rgba(0, 0, 0, 25%);
       word-wrap: break-word;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      white-space: normal;
     }
     img {
       width: 48px;

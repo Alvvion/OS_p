@@ -40,8 +40,8 @@ const useRnd = (maximized = false) => {
     updatePosition,
     updateSize,
     width: maximized ? window.innerWidth : width,
-    x,
-    y,
+    x: maximized ? 0 : x,
+    y: maximized ? 0 : y,
   };
 };
 
