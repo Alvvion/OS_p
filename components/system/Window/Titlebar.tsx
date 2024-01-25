@@ -10,13 +10,13 @@ import type { TitlebarProps } from "@/types/components/system/Window";
 
 import { CloseIcon, MaximizeIcon, MinimizeIcon } from "./Icons";
 
-const Titlebar: React.FC<TitlebarProps> = ({ id, showBar = true }) => {
+const Titlebar: React.FC<TitlebarProps> = ({ id, bar = "Default" }) => {
   const {
     minimize,
     maximize,
     closeProcess,
     processes: {
-      [id]: { icon, title },
+      [id]: { icon, title, autoSizing },
     },
   } = useProcesses();
 
@@ -24,19 +24,37 @@ const Titlebar: React.FC<TitlebarProps> = ({ id, showBar = true }) => {
   const onMaximize = useCallback(() => maximize(id), [id, maximize]);
   const onClose = useCallback(() => closeProcess(id), [id, closeProcess]);
 
+  const titlebarType = useCallback(
+    (barType: string) => {
+      switch (barType) {
+        case "Default":
+          return (
+            <h1>
+              <figure>
+                <img src={icon} alt={title} />
+                <figcaption>{title}</figcaption>
+              </figure>
+            </h1>
+          );
+        default:
+          return null;
+      }
+    },
+    [icon, title]
+  );
+
   return (
-    <StyledTitlebar $show={showBar} className="handle">
-      <h1>
-        <figure>
-          <img src={icon} alt={title} />
-          <figcaption>{title}</figcaption>
-        </figure>
-      </h1>
+    <StyledTitlebar className="handle">
+      {titlebarType(bar)}
       <nav className="cancel">
         <StyledTitlebarButton type="button" onClick={onMinimize}>
           <MinimizeIcon />
         </StyledTitlebarButton>
-        <StyledTitlebarButton type="button" onClick={onMaximize}>
+        <StyledTitlebarButton
+          type="button"
+          onClick={onMaximize}
+          disabled={autoSizing}
+        >
           <MaximizeIcon />
         </StyledTitlebarButton>
         <StyledTitlebarButton className="close" type="button" onClick={onClose}>

@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "browserfs": "^2.0.0",
+    "gsap": "^3.12.5",
     "ini": "^4.1.1",
     "next": "14.0.4",
     "react": "^18",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
+    "@types/gsap": "^3.0.0",
     "@types/ini": "^4.1.0",
     "@types/jest": "^29.5.11",
     "@types/node": "^20",

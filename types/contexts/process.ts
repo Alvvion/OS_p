@@ -6,6 +6,7 @@ export type Process = {
   icon: string;
   maximized?: boolean;
   minimized?: boolean;
+  autoSizing?: boolean;
   title: string;
 };
 

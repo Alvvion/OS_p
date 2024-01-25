@@ -1,11 +1,8 @@
-import { Rnd } from "react-rnd";
-
 import { useProcesses } from "@/contexts/process";
-import useRnd from "@/hooks/useRnd";
 import { StyledWindow } from "@/styles/components/system/StyledWindow";
 import type { WindowComponentProps } from "@/types/components/system/Window";
-import { rndDefaults } from "@/utils/constants";
 
+import RndWindow from "./RndWindow";
 import Titlebar from "./Titlebar";
 
 const Window: React.FC<WindowComponentProps> = ({ id, children }) => {
@@ -15,24 +12,13 @@ const Window: React.FC<WindowComponentProps> = ({ id, children }) => {
     },
   } = useProcesses();
 
-  const { height, width, updateSize, x, y, updatePosition } = useRnd(maximized);
-
   return (
-    <Rnd
-      disableDragging={maximized}
-      size={{ height, width }}
-      enableResizing={!maximized}
-      onResize={updateSize}
-      style={{ zIndex: 2 }}
-      position={{ x, y }}
-      onDragStop={updatePosition}
-      {...rndDefaults}
-    >
+    <RndWindow maximized={maximized} id={id}>
       <StyledWindow $minimized={minimized}>
         <Titlebar id={id} />
         {children}
       </StyledWindow>
-    </Rnd>
+    </RndWindow>
   );
 };
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useCallback } from "react";
 import { AiOutlineWifi } from "react-icons/ai";
 import { GiSpeaker } from "react-icons/gi";
 import { TbBattery4 } from "react-icons/tb";
@@ -17,11 +18,9 @@ import {
 
 import Clock from "./Clock";
 import TaskbarButtons from "./TaskbarButtons";
-import { useCallback } from "react";
 
 const Taskbar = () => {
-  const { openProcess, closeProcess, processes, pinnedProcesses, minimize } =
-    useProcesses();
+  const { openProcess, processes, pinnedProcesses, minimize } = useProcesses();
 
   const isBottomNotch = useCallback(
     (id: string) => {

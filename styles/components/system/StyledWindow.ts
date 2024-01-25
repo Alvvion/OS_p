@@ -12,9 +12,9 @@ export const StyledWindow = styled.section<{ $minimized?: boolean }>`
   overflow: hidden;
 `;
 
-export const StyledTitlebar = styled.header<{ $show: boolean }>`
+export const StyledTitlebar = styled.header`
   background-color: #fff;
-  display: ${({ $show }) => ($show ? "flex" : "none")};
+  display: flex;
   justify-content: space-between;
 
   h1 {
@@ -40,13 +40,22 @@ export const StyledTitlebarButton = styled.button.attrs({ type: "button" })`
   width: 45px;
   height: 100%;
 
+  &:disabled {
+    &:hover {
+      background-color: inherit;
+    }
+    svg {
+      fill: rgb(205, 205, 205);
+    }
+  }
+
   &:hover {
     background-color: #e9e9e9;
 
     &.close {
       background-color: rgb(232, 17, 35);
       border-top-right-radius: 5px;
-      transition: background-color 0.3 ease;
+      transition: background-color 0.25 ease;
 
       svg {
         fill: #fff;
@@ -57,3 +66,7 @@ export const StyledTitlebarButton = styled.button.attrs({ type: "button" })`
     width: 10px;
   }
 `;
+
+export const AddTabsButton = styled.button.attrs({ type: "button" })``;
+
+export const StyledTab = styled.div``;

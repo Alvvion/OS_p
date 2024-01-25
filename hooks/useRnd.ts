@@ -1,23 +1,46 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { RndDragCallback, RndResizeCallback } from "react-rnd";
 import { useTheme } from "styled-components";
 
+import { useProcesses } from "@/contexts/process";
+import { useSession } from "@/contexts/sessions";
 import type { Position, Size } from "@/types/components/system/Window";
 import {
   defaultWindowPosition,
   defaultWindowSize,
 } from "@/utils/intialContextStates";
 
-const useRnd = (maximized = false) => {
+const useRnd = (id: string, maximized = false) => {
+  const {
+    windowStates: { [id]: windowState },
+  } = useSession();
+
+  const {
+    processes: {
+      [id]: { autoSizing },
+    },
+  } = useProcesses();
+
+  const { position: prevPos, size: prevSize } = windowState || {};
   const { sizes } = useTheme();
-  const [{ x, y }, setPosition] = useState<Position>(defaultWindowPosition);
-  const [{ height, width }, setSize] = useState<Size>(defaultWindowSize);
+  const [{ x, y }, setPosition] = useState<Position>(
+    prevPos || defaultWindowPosition
+  );
+  const [{ height, width }, setSize] = useState<Size>(
+    prevSize || defaultWindowSize
+  );
 
   const updatePosition = useCallback<RndDragCallback>(
     (_event, { x: positionX, y: positionY }) =>
       setPosition({ x: positionX, y: positionY }),
     []
   );
+
+  useEffect(() => {
+    if (autoSizing) {
+      setSize(prevSize || defaultWindowSize);
+    }
+  }, [prevSize, autoSizing]);
 
   const updateSize = useCallback<RndResizeCallback>(
     (
@@ -42,6 +65,7 @@ const useRnd = (maximized = false) => {
     width: maximized ? window.innerWidth : width,
     x: maximized ? 0 : x,
     y: maximized ? 0 : y,
+    autoSizing,
   };
 };
 

@@ -7,7 +7,7 @@ export const StyledFileManager = styled.ol`
   height: ${({ theme }) => `calc(100% - ${theme.sizes.taskbar.height})`};
   grid-auto-flow: column;
   column-gap: 1px;
-  row-gap: 28px;
+  row-gap: 10px;
   padding: 5px 0;
 `;
 
@@ -55,7 +55,6 @@ export const StyledFileEntry = styled.li`
     }
     img {
       width: 48px;
-      height: 48px;
     }
   }
 `;
