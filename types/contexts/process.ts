@@ -8,6 +8,7 @@ export type Process = {
   minimized?: boolean;
   autoSizing?: boolean;
   title: string;
+  url?: string;
 };
 
 export type Processes = {
@@ -22,7 +23,7 @@ export type ProcessMap = (
 export type ProcessContextType = {
   processes: Processes | Record<string, never>;
   pinnedProcesses: Processes | Record<string, never>;
-  openProcess: (processId: string) => void;
+  openProcess: (processId: string, url: string) => void;
   closeProcess: (processId: string) => void;
   closePinnedProcess: (processId: string) => void;
   openPinnedProcess: (processId: string) => void;

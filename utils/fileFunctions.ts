@@ -11,9 +11,8 @@ export const getShortcut = (path: string, fs: FSModule): Promise<Shortcut> =>
       if (err) {
         reject(err);
       } else {
-        const { InternetShortcut = { URL: "", IconFile: "" } } = ini.parse(
-          contents.toString()
-        );
+        const { InternetShortcut = { BaseURL: "", URL: "", IconFile: "" } } =
+          ini.parse(contents.toString());
 
         if (InternetShortcut) {
           resolve(InternetShortcut as Shortcut);

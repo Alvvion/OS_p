@@ -11,6 +11,7 @@ const useFileInfo = (path: string): FileInfo => {
   const [info, setInfo] = useState<FileInfo>({
     icon: "",
     pid: "",
+    url: "",
   });
 
   useEffect(() => {
@@ -19,19 +20,23 @@ const useFileInfo = (path: string): FileInfo => {
 
       if (extension === ".url") {
         getShortcut(path, fs)
-          .then(({ URL: pid, IconFile: icon }) => setInfo({ icon, pid }))
+          .then(({ BaseURL: pid, URL: url, IconFile: icon }) =>
+            setInfo({ icon, pid, url })
+          )
           .catch(() =>
             setInfo({
               icon: "/assets/Blank.png",
               pid: getFileByExtension(extension),
+              url: path,
             })
           );
       } else if (IMAGE_FILE_EXTENSION.includes(extension)) {
-        setInfo({ icon: path, pid: "ImageViewer" });
+        setInfo({ icon: path, pid: "ImageViewer", url: path });
       } else {
         setInfo({
           icon: "/assets/Blank.png",
           pid: getFileByExtension(extension),
+          url: path,
         });
       }
     }

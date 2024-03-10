@@ -36,11 +36,11 @@ const Taskbar = () => {
   );
 
   const onButtonClick = useCallback(
-    (id: string) => {
+    (id: string, url = "") => {
       if (Object.keys(processes).includes(id)) {
         return () => minimize(id);
       }
-      return () => openProcess(id);
+      return () => openProcess(id, url);
     },
     [processes, minimize, openProcess]
   );
@@ -86,7 +86,7 @@ const Taskbar = () => {
                 width={32}
                 height={32}
                 name={id}
-                onClick={onButtonClick(id)}
+                onClick={onButtonClick(id, process.url)}
                 bottomnotch={isBottomNotch(id)}
               />
             ) : null;

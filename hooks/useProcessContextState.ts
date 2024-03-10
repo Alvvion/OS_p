@@ -24,7 +24,8 @@ const useProcessContextState = (): ProcessContextType => {
   );
 
   const openProcess = useCallback(
-    (processId: string) => setProcesses(openingProcess(processId)),
+    (processId: string, url: string) =>
+      setProcesses(openingProcess(processId, url)),
     []
   );
 

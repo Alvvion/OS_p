@@ -17,9 +17,12 @@ import type {
 } from "@/types/components/system/FileManager";
 
 const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
-  const { icon, pid } = useFileInfo(path);
+  const { icon, pid, url } = useFileInfo(path);
   const { openProcess } = useProcesses();
-  const onActivate = useCallback(() => openProcess(pid), [openProcess, pid]);
+  const onActivate = useCallback(
+    () => openProcess(pid, url),
+    [openProcess, pid, url]
+  );
 
   return (
     <StyledFileEntry>
