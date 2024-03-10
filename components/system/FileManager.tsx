@@ -4,6 +4,7 @@ import { useCallback } from "react";
 
 import { useProcesses } from "@/contexts/process";
 import useDoubleClick from "@/hooks/useDoubleClick";
+import useFileDrop from "@/hooks/useFileDrop";
 import useFileInfo from "@/hooks/useFileInfo";
 import useFiles from "@/hooks/useFiles";
 import {
@@ -32,16 +33,18 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
   );
 };
 
-const FileManager: React.FC<FileManagerProps> = ({ directory }) => (
-  <StyledFileManager>
-    {useFiles(directory, (file) => (
-      <FileEntry
-        key={file}
-        name={basename(file, extname(file))}
-        path={resolve(directory, file)}
-      />
-    ))}
-  </StyledFileManager>
-);
-
+const FileManager: React.FC<FileManagerProps> = ({ directory }) => {
+  const { files, getFiles } = useFiles(directory);
+  return (
+    <StyledFileManager {...useFileDrop(directory, getFiles)}>
+      {files.map((file) => (
+        <FileEntry
+          key={file}
+          name={basename(file, extname(file))}
+          path={resolve(directory, file)}
+        />
+      ))}
+    </StyledFileManager>
+  );
+};
 export default FileManager;
