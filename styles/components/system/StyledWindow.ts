@@ -7,7 +7,7 @@ export const StyledWindow = styled.section<{ $minimized?: boolean }>`
   width: 100%;
   height: 100%;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 50%);
-  outline: 1px solid rgba(0, 0, 0, 20%);
+  outline: ${({ theme }) => theme.sizes.window.outline};
   border-radius: 5px;
   overflow: hidden;
 `;
@@ -19,9 +19,9 @@ export const StyledTitlebar = styled.header`
 
   h1 {
     color: #000;
-    font-size: 11.5px;
+    font-size: ${({ theme }) => theme.sizes.titlebar.fontSize};
     font-weight: normal;
-    height: 29px;
+    height: ${({ theme }) => theme.sizes.titlebar.height};
   }
 
   figure {
@@ -29,15 +29,15 @@ export const StyledTitlebar = styled.header`
     align-items: center;
     height: 100%;
     img {
-      height: 16px;
-      width: 16px;
-      margin: 8px;
+      height: ${({ theme }) => theme.sizes.titlebar.buttonIconWidth};
+      width: ${({ theme }) => theme.sizes.titlebar.buttonIconWidth};
+      margin: ${({ theme }) => theme.sizes.titlebar.iconMargin};
     }
   }
 `;
 
 export const StyledTitlebarButton = styled.button.attrs({ type: "button" })`
-  width: 45px;
+  width: ${({ theme }) => theme.sizes.titlebar.buttonWidth};
   height: 100%;
 
   &:disabled {

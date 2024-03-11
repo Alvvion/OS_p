@@ -16,6 +16,14 @@ export const processDir: Processes = {
     hasWindow: true,
     title: "Hello Another World",
   },
+  V86: {
+    Component: dynamic(() => import("@/components/apps/V86")),
+    hasWindow: true,
+    icon: "/assets/V86.ico",
+    title: "V86",
+    autoSizing: true,
+    backgroundColor: "#000",
+  },
 };
 
 export const getProcess = (processes: string[]): Processes =>

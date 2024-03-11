@@ -8,13 +8,13 @@ import Titlebar from "./Titlebar";
 const Window: React.FC<WindowComponentProps> = ({ id, children }) => {
   const {
     processes: {
-      [id]: { maximized, minimized },
+      [id]: { maximized, minimized, backgroundColor },
     },
   } = useProcesses();
 
   return (
     <RndWindow maximized={maximized} id={id}>
-      <StyledWindow $minimized={minimized}>
+      <StyledWindow $minimized={minimized} style={{ backgroundColor }}>
         <Titlebar id={id} />
         {children}
       </StyledWindow>

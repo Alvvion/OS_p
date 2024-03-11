@@ -9,6 +9,7 @@ export type Process = {
   autoSizing?: boolean;
   title: string;
   url?: string;
+  backgroundColor?: string;
 };
 
 export type Processes = {

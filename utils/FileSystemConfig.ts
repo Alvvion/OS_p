@@ -1,6 +1,6 @@
 import type { FileSystemConfiguration } from "browserfs";
 
-import publicFileSystemIndex from "@/public.json";
+import publicFileSystemIndex from "@/public/.index/fs.bfs.json";
 
 const FileSystemConfig: FileSystemConfiguration = {
   fs: "OverlayFS",

@@ -16,6 +16,7 @@ declare module "styled-components" {
         height: string;
         clock: {
           width: string;
+          fontSize: string;
         };
         startButton: {
           width: string;
@@ -23,6 +24,21 @@ declare module "styled-components" {
         entry: {
           width: string;
         };
+      };
+      titlebar: {
+        buttonIconWidth: string;
+        buttonWidth: string;
+        fontSize: string;
+        height: string;
+        iconMargin: string;
+      };
+      window: {
+        outline: string;
+        lineHeight: string;
+      };
+      fileEntry: {
+        fontSize: string;
+        iconSize: string;
       };
     };
     formats: {

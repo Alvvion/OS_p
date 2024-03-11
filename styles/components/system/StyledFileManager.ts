@@ -40,7 +40,7 @@ export const StyledFileEntry = styled.li`
 
     figcaption {
       color: #fff;
-      font-size: 11.5px;
+      font-size: ${({ theme }) => theme.sizes.fileEntry.fontSize};
       text-shadow: 0 0 1px rgba(0, 0, 0, 75%), 0 0 2px rgba(0, 0, 0, 50%),
         0 0 3px rgba(0, 0, 0, 25%), 0 1px 1px rgba(0, 0, 0, 75%),
         0 1px 2px rgba(0, 0, 0, 50%), 0 1px 3px rgba(0, 0, 0, 25%),
@@ -54,7 +54,7 @@ export const StyledFileEntry = styled.li`
       white-space: normal;
     }
     img {
-      width: 48px;
+      width: ${({ theme }) => theme.sizes.fileEntry.iconSize};
     }
   }
 `;

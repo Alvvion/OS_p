@@ -160,7 +160,7 @@ const StyledClock = styled.time`
   flex-direction: column;
   justify-content: end;
   align-items: end;
-  font-size: 12px;
+  font-size: ${({ theme }) => theme.sizes.taskbar.clock.fontSize};
   height: 88%;
   padding: 0.3rem;
   border-radius: 0.25rem;

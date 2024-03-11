@@ -20,6 +20,7 @@ const themes: Themes = {
         height: "2.8em",
         clock: {
           width: "120px",
+          fontSize: "12px",
         },
         startButton: {
           width: "50px",
@@ -27,6 +28,21 @@ const themes: Themes = {
         entry: {
           width: "80px",
         },
+      },
+      titlebar: {
+        fontSize: "11.5px",
+        buttonIconWidth: "16px",
+        height: "29px",
+        iconMargin: "8px",
+        buttonWidth: "45px",
+      },
+      fileEntry: {
+        fontSize: "11.5px",
+        iconSize: "48px",
+      },
+      window: {
+        outline: "1px solid rgba(0, 0, 0, 20%)",
+        lineHeight: "14px",
       },
     },
     formats: {
