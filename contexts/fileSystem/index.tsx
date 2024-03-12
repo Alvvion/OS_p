@@ -1,7 +1,7 @@
-import useFileSystemState from "@/hooks/useFileSystemState";
+import contextFactory from "@/contexts/contextFactory";
+import useFileSystemState from "@/contexts/fileSystem/useFileSystemState";
+import { initalFileSystemState } from "@/contexts/intialContextStates";
 import type { FileSystemStateType } from "@/types/hooks/FileSystemState";
-import contextFactory from "@/utils/contextFactory";
-import { initalFileSystemState } from "@/utils/intialContextStates";
 
 const { Provider, useContext } = contextFactory<FileSystemStateType>(
   initalFileSystemState,

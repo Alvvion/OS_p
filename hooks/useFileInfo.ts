@@ -2,13 +2,14 @@ import { extname } from "path";
 import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/contexts/fileSystem";
-import type { FileInfo } from "@/types/hooks/FileInfo";
-import { IMAGE_FILE_EXTENSION } from "@/utils/constants";
 import {
   getIconByFileExtension,
   getProcessByFileExtension,
   getShortcut,
-} from "@/utils/fileFunctions";
+} from "@/contexts/fileSystem/functions";
+import type { FileInfo } from "@/types/hooks/FileInfo";
+import { IMAGE_FILE_EXTENSION } from "@/utils/constants";
+import { bufferToUrl } from "@/utils/functions";
 
 const useFileInfo = (path: string): FileInfo => {
   const { fs } = useFileSystem();
@@ -35,7 +36,13 @@ const useFileInfo = (path: string): FileInfo => {
           )
           .catch(() => defaultFileInfo(extension));
       } else if (IMAGE_FILE_EXTENSION.includes(extension)) {
-        setInfo({ icon: path, pid: "ImageViewer", url: path });
+        fs.readFile(path, (_err, contents = Buffer.from("")) =>
+          setInfo({
+            icon: bufferToUrl(contents),
+            pid: "Image Viewer",
+            url: path,
+          })
+        );
       } else {
         defaultFileInfo(extension);
       }

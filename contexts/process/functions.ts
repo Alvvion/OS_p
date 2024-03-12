@@ -1,6 +1,6 @@
 import type { Processes } from "@/types/contexts/process";
 
-import { processDir } from "./processDir";
+import { processDir } from "./directory";
 
 export const closingProcess =
   (processId: string) =>

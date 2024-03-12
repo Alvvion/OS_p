@@ -1,14 +1,15 @@
+import { stripUnit } from "polished";
 import { useCallback, useEffect, useState } from "react";
 import type { RndDragCallback, RndResizeCallback } from "react-rnd";
 import { useTheme } from "styled-components";
 
-import { useProcesses } from "@/contexts/process";
-import { useSession } from "@/contexts/sessions";
-import type { Position, Size } from "@/types/components/system/Window";
 import {
   defaultWindowPosition,
   defaultWindowSize,
-} from "@/utils/intialContextStates";
+} from "@/contexts/intialContextStates";
+import { useProcesses } from "@/contexts/process";
+import { useSession } from "@/contexts/session";
+import type { Position, Size } from "@/types/components/system/Window";
 
 const useRnd = (id: string, maximized = false) => {
   const {
@@ -58,7 +59,7 @@ const useRnd = (id: string, maximized = false) => {
 
   return {
     height: maximized
-      ? `${window.innerWidth - parseInt(sizes.taskbar.height, 10)}px`
+      ? `${window.innerWidth - Number(stripUnit(sizes.taskbar.height))}px`
       : height,
     updatePosition,
     updateSize,

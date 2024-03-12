@@ -1,17 +1,17 @@
 import { useCallback, useState } from "react";
 
-import type { ProcessContextType, Processes } from "@/types/contexts/process";
 import {
   getProcess,
   PINNED_PROCESSES,
   STARTUP_PROCESSES,
-} from "@/utils/processDir";
+} from "@/contexts/process/directory";
 import {
   closingProcess,
   maximizeProcess,
   minimizeProcess,
   openingProcess,
-} from "@/utils/processFunctions";
+} from "@/contexts/process/functions";
+import type { ProcessContextType, Processes } from "@/types/contexts/process";
 
 const useProcessContextState = (): ProcessContextType => {
   const [processes, setProcesses] = useState<Processes>(

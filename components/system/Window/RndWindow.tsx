@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 
-import { useSession } from "@/contexts/sessions";
+import { defaultWindowSize } from "@/contexts/intialContextStates";
+import { useSession } from "@/contexts/session";
 import useRnd from "@/hooks/useRnd";
 import type { RndWindowProps } from "@/types/components/system/Window";
 import { rndDefaults } from "@/utils/constants";
-import { defaultWindowSize } from "@/utils/intialContextStates";
 
 const RndWindow: React.FC<RndWindowProps> = ({ children, maximized, id }) => {
   const { height, width, updateSize, x, y, updatePosition, autoSizing } =

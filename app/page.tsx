@@ -7,7 +7,7 @@ import ProcessLoader from "@/components/system/ProcessLoader";
 import Taskbar from "@/components/system/Taskbar";
 import { FileSystemProvider } from "@/contexts/fileSystem";
 import { ProcessProvider } from "@/contexts/process";
-import { SessionProvider } from "@/contexts/sessions";
+import { SessionProvider } from "@/contexts/session";
 
 export default function Home() {
   return (

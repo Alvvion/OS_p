@@ -8,7 +8,7 @@ import type {
   V86Starter,
   WindowWithV86Starter,
 } from "@/types/components/apps/V86";
-import { bufferToUrl, loadScript } from "@/utils/fileFunctions";
+import { bufferToUrl, loadScript } from "@/utils/functions";
 import { BOOT_CD_FD_HD, BOOT_FD_CD_HD, V86Config } from "@/utils/V86Config";
 
 const useV86 = (

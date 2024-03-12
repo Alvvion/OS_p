@@ -1,9 +1,9 @@
+import { stripUnit } from "polished";
 import { useCallback, useEffect } from "react";
 import { type CSSProperties, useTheme } from "styled-components";
 
-import { useSession } from "@/contexts/sessions";
+import { useSession } from "@/contexts/session";
 import type { EventCallback, V86Starter } from "@/types/components/apps/V86";
-import { pxToNumber } from "@/utils/fileFunctions";
 
 const SET_SCREEN_GFX = "screen-set-size-graphical";
 const SET_SCREEN_TXT = "screen-set-size-text";
@@ -36,17 +36,17 @@ const useV86ScreenSize = (
 
   const setScreenGfx = useCallback<EventCallback>(
     ([width, height]) =>
-      updateWindowSize(height + pxToNumber(titlebar.height), width),
+      updateWindowSize(height + Number(stripUnit(titlebar.height)), width),
     [titlebar.height, updateWindowSize]
   );
 
   const setScreenText = useCallback<EventCallback>(
     ([cols, rows]) => {
       updateWindowSize(
-        rows * pxToNumber(lineHeight) +
-          pxToNumber(titlebar.height) +
+        rows * Number(stripUnit(lineHeight)) +
+          Number(stripUnit(titlebar.height)) +
           BORDER_OFFESET,
-        (cols / 2 + 4) * pxToNumber(lineHeight)
+        (cols / 2 + 4) * Number(stripUnit(lineHeight))
       );
     },
     [lineHeight, titlebar.height, updateWindowSize]
