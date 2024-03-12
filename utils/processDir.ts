@@ -5,7 +5,7 @@ import type { Processes } from "@/types/contexts/process";
 export const processDir: Processes = {
   HelloWorld: {
     Component: dynamic(() => import("@/components/apps/HelloWorld")),
-    icon: "/assets/portfolio.png",
+    icon: "/assets/win-file-explorer.ico",
     hasWindow: true,
     title: "Hello World",
     autoSizing: true,

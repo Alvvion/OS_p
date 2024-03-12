@@ -3,8 +3,6 @@ import ini from "ini";
 
 import type { Shortcut } from "@/types/hooks/FileInfo";
 
-export const getFileByExtension = (_extension: string): string => "";
-
 export const getShortcut = (path: string, fs: FSModule): Promise<Shortcut> =>
   new Promise((resolve, reject) => {
     fs.readFile(path, (err, contents = Buffer.from("")) => {
@@ -34,3 +32,23 @@ export const bufferToUrl = (buffer: Buffer): string =>
 
 export const pxToNumber = (px: string): number =>
   parseInt(px.slice(0, px.length - 2), 10);
+
+export const getIconByFileExtension = (extention: string): string => {
+  switch (extention) {
+    case ".img":
+    case ".iso":
+      return "/assets/imageres_5205.ico";
+    default:
+      return "/assets/ICON2_1.ico";
+  }
+};
+
+export const getProcessByFileExtension = (extention: string) => {
+  switch (extention) {
+    case ".img":
+    case ".iso":
+      return "V86";
+    default:
+      return "";
+  }
+};

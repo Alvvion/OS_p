@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { useFileSystem } from "@/contexts/fileSystem";
 import type { FileInfo } from "@/types/hooks/FileInfo";
 import { IMAGE_FILE_EXTENSION } from "@/utils/constants";
-import { getFileByExtension, getShortcut } from "@/utils/fileFunctions";
+import {
+  getIconByFileExtension,
+  getProcessByFileExtension,
+  getShortcut,
+} from "@/utils/fileFunctions";
 
 const useFileInfo = (path: string): FileInfo => {
   const { fs } = useFileSystem();
@@ -15,6 +19,12 @@ const useFileInfo = (path: string): FileInfo => {
   });
 
   useEffect(() => {
+    const defaultFileInfo = (extension: string) =>
+      setInfo({
+        icon: getIconByFileExtension(extension),
+        pid: getProcessByFileExtension(extension),
+        url: path,
+      });
     if (fs) {
       const extension = extname(path);
 
@@ -23,21 +33,11 @@ const useFileInfo = (path: string): FileInfo => {
           .then(({ BaseURL: pid, URL: url, IconFile: icon }) =>
             setInfo({ icon, pid, url })
           )
-          .catch(() =>
-            setInfo({
-              icon: "/assets/Blank.png",
-              pid: getFileByExtension(extension),
-              url: path,
-            })
-          );
+          .catch(() => defaultFileInfo(extension));
       } else if (IMAGE_FILE_EXTENSION.includes(extension)) {
         setInfo({ icon: path, pid: "ImageViewer", url: path });
       } else {
-        setInfo({
-          icon: "/assets/Blank.png",
-          pid: getFileByExtension(extension),
-          url: path,
-        });
+        defaultFileInfo(extension);
       }
     }
   }, [path, fs]);

@@ -1264,7 +1264,7 @@
       URL.revokeObjectURL(b);
     };
     C.prototype.yield = function (b, c) {
-      this.worker.postMessage({ t: b, tick: c });
+      this.worker?.postMessage({ t: b, tick: c });
     };
     C.prototype.unregister_yield = function () {
       this.worker && this.worker.terminate();
@@ -11044,7 +11044,7 @@
         a.register(
           "emulator-started",
           function () {
-            this.audio_context.resume();
+            this.audio_context?.resume();
           },
           this
         );
