@@ -27,7 +27,7 @@ const useFileInfo = (path: string): FileInfo => {
         url: path,
       });
     if (fs) {
-      const extension = extname(path);
+      const extension = extname(path).toLowerCase();
 
       if (extension === ".url") {
         getShortcut(path, fs)
