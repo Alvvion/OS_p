@@ -37,9 +37,9 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
 };
 
 const FileManager: React.FC<FileManagerProps> = ({ directory }) => {
-  const { files, getFiles } = useFiles(directory);
+  const { files, updateFiles } = useFiles(directory);
   return (
-    <StyledFileManager {...useFileDrop(directory, getFiles)}>
+    <StyledFileManager {...useFileDrop(directory, updateFiles)}>
       {files.map((file) => (
         <FileEntry
           key={file}

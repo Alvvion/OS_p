@@ -8,7 +8,10 @@ const haltDragEvent = (event: React.DragEvent<HTMLElement>): void => {
   event.stopPropagation();
 };
 
-const useFileDrop = (directory: string, getFiles: () => void): FileDrop => {
+const useFileDrop = (
+  directory: string,
+  updateFiles: (appendFile?: string) => void
+): FileDrop => {
   const { fs } = useFileSystem();
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLElement>) => {
@@ -20,13 +23,13 @@ const useFileDrop = (directory: string, getFiles: () => void): FileDrop => {
         fs?.writeFile(
           `${directory}/${file.name}`,
           Buffer.from(new Uint8Array(target?.result as ArrayBuffer)),
-          getFiles
+          (e) => !e && updateFiles(file.name)
         );
       };
 
       reader.readAsArrayBuffer(file);
     },
-    [directory, fs, getFiles]
+    [directory, fs, updateFiles]
   );
   return {
     onDragOver: haltDragEvent,

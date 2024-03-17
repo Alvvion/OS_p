@@ -5,14 +5,21 @@ import { useFileSystem } from "@/contexts/fileSystem";
 const useFiles = (directory: string) => {
   const { fs } = useFileSystem();
   const [files, setFiles] = useState<string[]>([]);
-  const getFiles = useCallback(
-    () => fs?.readdir(directory, (_err, contents = []) => setFiles(contents)),
+  const updateFiles = useCallback(
+    (appendFiles?: string) =>
+      fs?.readdir(directory, (_err, contents = []) =>
+        setFiles((currentFiles) =>
+          appendFiles && contents.length !== 0
+            ? [...currentFiles, appendFiles]
+            : contents
+        )
+      ),
     [fs, directory]
   );
 
-  useEffect(getFiles, [getFiles]);
+  useEffect(updateFiles, [updateFiles]);
 
-  return { files, getFiles };
+  return { files, updateFiles };
 };
 
 export default useFiles;
