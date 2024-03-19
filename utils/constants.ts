@@ -80,4 +80,6 @@ const rndDefaults = {
   },
 };
 
-export { centered, IMAGE_FILE_EXTENSION, rndDefaults };
+const LOCALE = "en";
+
+export { centered, IMAGE_FILE_EXTENSION, LOCALE, rndDefaults };
