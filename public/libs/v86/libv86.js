@@ -11449,31 +11449,34 @@
     var g = URL.createObjectURL(b);
     this.node_processor = null;
     this.node_output = this.audio_context.createGain();
-    this.audio_context.audioWorklet.addModule(g).then(() => {
-      URL.revokeObjectURL(g);
-      this.node_processor = new AudioWorkletNode(
-        this.audio_context,
-        "dac-processor",
-        {
-          numberOfInputs: 0,
-          numberOfOutputs: 1,
-          outputChannelCount: [2],
-          parameterData: {},
-          processorOptions: {},
-        }
-      );
-      this.node_processor.port.postMessage({
-        type: "sampling-rate",
-        value: this.sampling_rate,
-      });
-      this.node_processor.port.onmessage = (f) => {
-        switch (f.data.type) {
-          case "pump":
-            this.pump();
-        }
-      };
-      this.node_processor.connect(this.node_output);
-    });
+    this.audio_context.audioWorklet
+      .addModule(g)
+      .then(() => {
+        URL.revokeObjectURL(g);
+        this.node_processor = new AudioWorkletNode(
+          this.audio_context,
+          "dac-processor",
+          {
+            numberOfInputs: 0,
+            numberOfOutputs: 1,
+            outputChannelCount: [2],
+            parameterData: {},
+            processorOptions: {},
+          }
+        );
+        this.node_processor.port.postMessage({
+          type: "sampling-rate",
+          value: this.sampling_rate,
+        });
+        this.node_processor.port.onmessage = (f) => {
+          switch (f.data.type) {
+            case "pump":
+              this.pump();
+          }
+        };
+        this.node_processor.connect(this.node_output);
+      })
+      .catch(() => {});
     this.mixer_connection = c.add_source(this.node_output, 2);
     this.mixer_connection.set_gain_hidden(3);
     a.register(
@@ -12261,13 +12264,13 @@
   F.exportProperty(Y.prototype, "stop", Y.prototype.stop);
   Y.prototype.destroy = async function () {
     await this.stop();
-    this.v86.destroy();
-    this.keyboard_adapter && this.keyboard_adapter.destroy();
-    this.network_adapter && this.network_adapter.destroy();
-    this.mouse_adapter && this.mouse_adapter.destroy();
-    this.screen_adapter && this.screen_adapter.destroy();
-    this.serial_adapter && this.serial_adapter.destroy();
-    this.speaker_adapter && this.speaker_adapter.destroy();
+    this.v86?.destroy();
+    this.keyboard_adapter && this.keyboard_adapter?.destroy();
+    this.network_adapter && this.network_adapter?.destroy();
+    this.mouse_adapter && this.mouse_adapter?.destroy();
+    this.screen_adapter && this.screen_adapter?.destroy();
+    this.serial_adapter && this.serial_adapter?.destroy();
+    this.speaker_adapter && this.speaker_adapter?.destroy();
   };
   F.exportProperty(Y.prototype, "destroy", Y.prototype.destroy);
   Y.prototype.restart = function () {
