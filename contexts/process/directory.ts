@@ -8,7 +8,6 @@ export const processDir: Processes = {
     icon: "/assets/win-file-explorer.ico",
     hasWindow: true,
     title: "Hello World",
-    autoSizing: true,
   },
   HelloAnotherWorld: {
     Component: dynamic(() => import("@/components/apps/HelloAnotherWorld")),

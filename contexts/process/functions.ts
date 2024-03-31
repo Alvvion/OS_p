@@ -27,8 +27,8 @@ export const toggleProcessSetting =
   ({ [processId]: process, ...otherProcesses }: Processes): Processes =>
     process
       ? {
-          [processId]: { ...process, [setting]: !process[setting] },
           ...otherProcesses,
+          [processId]: { ...process, [setting]: !process[setting] },
         }
       : otherProcesses;
 

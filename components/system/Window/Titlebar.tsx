@@ -8,7 +8,7 @@ import {
 } from "@/styles/components/system/StyledWindow";
 import type { TitlebarProps } from "@/types/components/system/Window";
 
-import { CloseIcon, MaximizeIcon, MinimizeIcon } from "./Icons";
+import { CloseIcon, MaximizedIcon, MaximizeIcon, MinimizeIcon } from "./Icons";
 
 const Titlebar: React.FC<TitlebarProps> = ({ id, bar = "Default" }) => {
   const {
@@ -16,7 +16,7 @@ const Titlebar: React.FC<TitlebarProps> = ({ id, bar = "Default" }) => {
     maximize,
     closeProcess,
     processes: {
-      [id]: { icon, title, autoSizing },
+      [id]: { icon, title, autoSizing, maximized },
     },
   } = useProcesses();
 
@@ -55,7 +55,7 @@ const Titlebar: React.FC<TitlebarProps> = ({ id, bar = "Default" }) => {
           onClick={onMaximize}
           disabled={autoSizing}
         >
-          <MaximizeIcon />
+          {maximized ? <MaximizedIcon /> : <MaximizeIcon />}
         </StyledTitlebarButton>
         <StyledTitlebarButton className="close" type="button" onClick={onClose}>
           <CloseIcon />
