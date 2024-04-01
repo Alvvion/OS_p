@@ -7,7 +7,12 @@ import useRnd from "@/hooks/useRnd";
 import type { RndWindowProps } from "@/types/components/system/Window";
 import { rndDefaults } from "@/utils/constants";
 
-const RndWindow: React.FC<RndWindowProps> = ({ children, maximized, id }) => {
+const RndWindow: React.FC<RndWindowProps> = ({
+  children,
+  maximized,
+  id,
+  style,
+}) => {
   const { height, width, updateSize, x, y, updatePosition, autoSizing } =
     useRnd(id, maximized);
 
@@ -32,7 +37,7 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, maximized, id }) => {
       size={{ height, width }}
       enableResizing={!maximized && !autoSizing}
       onResize={updateSize}
-      style={{ zIndex: 2 }}
+      style={style}
       position={{ x, y }}
       onDragStop={updatePosition}
       ref={rndRef}

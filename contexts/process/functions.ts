@@ -7,10 +7,13 @@ export const closingProcess =
   ({ [processId]: _closedProcess, ...remaingProcesses }): Processes =>
     remaingProcesses;
 
+export const createPid = (processId: string, url: string): string =>
+  url ? `${processId}_${url}` : processId;
+
 export const openingProcess =
   (processId: string, url: string) =>
   (currentProcesses: Processes): Processes => {
-    const id = url ? `${processId}_${url}` : processId;
+    const id = createPid(processId, url);
     return currentProcesses[id] || !processDir[processId]
       ? currentProcesses
       : {
@@ -27,8 +30,8 @@ export const toggleProcessSetting =
   ({ [processId]: process, ...otherProcesses }: Processes): Processes =>
     process
       ? {
-          ...otherProcesses,
           [processId]: { ...process, [setting]: !process[setting] },
+          ...otherProcesses,
         }
       : otherProcesses;
 

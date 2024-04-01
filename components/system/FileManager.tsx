@@ -3,6 +3,8 @@ import { basename, extname, resolve } from "path";
 import { useCallback } from "react";
 
 import { useProcesses } from "@/contexts/process";
+import { createPid } from "@/contexts/process/functions";
+import { useSession } from "@/contexts/session";
 import useDoubleClick from "@/hooks/useDoubleClick";
 import useFileDrop from "@/hooks/useFileDrop";
 import useFileInfo from "@/hooks/useFileInfo";
@@ -18,11 +20,16 @@ import type {
 
 const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
   const { icon, pid, url } = useFileInfo(path);
-  const { openProcess } = useProcesses();
-  const onActivate = useCallback(
-    () => openProcess(pid, url),
-    [openProcess, pid, url]
-  );
+  const { openProcess, processes } = useProcesses();
+  const { setForegroundId } = useSession();
+  const onActivate = useCallback(() => {
+    const id = createPid(pid, url);
+    if (processes[id]) {
+      setForegroundId(id);
+    } else {
+      openProcess(pid, url);
+    }
+  }, [openProcess, pid, processes, setForegroundId, url]);
 
   return (
     <StyledFileEntry>

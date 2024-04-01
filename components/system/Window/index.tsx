@@ -1,4 +1,7 @@
+import { useRef } from "react";
+
 import { useProcesses } from "@/contexts/process";
+import useFocusable from "@/hooks/useFocusable";
 import { StyledWindow } from "@/styles/components/system/StyledWindow";
 import type { WindowComponentProps } from "@/types/components/system/Window";
 
@@ -12,9 +15,17 @@ const Window: React.FC<WindowComponentProps> = ({ id, children }) => {
     },
   } = useProcesses();
 
+  const windowRef = useRef<HTMLElement | null>(null);
+  const { zIndex, ...focusableProps } = useFocusable(id, windowRef);
+
   return (
-    <RndWindow maximized={maximized} id={id}>
-      <StyledWindow $minimized={minimized} style={{ backgroundColor }}>
+    <RndWindow maximized={maximized} id={id} style={{ zIndex }}>
+      <StyledWindow
+        $minimized={minimized}
+        style={{ backgroundColor }}
+        ref={windowRef}
+        {...focusableProps}
+      >
         <Titlebar id={id} />
         {children}
       </StyledWindow>

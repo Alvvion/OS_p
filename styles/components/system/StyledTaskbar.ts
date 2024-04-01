@@ -9,7 +9,7 @@ const centered = `
 const StyledTaskbar = styled.nav`
   background-color: ${({ theme }) => theme.colors.taskbar};
   position: absolute;
-  z-index: 10;
+  z-index: 1000;
   bottom: 0;
   height: ${({ theme }) => theme.sizes.taskbar.height};
   width: 100vw;

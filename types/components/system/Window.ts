@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Props } from "react-rnd";
 
 export type ComponentProps = {
@@ -28,4 +29,5 @@ export type RndWindowProps = {
   children: React.ReactNode;
   maximized?: boolean;
   id: string;
+  style: CSSProperties;
 };

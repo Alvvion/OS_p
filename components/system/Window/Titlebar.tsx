@@ -2,6 +2,7 @@
 import { useCallback } from "react";
 
 import { useProcesses } from "@/contexts/process";
+import useWindowActions from "@/hooks/useWindowActions";
 import {
   StyledTitlebar,
   StyledTitlebarButton,
@@ -12,17 +13,12 @@ import { CloseIcon, MaximizedIcon, MaximizeIcon, MinimizeIcon } from "./Icons";
 
 const Titlebar: React.FC<TitlebarProps> = ({ id, bar = "Default" }) => {
   const {
-    minimize,
-    maximize,
-    closeProcess,
     processes: {
       [id]: { icon, title, autoSizing, maximized },
     },
   } = useProcesses();
 
-  const onMinimize = useCallback(() => minimize(id), [id, minimize]);
-  const onMaximize = useCallback(() => maximize(id), [id, maximize]);
-  const onClose = useCallback(() => closeProcess(id), [id, closeProcess]);
+  const { onMinimize, onMaximize, onClose } = useWindowActions(id);
 
   const titlebarType = useCallback(
     (barType: string) => {
