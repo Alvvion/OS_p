@@ -20,9 +20,9 @@ const useFileInfo = (path: string): FileInfo => {
   });
 
   useEffect(() => {
-    const defaultFileInfo = (extension: string) =>
+    const defaultFileInfo = (extension: string, icon?: string) =>
       setInfo({
-        icon: getIconByFileExtension(extension),
+        icon: icon || getIconByFileExtension(extension),
         pid: getProcessByFileExtension(extension),
         url: path,
       });
@@ -36,12 +36,11 @@ const useFileInfo = (path: string): FileInfo => {
           )
           .catch(() => defaultFileInfo(extension));
       } else if (IMAGE_FILE_EXTENSION.includes(extension)) {
-        fs.readFile(path, (_err, contents = Buffer.from("")) =>
-          setInfo({
-            icon: bufferToUrl(contents),
-            pid: "Image Viewer",
-            url: path,
-          })
+        fs.readFile(path, (err, contents = Buffer.from("")) =>
+          defaultFileInfo(
+            extension,
+            err ? "/assets/ICON132_1.ico" : bufferToUrl(contents)
+          )
         );
       } else {
         defaultFileInfo(extension);

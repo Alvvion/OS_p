@@ -35,7 +35,7 @@ const useSessionContextState = (): SessionContextType => {
   useEffect(() => {
     fs?.readFile(SESSION_FILE, (_err, content) => {
       if (content) {
-        const session = JSON.parse(content.toString());
+        const session = JSON.parse(content.toString() || "{}");
         setThemeName(session.themeName);
         setWindowStates(session.windowStates);
         setForegroundId(session.foregroundId);

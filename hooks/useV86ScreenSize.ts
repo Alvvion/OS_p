@@ -2,54 +2,38 @@ import { stripUnit } from "polished";
 import { useCallback, useEffect } from "react";
 import { type CSSProperties, useTheme } from "styled-components";
 
-import { useSession } from "@/contexts/session";
 import type { EventCallback, V86Starter } from "@/types/components/apps/V86";
+
+import useWindowSize from "./useWindowSize";
 
 const SET_SCREEN_GFX = "screen-set-size-graphical";
 const SET_SCREEN_TXT = "screen-set-size-text";
-
-const BORDER_OFFESET = 3;
 
 const useV86ScreenSize = (
   emulator: V86Starter | null,
   id: string
 ): CSSProperties => {
-  const { setWindowStates } = useSession();
   const {
     sizes: {
-      titlebar,
       window: { lineHeight },
     },
   } = useTheme();
 
-  const updateWindowSize = useCallback(
-    (height: number, width: number) => {
-      setWindowStates((current) => ({
-        ...current,
-        [id]: {
-          size: { height, width },
-        },
-      }));
-    },
-    [id, setWindowStates]
-  );
+  const { updateWindowSize } = useWindowSize(id);
 
   const setScreenGfx = useCallback<EventCallback>(
-    ([width, height]) =>
-      updateWindowSize(height + Number(stripUnit(titlebar.height)), width),
-    [titlebar.height, updateWindowSize]
+    ([width, height]) => updateWindowSize(height, width),
+    [updateWindowSize]
   );
 
   const setScreenText = useCallback<EventCallback>(
     ([cols, rows]) => {
       updateWindowSize(
-        rows * Number(stripUnit(lineHeight)) +
-          Number(stripUnit(titlebar.height)) +
-          BORDER_OFFESET,
+        rows * Number(stripUnit(lineHeight)),
         (cols / 2 + 4) * Number(stripUnit(lineHeight))
       );
     },
-    [lineHeight, titlebar.height, updateWindowSize]
+    [lineHeight, updateWindowSize]
   );
 
   useEffect(() => {
@@ -65,8 +49,6 @@ const useV86ScreenSize = (
   return {
     font: `${lineHeight} monospace`,
     lineHeight,
-    top: BORDER_OFFESET - 1,
-    position: "relative",
   };
 };
 

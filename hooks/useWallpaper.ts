@@ -31,9 +31,9 @@ const useWallpaper = (refElement: RefObject<HTMLElement>) => {
         : undefined;
 
     if (vantaEffect) {
-      const { onDestroy } = colorCycle(vantaSettings.color, (color) => {
-        vantaEffect.options.color = color;
-      });
+      const { onDestroy } = colorCycle(vantaSettings.color, (color) =>
+        vantaEffect.setOptions({ color })
+      );
 
       vantaEffect.onDestroy = onDestroy;
     }

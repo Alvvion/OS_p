@@ -32,6 +32,7 @@ export const StyledTitlebar = styled.header`
       height: ${({ theme }) => theme.sizes.titlebar.buttonIconWidth};
       width: ${({ theme }) => theme.sizes.titlebar.buttonIconWidth};
       margin: ${({ theme }) => theme.sizes.titlebar.iconMargin};
+      image-rendering: pixelated;
     }
   }
 `;

@@ -1,36 +1,27 @@
-/* eslint-disable @next/next/no-img-element */
-import { basename, extname, resolve } from "path";
 import { useCallback } from "react";
 
 import { useProcesses } from "@/contexts/process";
 import { createPid } from "@/contexts/process/functions";
 import { useSession } from "@/contexts/session";
 import useDoubleClick from "@/hooks/useDoubleClick";
-import useFileDrop from "@/hooks/useFileDrop";
 import useFileInfo from "@/hooks/useFileInfo";
-import useFiles from "@/hooks/useFiles";
 import Image from "@/styles/commons/Image";
-import {
-  StyledFileEntry,
-  StyledFileManager,
-} from "@/styles/components/system/StyledFileManager";
-import type {
-  FileEntryProps,
-  FileManagerProps,
-} from "@/types/components/system/FileManager";
+import { StyledFileEntry } from "@/styles/components/system/StyledFileManager";
+import type { FileEntryProps } from "@/types/components/system/FileManager";
 
 const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
   const { icon, pid, url } = useFileInfo(path);
-  const { openProcess, processes } = useProcesses();
+  const { openProcess, processes, minimize } = useProcesses();
   const { setForegroundId } = useSession();
   const onActivate = useCallback(() => {
     const id = createPid(pid, url);
     if (processes[id]) {
+      if (processes[id].minimized) minimize(id);
       setForegroundId(id);
     } else {
       openProcess(pid, url);
     }
-  }, [openProcess, pid, processes, setForegroundId, url]);
+  }, [minimize, openProcess, pid, processes, setForegroundId, url]);
 
   return (
     <StyledFileEntry>
@@ -44,18 +35,4 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
   );
 };
 
-const FileManager: React.FC<FileManagerProps> = ({ directory }) => {
-  const { files, updateFiles } = useFiles(directory);
-  return (
-    <StyledFileManager {...useFileDrop(directory, updateFiles)}>
-      {files.map((file) => (
-        <FileEntry
-          key={file}
-          name={basename(file, extname(file))}
-          path={resolve(directory, file)}
-        />
-      ))}
-    </StyledFileManager>
-  );
-};
-export default FileManager;
+export default FileEntry;
