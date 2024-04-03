@@ -1,5 +1,7 @@
 import { extname } from "path";
 
+export const cleanUpBufferUrl = (url: string): void => URL.revokeObjectURL(url);
+
 export const loadScripts = (src: string): Promise<Event> =>
   new Promise<Event>((resolve, reject) => {
     const loadedScripts = [...document.scripts];

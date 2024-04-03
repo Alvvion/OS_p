@@ -8,7 +8,7 @@ import type {
   V86Starter,
   WindowWithV86Starter,
 } from "@/types/components/apps/V86";
-import { bufferToUrl, loadFiles } from "@/utils/functions";
+import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 import { BOOT_CD_FD_HD, BOOT_FD_CD_HD, V86Config } from "@/utils/V86Config";
 
 const useV86 = (
@@ -21,25 +21,35 @@ const useV86 = (
   const { fs } = useFileSystem();
 
   useEffect(() => {
-    if (!emulator) {
-      fs?.readFile(url, (_err, contents = Buffer.from("")) => {
+    if (!emulator && fs && url && ref?.current) {
+      fs.readFile(url, (_err, contents = Buffer.from("")) => {
         loadFiles(["/libs/v86/libv86.js"]).then(() => {
           const extention = extname(url).toLowerCase();
           const isISO = extention === ".iso";
           const { deviceMemory = 8 } = navigator as NavigatorWithMemory;
 
           const memoryRatio = deviceMemory / 8;
+          const bufferUrl = bufferToUrl(contents);
 
-          setEmulator(
-            new (window as WindowWithV86Starter).V86Starter({
-              memory_size: memoryRatio * 1024 * 1024 * 1024,
-              vga_memory_size: memoryRatio * 32 * 1024 * 1024,
-              boot_order: isISO ? BOOT_CD_FD_HD : BOOT_FD_CD_HD,
-              [isISO ? "cdrom" : "fda"]: { url: bufferToUrl(contents) },
-              screen_container: ref.current,
-              ...V86Config,
-            })
+          const v86 = new (window as WindowWithV86Starter).V86Starter({
+            memory_size: memoryRatio * 1024 * 1024 * 1024,
+            vga_memory_size: memoryRatio * 32 * 1024 * 1024,
+            boot_order: isISO ? BOOT_CD_FD_HD : BOOT_FD_CD_HD,
+            [isISO ? "cdrom" : "fda"]: {
+              async: false,
+              size: contents.length,
+              url: bufferUrl,
+              use_parts: false,
+            },
+            screen_container: ref.current,
+            ...V86Config,
+          });
+
+          v86.add_listener("emulator-loaded", () =>
+            cleanUpBufferUrl(bufferUrl)
           );
+
+          setEmulator(v86);
         });
       });
     }

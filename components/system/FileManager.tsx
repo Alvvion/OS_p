@@ -9,6 +9,7 @@ import useDoubleClick from "@/hooks/useDoubleClick";
 import useFileDrop from "@/hooks/useFileDrop";
 import useFileInfo from "@/hooks/useFileInfo";
 import useFiles from "@/hooks/useFiles";
+import Image from "@/styles/commons/Image";
 import {
   StyledFileEntry,
   StyledFileManager,
@@ -35,7 +36,7 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
     <StyledFileEntry>
       <button type="button" onClick={useDoubleClick(onActivate)}>
         <figure>
-          <img src={icon} alt={name} />
+          <Image src={icon} alt={name} />
           <figcaption>{name}</figcaption>
         </figure>
       </button>
