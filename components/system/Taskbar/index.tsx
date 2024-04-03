@@ -18,9 +18,10 @@ import {
 
 import Clock from "./Clock";
 import TaskbarButtons from "./TaskbarButtons";
+import TaskbarEntry from "./TaskbarEntry";
 
 const Taskbar = () => {
-  const { openProcess, processes, pinnedProcesses, minimize } = useProcesses();
+  const { processes, pinnedProcesses } = useProcesses();
 
   const isBottomNotch = useCallback(
     (id: string) => {
@@ -35,15 +36,15 @@ const Taskbar = () => {
     [processes]
   );
 
-  const onButtonClick = useCallback(
-    (id: string, url = "") => {
-      if (Object.keys(processes).includes(id)) {
-        return () => minimize(id);
-      }
-      return () => openProcess(id, url);
-    },
-    [processes, minimize, openProcess]
-  );
+  // const onButtonClick = useCallback(
+  //   (id: string, url?: string) => {
+  //     if (Object.keys(processes).includes(id)) {
+  //       return () => minimize(id);
+  //     }
+  //     return () => openProcess(id, url);
+  //   },
+  //   [processes, minimize, openProcess]
+  // );
 
   return (
     <StyledTaskbar>
@@ -67,26 +68,28 @@ const Taskbar = () => {
         </StyledSearchContainer>
         <StyledTaskbarEntries>
           {Object.entries(pinnedProcesses).map(([id, process]) => (
-            <TaskbarButtons
+            <TaskbarEntry
               key={id}
               src={process.icon}
               width={32}
               height={32}
               name={id}
-              onClick={onButtonClick(id)}
+              pid={id}
+              processes={processes}
               bottomnotch={isBottomNotch(id)}
             />
           ))}
           {Object.entries(processes).map(([id, process]) => {
             const isPinned = Object.keys(pinnedProcesses).includes(id);
             return !isPinned ? (
-              <TaskbarButtons
+              <TaskbarEntry
                 key={id}
                 src={process.icon}
                 width={32}
                 height={32}
                 name={id}
-                onClick={onButtonClick(id, process.url)}
+                pid={id}
+                processes={processes}
                 bottomnotch={isBottomNotch(id)}
               />
             ) : null;

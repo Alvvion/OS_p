@@ -1,11 +1,6 @@
 import type { ComponentPropsWithoutRef } from "react";
 
-// export type TaskbarButtonType = {
-//   src: string;
-//   width: number;
-//   height: number;
-//   name: string;
-// };
+import type { Processes } from "@/types/contexts/process";
 
 export interface TaskbarButtonType extends ComponentPropsWithoutRef<"button"> {
   src: string;
@@ -13,4 +8,9 @@ export interface TaskbarButtonType extends ComponentPropsWithoutRef<"button"> {
   height: number;
   name: string;
   bottomnotch?: string;
+}
+
+export interface TaskbarEntyType extends TaskbarButtonType {
+  pid: string;
+  processes: Processes | Record<string, never>;
 }
