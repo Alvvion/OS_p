@@ -1,8 +1,7 @@
 import { useRef } from "react";
 
-// eslint-disable-next-line import/no-cycle
+import useV86 from "@/components/apps/V86/useV86";
 import { useProcesses } from "@/contexts/process";
-import useV86 from "@/hooks/useV86";
 import useV86ScreenSize from "@/hooks/useV86ScreenSize";
 import { StyledV86 } from "@/styles/components/apps/V86";
 

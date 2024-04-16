@@ -12,9 +12,7 @@ import { useSession } from "@/contexts/session";
 import type { Position, Size } from "@/types/components/system/Window";
 
 const useRnd = (id: string, maximized = false) => {
-  const {
-    windowStates: { [id]: windowState },
-  } = useSession();
+  const { windowStates: { [id]: windowState } = {} } = useSession();
 
   const {
     processes: {

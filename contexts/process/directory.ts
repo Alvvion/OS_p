@@ -15,6 +15,14 @@ export const processDir: Processes = {
     hasWindow: true,
     title: "Hello Another World",
   },
+  JSDOS: {
+    autoSizing: true,
+    backgroundColor: "#000",
+    Component: dynamic(() => import("@/components/apps/JSDOS")),
+    hasWindow: true,
+    icon: "/assets/jsdos.png",
+    title: "JSDOS",
+  },
   V86: {
     Component: dynamic(() => import("@/components/apps/V86")),
     hasWindow: true,
