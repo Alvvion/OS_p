@@ -1,8 +1,6 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithRef } from "react";
 
-import type { Processes } from "@/types/contexts/process";
-
-export interface TaskbarButtonType extends ComponentPropsWithoutRef<"button"> {
+export interface TaskbarButtonType extends ComponentPropsWithRef<"button"> {
   src: string;
   width: number;
   height: number;
@@ -12,5 +10,5 @@ export interface TaskbarButtonType extends ComponentPropsWithoutRef<"button"> {
 
 export interface TaskbarEntyType extends TaskbarButtonType {
   pid: string;
-  processes: Processes | Record<string, never>;
+  isPinned: boolean;
 }

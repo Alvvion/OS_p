@@ -1,16 +1,24 @@
 import type { ComponentProps } from "../components/system/Window";
 
-export type Process = {
-  Component: React.ComponentType<ComponentProps>;
-  hasWindow?: boolean;
-  icon: string;
+export type ProcessElement = {
+  taskbarEntry?: HTMLElement;
+};
+
+export type ProcessToggle = {
   maximized?: boolean;
   minimized?: boolean;
-  autoSizing?: boolean;
-  title: string;
-  url?: string;
-  backgroundColor?: string;
 };
+
+export type Process = ProcessElement &
+  ProcessToggle & {
+    Component: React.ComponentType<ComponentProps>;
+    hasWindow?: boolean;
+    icon: string;
+    autoSizing?: boolean;
+    title: string;
+    url?: string;
+    backgroundColor?: string;
+  };
 
 export type Processes = {
   [id: string]: Process;
@@ -30,6 +38,7 @@ export type ProcessContextType = {
   openPinnedProcess: (processId: string) => void;
   maximize: (id: string) => void;
   minimize: (id: string) => void;
+  linkElement: (id: string, name: keyof ProcessElement, element: HTMLElement) => void;
 };
 
 export type ProcessProviderProps = {

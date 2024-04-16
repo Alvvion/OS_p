@@ -10,8 +10,13 @@ import {
   maximizeProcess,
   minimizeProcess,
   openingProcess,
+  setProcessElement,
 } from "@/contexts/process/functions";
-import type { ProcessContextType, Processes } from "@/types/contexts/process";
+import type {
+  ProcessContextType,
+  ProcessElement,
+  Processes,
+} from "@/types/contexts/process";
 
 const useProcessContextState = (): ProcessContextType => {
   const [processes, setProcesses] = useState<Processes>(
@@ -43,6 +48,12 @@ const useProcessContextState = (): ProcessContextType => {
     []
   );
 
+  const linkElement = useCallback(
+    (id: string, name: keyof ProcessElement, element: HTMLElement) =>
+      setProcesses(setProcessElement(id, name, element)),
+    []
+  );
+
   return {
     closeProcess,
     closePinnedProcess,
@@ -52,6 +63,7 @@ const useProcessContextState = (): ProcessContextType => {
     pinnedProcesses,
     maximize,
     minimize,
+    linkElement,
   };
 };
 

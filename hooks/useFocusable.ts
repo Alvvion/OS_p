@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 
+import { useProcesses } from "@/contexts/process";
 import { useSession } from "@/contexts/session";
 
 type Focusable = {
@@ -16,13 +17,22 @@ const useFocusable = (
   const { foregroundId, setForegroundId, stackOrder, setStackOrder } =
     useSession();
 
+  const {
+    processes: {
+      [id]: { taskbarEntry },
+    },
+  } = useProcesses();
+
   const zIndex = stackOrder.length - stackOrder.indexOf(id) + 1;
 
   const isForeground = useMemo(() => id === foregroundId, [id, foregroundId]);
 
-  const onBlur = useCallback(() => {
-    setForegroundId("");
-  }, [setForegroundId]);
+  const onBlur = useCallback(
+    ({ relatedTarget }: React.FocusEvent<HTMLElement>) => {
+      if (isForeground && relatedTarget !== taskbarEntry) setForegroundId("");
+    },
+    [isForeground, setForegroundId, taskbarEntry]
+  );
 
   const moveToFront = useCallback(() => {
     setStackOrder((currentOrder) => {

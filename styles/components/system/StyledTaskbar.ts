@@ -35,6 +35,8 @@ const StyledStartButton = styled.button.attrs({ type: "button" })<{
   padding: 5px;
   border-radius: 0.25rem;
   position: relative;
+  background-color: ${({ $bottomnotch }) =>
+    $bottomnotch === "true" ? "#292929" : "inherit"};
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
@@ -48,7 +50,7 @@ const StyledStartButton = styled.button.attrs({ type: "button" })<{
   ${({ $bottomnotch }) =>
     $bottomnotch === "true" || $bottomnotch === "minimized"
       ? css`
-  &::after {
+  &::before {
         content: "";
         position: absolute;
         bottom: 0;

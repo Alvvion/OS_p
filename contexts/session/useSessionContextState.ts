@@ -38,8 +38,6 @@ const useSessionContextState = (): SessionContextType => {
         const session = JSON.parse(content.toString() || "{}");
         setThemeName(session.themeName);
         setWindowStates(session.windowStates);
-        setForegroundId(session.foregroundId);
-        setStackOrder(session.stackOrder);
       }
 
       setSessionLoaded(true);

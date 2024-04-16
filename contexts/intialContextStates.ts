@@ -11,6 +11,7 @@ export const initalProcessState: ProcessContextType = {
   pinnedProcesses: {},
   maximize: () => undefined,
   minimize: () => undefined,
+  linkElement: () => undefined,
 };
 
 export const initialSessionState: SessionContextType = {
@@ -18,6 +19,10 @@ export const initialSessionState: SessionContextType = {
   windowStates: {},
   setWindowStates: () => undefined,
   setThemeName: () => undefined,
+  foregroundId: "",
+  setForegroundId: () => undefined,
+  setStackOrder: () => undefined,
+  stackOrder: [],
 };
 
 export const initalFileSystemState: FileSystemStateType = {

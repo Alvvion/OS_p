@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useCallback } from "react";
 import { AiOutlineWifi } from "react-icons/ai";
 import { GiSpeaker } from "react-icons/gi";
 import { TbBattery4 } from "react-icons/tb";
@@ -21,30 +20,7 @@ import TaskbarButtons from "./TaskbarButtons";
 import TaskbarEntry from "./TaskbarEntry";
 
 const Taskbar = () => {
-  const { processes, pinnedProcesses } = useProcesses();
-
-  const isBottomNotch = useCallback(
-    (id: string) => {
-      if (Object.keys(processes).includes(id)) {
-        if (processes[id].minimized) {
-          return "minimized";
-        }
-        return "true";
-      }
-      return "false";
-    },
-    [processes]
-  );
-
-  // const onButtonClick = useCallback(
-  //   (id: string, url?: string) => {
-  //     if (Object.keys(processes).includes(id)) {
-  //       return () => minimize(id);
-  //     }
-  //     return () => openProcess(id, url);
-  //   },
-  //   [processes, minimize, openProcess]
-  // );
+  const { processes } = useProcesses();
 
   return (
     <StyledTaskbar>
@@ -67,7 +43,7 @@ const Taskbar = () => {
           <StyledSearch placeholder="Search" type="text" />
         </StyledSearchContainer>
         <StyledTaskbarEntries>
-          {Object.entries(pinnedProcesses).map(([id, process]) => (
+          {Object.entries(processes).map(([id, process]) => (
             <TaskbarEntry
               key={id}
               src={process.icon}
@@ -75,25 +51,9 @@ const Taskbar = () => {
               height={32}
               name={id}
               pid={id}
-              processes={processes}
-              bottomnotch={isBottomNotch(id)}
+              isPinned={false}
             />
           ))}
-          {Object.entries(processes).map(([id, process]) => {
-            const isPinned = Object.keys(pinnedProcesses).includes(id);
-            return !isPinned ? (
-              <TaskbarEntry
-                key={id}
-                src={process.icon}
-                width={32}
-                height={32}
-                name={id}
-                pid={id}
-                processes={processes}
-                bottomnotch={isBottomNotch(id)}
-              />
-            ) : null;
-          })}
         </StyledTaskbarEntries>
       </StyledInnerContainer>
       <StyledSideMenu>

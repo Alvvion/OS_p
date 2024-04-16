@@ -4,7 +4,7 @@ import StyledApp from "@/components/pages/StyledApp";
 import Desktop from "@/components/system/Desktop";
 import FileManager from "@/components/system/FIleManager";
 import ProcessLoader from "@/components/system/Window/ProcessLoader";
-import Taskbar from "@/components/system/Taskbar";
+import Taskbar from "@/components/system/Window/Taskbar";
 import { FileSystemProvider } from "@/contexts/fileSystem";
 import { ProcessProvider } from "@/contexts/process";
 import { SessionProvider } from "@/contexts/session";

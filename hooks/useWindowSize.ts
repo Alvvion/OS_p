@@ -1,3 +1,4 @@
+import { stripUnit } from "polished";
 import { useCallback } from "react";
 import { useTheme } from "styled-components";
 
@@ -19,7 +20,7 @@ const useWindowSize = (id: string): WindowSize => {
         ...currentState,
         [id]: {
           size: {
-            height: height + Number(titlebar.height),
+            height: height + Number(stripUnit(titlebar.height)),
             width,
           },
         },

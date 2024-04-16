@@ -1,4 +1,9 @@
-import type { Processes } from "@/types/contexts/process";
+import type {
+  Process,
+  ProcessElement,
+  Processes,
+  ProcessToggle,
+} from "@/types/contexts/process";
 
 import { processDir } from "./directory";
 
@@ -26,14 +31,23 @@ export const openingProcess =
   };
 
 export const toggleProcessSetting =
-  (processId: string, setting: "maximized" | "minimized") =>
-  ({ [processId]: process, ...otherProcesses }: Processes): Processes =>
-    process
-      ? {
-          [processId]: { ...process, [setting]: !process[setting] },
-          ...otherProcesses,
-        }
-      : otherProcesses;
+  (processId: string, setting: keyof ProcessToggle) =>
+  (currentProcesses: Processes): Processes => {
+    const updatedProcesses: Processes = {};
+
+    Object.keys(currentProcesses).forEach((key) => {
+      if (key === processId) {
+        updatedProcesses[key] = {
+          ...currentProcesses[key],
+          [setting]: !currentProcesses[processId][setting],
+        };
+      } else {
+        updatedProcesses[key] = currentProcesses[key];
+      }
+    });
+
+    return updatedProcesses;
+  };
 
 export const maximizeProcess =
   (processId: string) =>
@@ -44,3 +58,21 @@ export const minimizeProcess =
   (processId: string) =>
   (processes: Processes): Processes =>
     toggleProcessSetting(processId, "minimized")(processes);
+
+export const setProcessSetting =
+  (processId: string, setting: Partial<Process>) =>
+  (currentProcesses: Processes): Processes => {
+    const { ...newProcesses } = currentProcesses;
+
+    newProcesses[processId] = {
+      ...newProcesses[processId],
+      ...setting,
+    };
+
+    return newProcesses;
+  };
+
+export const setProcessElement =
+  (processId: string, name: keyof ProcessElement, element: HTMLElement) =>
+  (currentProcesses: Processes) =>
+    setProcessSetting(processId, { [name]: element })(currentProcesses);
