@@ -3,6 +3,13 @@ import dynamic from "next/dynamic";
 import type { Processes } from "@/types/contexts/process";
 
 export const processDir: Processes = {
+  FileExplorer: {
+    Component: dynamic(() => import("@/components/apps/FileExplorer")),
+    icon: "/assets/win-file-explorer.ico",
+    hasWindow: true,
+    title: "File Explorer",
+    backgroundColor: "#fff",
+  },
   HelloWorld: {
     Component: dynamic(() => import("@/components/apps/HelloWorld")),
     icon: "/assets/win-file-explorer.ico",

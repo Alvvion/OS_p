@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { StyledWindow } from "./StyledWindow";
+
 export const StyledFileManager = styled.ol`
   display: grid;
   grid-template-columns: repeat(auto-fill, 74px);
@@ -9,6 +11,10 @@ export const StyledFileManager = styled.ol`
   column-gap: 1px;
   row-gap: 10px;
   padding: 5px 0;
+
+  ${StyledWindow} & {
+    grid-auto-flow: row;
+  }
 `;
 
 export const StyledFileEntry = styled.li`
