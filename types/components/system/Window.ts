@@ -6,6 +6,7 @@ export type ComponentProps = {
 };
 
 export type WindowComponentProps = ComponentProps & {
+  titlebarStyle: "File Explorer" | "Default";
   children: React.ReactNode;
 };
 
@@ -17,7 +18,7 @@ export type Position = {
 };
 
 export type TitlebarProps = ComponentProps & {
-  bar?: "WinExplorer" | "Default";
+  bar?: "File Explorer" | "Default";
 };
 
 export type WinExplorerTitlebarProps = {

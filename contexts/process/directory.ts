@@ -9,6 +9,7 @@ export const processDir: Processes = {
     hasWindow: true,
     title: "File Explorer",
     backgroundColor: "#fff",
+    titlebarStyle: "File Explorer",
   },
   HelloWorld: {
     Component: dynamic(() => import("@/components/apps/HelloWorld")),

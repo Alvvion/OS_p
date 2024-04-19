@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const StyledDesktop = styled.main`
-  background-color: ${({ theme }) => theme.colors.backgroundcolor};
+  background-color: ${({ theme }) => theme.colors.desktopBgColor};
   overflow: hidden;
   height: 100vh;
   width: 100vw;

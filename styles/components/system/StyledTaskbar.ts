@@ -7,7 +7,7 @@ const centered = `
 `;
 
 const StyledTaskbar = styled.nav`
-  background-color: ${({ theme }) => theme.colors.taskbar};
+  background-color: ${({ theme }) => theme.colors.taskbar.bgColor};
   position: absolute;
   z-index: 1000;
   bottom: 0;
@@ -115,7 +115,7 @@ const StyledSideMenu = styled.div`
 `;
 
 const StyledLanguageButton = styled.button`
-  color: ${({ theme }) => theme.colors.taskbarText};
+  color: ${({ theme }) => theme.colors.taskbar.text};
   font-size: 12px;
   display: flex;
   flex-direction: column;
@@ -125,11 +125,11 @@ const StyledLanguageButton = styled.button`
   border-radius: 0.375rem;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.taskbarButtonHover};
+    background-color: ${({ theme }) => theme.colors.taskbar.buttonHover};
   }
 
   &:active {
-    color: ${({ theme }) => theme.colors.taskbarLangHover};
+    color: ${({ theme }) => theme.colors.taskbar.langHover};
   }
 
   span {
@@ -144,7 +144,7 @@ const StyledTaskButtons = styled.button`
   justify-content: space-between;
   align-items: center;
   padding: 0.65rem;
-  color: ${({ theme }) => theme.colors.taskbarText};
+  color: ${({ theme }) => theme.colors.taskbar.text};
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
@@ -157,7 +157,7 @@ const StyledTaskButtons = styled.button`
 
 const StyledClock = styled.time`
   margin-right: 10px;
-  color: ${({ theme }) => theme.colors.taskbarText};
+  color: ${({ theme }) => theme.colors.taskbar.text};
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -169,7 +169,7 @@ const StyledClock = styled.time`
   ${centered}
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.taskbarButtonHover};
+    background-color: ${({ theme }) => theme.colors.taskbar.buttonHover};
   }
 
   &:hover::after {

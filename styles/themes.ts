@@ -9,11 +9,18 @@ const themes: Themes = {
     colors: {
       primary: "#008000",
       window: "#808080",
-      backgroundcolor: "#000",
-      taskbar: "#1d1c1d",
-      taskbarText: "#fff",
-      taskbarLangHover: "#c1c0c0",
-      taskbarButtonHover: "rgba(255, 255, 255, 0.1)",
+      desktopBgColor: "#000",
+      taskbar: {
+        bgColor: "#1d1c1d",
+        text: "#fff",
+        langHover: "#c1c0c0",
+        buttonHover: "rgba(255, 255, 255, 0.1)",
+      },
+      titlebar: {
+        bgColor: "#202020",
+        text: "#E2E2E2",
+        buttonHover: "#2D2D2D",
+      },
     },
     sizes: {
       taskbar: {

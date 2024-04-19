@@ -18,6 +18,7 @@ export type Process = ProcessElement &
     title: string;
     url?: string;
     backgroundColor?: string;
+    titlebarStyle?: "File Explorer" | "Default";
   };
 
 export type Processes = {
@@ -38,7 +39,11 @@ export type ProcessContextType = {
   openPinnedProcess: (processId: string) => void;
   maximize: (id: string) => void;
   minimize: (id: string) => void;
-  linkElement: (id: string, name: keyof ProcessElement, element: HTMLElement) => void;
+  linkElement: (
+    id: string,
+    name: keyof ProcessElement,
+    element: HTMLElement
+  ) => void;
 };
 
 export type ProcessProviderProps = {

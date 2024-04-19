@@ -5,11 +5,18 @@ declare module "styled-components" {
     colors: {
       primary: string;
       window: string;
-      backgroundcolor: string;
-      taskbar: string;
-      taskbarText: string;
-      taskbarLangHover: string;
-      taskbarButtonHover: string;
+      desktopBgColor: string;
+      taskbar: {
+        bgColor: string;
+        text: string;
+        langHover: string;
+        buttonHover: string;
+      };
+      titlebar: {
+        bgColor: string;
+        text: string;
+        buttonHover: string;
+      };
     };
     sizes: {
       taskbar: {

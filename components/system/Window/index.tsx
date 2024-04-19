@@ -8,7 +8,11 @@ import type { WindowComponentProps } from "@/types/components/system/Window";
 import RndWindow from "./RndWindow";
 import Titlebar from "./Titlebar";
 
-const Window: React.FC<WindowComponentProps> = ({ id, children }) => {
+const Window: React.FC<WindowComponentProps> = ({
+  id,
+  titlebarStyle,
+  children,
+}) => {
   const {
     processes: {
       [id]: { maximized, minimized, backgroundColor },
@@ -26,7 +30,7 @@ const Window: React.FC<WindowComponentProps> = ({ id, children }) => {
         ref={windowRef}
         {...focusableProps}
       >
-        <Titlebar id={id} />
+        <Titlebar id={id} bar={titlebarStyle} />
         {children}
       </StyledWindow>
     </RndWindow>

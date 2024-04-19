@@ -11,14 +11,15 @@ const ProcessLoader: React.FC = () => {
 
   return (
     <>
-      {Object.entries(processes).map(([id, { Component, hasWindow = false }]) =>
-        hasWindow ? (
-          <Window key={id} id={id}>
-            <Component id={id} />
-          </Window>
-        ) : (
-          <Component key={id} id={id} />
-        )
+      {Object.entries(processes).map(
+        ([id, { Component, hasWindow = false, titlebarStyle = "Default" }]) =>
+          hasWindow ? (
+            <Window key={id} id={id} titlebarStyle={titlebarStyle}>
+              <Component id={id} />
+            </Window>
+          ) : (
+            <Component key={id} id={id} />
+          )
       )}
     </>
   );
