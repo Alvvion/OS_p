@@ -4,23 +4,47 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build:fs && next build",
+    "build:fs": "cd public && node ../node_modules/browserfs/dist/scripts/make_xhrfs_index.js > .index/fs.bfs.json && node ../utils/fs2json.js --exclude .index --out .index/fs.9p.json .",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "eslint": "eslint ."
   },
   "dependencies": {
+    "browserfs": "^1.4.3",
+    "i": "^0.3.7",
+    "ini": "^4.1.2",
+    "next": "14.2.2",
+    "npm": "^10.5.2",
+    "polished": "^4.3.1",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.2"
+    "react-icons": "^5.1.0",
+    "react-rnd": "^10.4.1",
+    "sharp": "^0.33.3",
+    "three": "^0.124.0",
+    "vanta": "^0.5.21"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/ini": "^4.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/three": "^0.163.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "eslint": "^8",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-next": "14.2.2",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest": "^28.2.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^12.1.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.2"
+    "typescript": "^5"
   }
 }

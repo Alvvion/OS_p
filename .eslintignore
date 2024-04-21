@@ -1,0 +1,8 @@
+/.next
+/lib
+/node_modules
+/.swc
+/postcss.config.mjs
+/tailwind.config.ts
+/public
+/next-env.d.ts
