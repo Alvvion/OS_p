@@ -21,3 +21,7 @@ export type RndWindowProps = ChildrenProp & {
   id: string;
   style: React.CSSProperties;
 };
+
+export type Title = {
+  appendFileToTitle: (url: string) => void;
+};

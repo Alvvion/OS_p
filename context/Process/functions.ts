@@ -1,3 +1,5 @@
+import { PROCESS_DELIMITER } from "@/utils/constants";
+
 import { processDir } from "./directory";
 import type {
   Process,
@@ -12,7 +14,7 @@ export const closingProcess =
     remaingProcesses;
 
 export const createPid = (processId: string, url?: string): string =>
-  url ? `${processId}_${url}` : processId;
+  url ? `${processId}${PROCESS_DELIMITER}${url}` : processId;
 
 export const openingProcess =
   (processId: string, url?: string) =>
@@ -75,3 +77,8 @@ export const setProcessElement =
   (processId: string, name: keyof ProcessElement, element: HTMLElement) =>
   (currentProcesses: Processes) =>
     setProcessSetting(processId, { [name]: element })(currentProcesses);
+
+export const setTitle =
+  (processId: string, title: string) =>
+  (currentProcesses: Processes): Processes =>
+    setProcessSetting(processId, { title })(currentProcesses);

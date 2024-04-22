@@ -13,7 +13,7 @@ const V86: React.FC<ComponentProps> = ({ id }) => {
     },
   } = useProcesses();
   const screenRef = useRef<HTMLDivElement | null>(null);
-  const { emulator, lockMouse } = useV86(url, screenRef);
+  const { emulator, lockMouse } = useV86(id, url, screenRef);
 
   const textStyle = useV86ScreenSize(emulator, id);
 

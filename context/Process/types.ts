@@ -32,11 +32,8 @@ export type ProcessMap = (
 
 export type ProcessContextType = {
   processes: Processes | Record<string, never>;
-  pinnedProcesses: Processes | Record<string, never>;
   openProcess: (processId: string, url?: string) => void;
   closeProcess: (processId: string) => void;
-  closePinnedProcess: (processId: string) => void;
-  openPinnedProcess: (processId: string) => void;
   maximize: (id: string) => void;
   minimize: (id: string) => void;
   linkElement: (
@@ -44,6 +41,7 @@ export type ProcessContextType = {
     name: keyof ProcessElement,
     element: HTMLElement
   ) => void;
+  title: (id: string, newTitle: string) => void;
 };
 
 export type ProcessProviderProps = {

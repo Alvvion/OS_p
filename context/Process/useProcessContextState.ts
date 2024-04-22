@@ -1,12 +1,13 @@
 import { useCallback, useState } from "react";
 
-import { getProcess, PINNED_PROCESSES, STARTUP_PROCESSES } from "./directory";
+import { getProcess, STARTUP_PROCESSES } from "./directory";
 import {
   closingProcess,
   maximizeProcess,
   minimizeProcess,
   openingProcess,
   setProcessElement,
+  setTitle,
 } from "./functions";
 import type { ProcessContextType, ProcessElement, Processes } from "./types";
 
@@ -26,10 +27,10 @@ const useProcessContextState = (): ProcessContextType => {
     []
   );
 
-  const [pinnedProcesses] = useState<Processes>(getProcess(PINNED_PROCESSES));
-  const closePinnedProcess = () => {};
+  // const [pinnedProcesses] = useState<Processes>(getProcess(PINNED_PROCESSES));
+  // const closePinnedProcess = () => {};
 
-  const openPinnedProcess = () => {};
+  // const openPinnedProcess = () => {};
 
   const minimize = useCallback(
     (id: string) => setProcesses(minimizeProcess(id)),
@@ -46,16 +47,19 @@ const useProcessContextState = (): ProcessContextType => {
     []
   );
 
+  const title = useCallback(
+    (id: string, newTitle: string) => setProcesses(setTitle(id, newTitle)),
+    []
+  );
+
   return {
     closeProcess,
-    closePinnedProcess,
     openProcess,
-    openPinnedProcess,
     processes,
-    pinnedProcesses,
     maximize,
     minimize,
     linkElement,
+    title,
   };
 };
 

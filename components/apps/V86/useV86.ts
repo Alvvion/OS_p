@@ -1,6 +1,7 @@
 import { extname } from "path";
 import { useCallback, useEffect, useState } from "react";
 
+import useTitle from "@/components/system/Window/useTitle";
 import { useFileSystem } from "@/context/FileSystem";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 
@@ -13,6 +14,7 @@ import type {
 } from "./types";
 
 const useV86 = (
+  id: string,
   url: string,
   ref: React.MutableRefObject<HTMLDivElement | null>
 ): V86 => {
@@ -20,6 +22,8 @@ const useV86 = (
   const lockMouse = useCallback(() => emulator?.lock_mouse?.(), [emulator]);
 
   const { fs } = useFileSystem();
+
+  const { appendFileToTitle } = useTitle(id);
 
   useEffect(() => {
     if (!emulator && fs && url && ref?.current) {
@@ -46,9 +50,10 @@ const useV86 = (
             ...v86Config,
           });
 
-          v86.add_listener("emulator-loaded", () =>
-            cleanUpBufferUrl(bufferUrl)
-          );
+          v86.add_listener("emulator-loaded", () => {
+            appendFileToTitle(url);
+            cleanUpBufferUrl(bufferUrl);
+          });
 
           setEmulator(v86);
         });
@@ -56,7 +61,7 @@ const useV86 = (
     }
 
     return () => emulator?.destroy?.();
-  }, [emulator, ref, url, fs]);
+  }, [emulator, ref, url, fs, appendFileToTitle]);
 
   return { emulator, lockMouse };
 };

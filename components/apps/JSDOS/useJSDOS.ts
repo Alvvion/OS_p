@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import useTitle from "@/components/system/Window/useTitle";
 import { useFileSystem } from "@/context/FileSystem";
 import useWindowSize from "@/hooks/useWindowSize";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
@@ -16,6 +17,8 @@ const useJSDOS = (
 
   const [dos, setDos] = useState<DosCI | null>(null);
 
+  const { appendFileToTitle } = useTitle(id);
+
   useEffect(() => {
     if (!dos && fs && url && ref?.current) {
       fs.readFile(url, (_err, contents = Buffer.from("")) =>
@@ -29,6 +32,7 @@ const useJSDOS = (
             DosWindow.Dos(ref.current as HTMLDivElement)
               .run(objectURL)
               .then((ci) => {
+                appendFileToTitle(url);
                 cleanUpBufferUrl(objectURL);
                 setDos(ci);
               });
@@ -38,7 +42,7 @@ const useJSDOS = (
     }
 
     return () => dos?.exit();
-  }, [dos, fs, ref, url]);
+  }, [appendFileToTitle, dos, fs, ref, url]);
 
   useEffect(() => {
     if (dos) {

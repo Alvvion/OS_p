@@ -5,14 +5,12 @@ import themes from "../Theme/themes";
 
 export const initalProcessState: ProcessContextType = {
   closeProcess: () => undefined,
-  closePinnedProcess: () => undefined,
   openProcess: () => undefined,
-  openPinnedProcess: () => undefined,
   processes: {},
-  pinnedProcesses: {},
   maximize: () => undefined,
   minimize: () => undefined,
   linkElement: () => undefined,
+  title: () => undefined,
 };
 
 export const initialSessionState: SessionContextType = {

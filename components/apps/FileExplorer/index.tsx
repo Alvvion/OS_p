@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaArrowUp } from "react-icons/fa6";
 import { IoMdRefresh } from "react-icons/io";
 
@@ -15,6 +15,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
     processes: {
       [id]: { url },
     },
+    title,
   } = useProcesses();
 
   const {
@@ -51,8 +52,13 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
     {
       Component: IoMdRefresh,
       iconHover: "refresh",
+      size: 20,
     },
   ];
+
+  const path = url || "/";
+
+  useEffect(() => title(id, path), [id, path, title]);
 
   return (
     <>
@@ -60,7 +66,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
         style={{ height }}
         className="bg-[#2C2C2C] flex flex-row border-b-[0.5px] border-b-[#3A3A3A] items-center"
       >
-        {buttonsOnNav.map(({ iconHover, Component }) => (
+        {buttonsOnNav.map(({ iconHover, Component, size }) => (
           <Button
             key={iconHover}
             extraStyles="p-2 rounded-md mt-1 ml-4 mr-1"
@@ -76,11 +82,11 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
                 : "transparent",
             }}
           >
-            <Component style={{ color: text }} />
+            <Component style={{ color: text }} size={size} />
           </Button>
         ))}
       </header>
-      <FileManager directory={url || "/"} />
+      <FileManager directory={path} />
     </>
   );
 };

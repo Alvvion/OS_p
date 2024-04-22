@@ -10,4 +10,5 @@ export type HoverState = {
 export type ButtonOnNavType = {
   Component: IconType;
   iconHover: keyof HoverState;
+  size?: number;
 };

@@ -81,3 +81,4 @@ export const rndDefaults = {
 
 export const LOCALE = "en";
 export const MILLISEC_IN_SEC = 1000;
+export const PROCESS_DELIMITER = "_";
