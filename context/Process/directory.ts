@@ -8,7 +8,7 @@ export const processDir: Processes = {
     icon: "/assets/win-file-explorer.ico",
     hasWindow: true,
     title: "File Explorer",
-    backgroundColor: "#fff",
+    backgroundColor: "#191919",
     titlebarStyle: "File Explorer",
   },
   HelloWorld: {

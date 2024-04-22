@@ -76,6 +76,9 @@ const themes: Themes = {
         iconSize: "48px",
         letterSpacing: "0.25px",
       },
+      fileExplorer: {
+        height: "51px",
+      },
       window: {
         outline: "1px solid rgba(0, 0, 0, 20%)",
         lineHeight: "14px",

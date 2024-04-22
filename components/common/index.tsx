@@ -22,7 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => (
   <button
     type="button"
-    className={`${extraStyles} w-full cursor-context-menu`}
+    className={`${extraStyles} cursor-context-menu`}
     {...restProps}
   >
     {children}

@@ -58,6 +58,9 @@ export interface DefaultTheme {
       lineHeight: string;
       boxShadow: string;
     };
+    fileExplorer: {
+      height: string;
+    };
     fileEntry: {
       fontSize: string;
       iconSize: string;
