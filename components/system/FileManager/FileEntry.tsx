@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { Button, Image } from "@/components/common";
+import { Button, Icon } from "@/components/common";
 import { useProcesses } from "@/context/Process";
 import { createPid } from "@/context/Process/functions";
 import { useSession } from "@/context/Session";
@@ -43,7 +43,7 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
         onClick={useDoubleClick(onActivate)}
       >
         <figure className="flex flex-col items-center">
-          <Image src={icon} alt={name} style={{ width: iconSize }} />
+          <Icon src={icon} alt={name} size={iconSize} />
           <figcaption
             style={{ fontSize, color: text, letterSpacing, textShadow }}
             className="py-[2px]"

@@ -58,6 +58,7 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
       width={width}
       height={height}
       name={name}
+      reqBottomNotch
       bottomnotch={isBottomNotch()}
       onClick={onClick}
       reference={linkTaskbarEntry}

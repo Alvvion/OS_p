@@ -25,6 +25,7 @@ export const getIconByFileExtension = (extention: string): string => {
     case ".iso":
       return "/assets/imageres_5205.ico";
     case ".jsdos":
+    case ".zip":
       return "/assets/compressed.png";
     default:
       return "/assets/ICON2_1.ico";
@@ -37,6 +38,7 @@ export const getProcessByFileExtension = (extention: string) => {
     case ".iso":
       return "V86";
     case ".jsdos":
+    case ".zip":
       return "JSDOS";
     default:
       return "";

@@ -3,7 +3,7 @@ import { AiOutlineWifi } from "react-icons/ai";
 import { GiSpeaker } from "react-icons/gi";
 import { TbBattery4 } from "react-icons/tb";
 
-import { Button, Image } from "@/components/common";
+import { Button, Icon } from "@/components/common";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
 
@@ -55,7 +55,7 @@ const Taskbar = () => {
           name="Start Button"
         />
         <div className="relative h-full">
-          <Image
+          <Icon
             src="/assets/search.png"
             width={22}
             height={22}

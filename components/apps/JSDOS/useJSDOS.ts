@@ -1,3 +1,4 @@
+import { extname } from "path";
 import { useEffect, useState } from "react";
 
 import useTitle from "@/components/system/Window/useTitle";
@@ -5,7 +6,9 @@ import { useFileSystem } from "@/context/FileSystem";
 import useWindowSize from "@/hooks/useWindowSize";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 
-import type { DosCI, WindowWithDos } from "./types";
+import { libs, pathPrefix } from "./config";
+import addJSDOSConfig from "./functions";
+import type { DosCI } from "./types";
 
 const useJSDOS = (
   id: string,
@@ -22,22 +25,23 @@ const useJSDOS = (
   useEffect(() => {
     if (!dos && fs && url && ref?.current) {
       fs.readFile(url, (_err, contents = Buffer.from("")) =>
-        loadFiles(["/libs/jsdos/js-dos.js", "/libs/jsdos/js-dos.css"]).then(
-          () => {
-            const DosWindow = window as WindowWithDos;
-            const objectURL = bufferToUrl(contents);
+        loadFiles(libs).then(async () => {
+          const isZip = extname(url).toLowerCase() === ".zip";
+          const objectURL = bufferToUrl(
+            isZip ? await addJSDOSConfig(contents, fs) : contents
+          );
 
-            DosWindow.emulators.pathPrefix = "/libs/jsdos/";
+          window.emulators.pathPrefix = pathPrefix;
 
-            DosWindow.Dos(ref.current as HTMLDivElement)
-              .run(objectURL)
-              .then((ci) => {
-                appendFileToTitle(url);
-                cleanUpBufferUrl(objectURL);
-                setDos(ci);
-              });
-          }
-        )
+          window
+            .Dos(ref.current as HTMLDivElement)
+            .run(objectURL)
+            .then((ci) => {
+              appendFileToTitle(url);
+              cleanUpBufferUrl(objectURL);
+              setDos(ci);
+            });
+        })
       );
     }
 

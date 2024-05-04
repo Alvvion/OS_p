@@ -6,12 +6,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 
 import { BOOT_CD_FD_HD, BOOT_FD_CD_HD, config as v86Config } from "./config";
-import type {
-  NavigatorWithMemory,
-  V86,
-  V86Starter,
-  WindowWithV86Starter,
-} from "./types";
+import type { V86, V86Starter } from "./types";
 
 const useV86 = (
   id: string,
@@ -31,12 +26,12 @@ const useV86 = (
         loadFiles(["/libs/v86/libv86.js"]).then(() => {
           const extention = extname(url).toLowerCase();
           const isISO = extention === ".iso";
-          const { deviceMemory = 8 } = navigator as NavigatorWithMemory;
+          const { deviceMemory = 8 } = navigator;
 
           const memoryRatio = deviceMemory / 8;
           const bufferUrl = bufferToUrl(contents);
 
-          const v86 = new (window as WindowWithV86Starter).V86Starter({
+          const v86 = new window.V86Starter({
             memory_size: memoryRatio * 1024 * 1024 * 1024,
             vga_memory_size: memoryRatio * 32 * 1024 * 1024,
             boot_order: isISO ? BOOT_CD_FD_HD : BOOT_FD_CD_HD,

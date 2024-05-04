@@ -1,4 +1,4 @@
-import { Image } from "@/components/common";
+import { Icon } from "@/components/common";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
 import type { ComponentProps } from "@/types/common";
@@ -30,7 +30,7 @@ const DefaultBar: React.FC<ComponentProps> = ({ id }) => {
     >
       <h1 style={{ color: text, fontSize, height }} className="font-normal">
         <figure className="flex items-center h-full">
-          <Image
+          <Icon
             src={icon}
             alt={title}
             style={{

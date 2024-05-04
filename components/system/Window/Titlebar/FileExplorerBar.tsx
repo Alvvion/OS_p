@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IoAddOutline, IoCloseOutline } from "react-icons/io5";
 
-import { Button, Image } from "@/components/common";
+import { Button, Icon } from "@/components/common";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
 import type { ComponentProps } from "@/types/common";
@@ -39,7 +39,7 @@ const FileExplorerBar: React.FC<ComponentProps> = ({ id }) => {
           style={{ height }}
         >
           <figure className="flex items-center h-full">
-            <Image
+            <Icon
               src={icon}
               alt={title}
               style={{

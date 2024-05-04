@@ -10,9 +10,15 @@ const onLoad: React.ReactEventHandler<HTMLImageElement> = ({ target }) => {
   if (img.src.startsWith("blob:")) cleanUpBufferUrl(img.src);
 };
 
-export const Image: React.FC<ImageProps> = ({ ...restProps }) => (
+export const Icon: React.FC<ImageProps> = ({ size, ...restProps }) => (
   // eslint-disable-next-line jsx-a11y/alt-text
-  <img draggable={false} onLoad={onLoad} {...restProps} />
+  <img
+    draggable={false}
+    onLoad={onLoad}
+    height={size}
+    width={size}
+    {...restProps}
+  />
 );
 
 export const Button: React.FC<ButtonProps> = ({

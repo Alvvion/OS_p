@@ -4,8 +4,9 @@ export interface TaskbarButtonProps
   width: number;
   height: number;
   name: string;
+  reqBottomNotch: boolean;
   bottomnotch?: boolean;
-  reference: (taskbarEntry: HTMLButtonElement | null) => void;
+  reference?: (taskbarEntry: HTMLButtonElement | null) => void;
 }
 
 export type TaskbarEntryProps = TaskbarButtonProps & {
