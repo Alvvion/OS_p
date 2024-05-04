@@ -20,6 +20,10 @@ export const IMAGE_FILE_EXTENSION = [
   ".xbm",
 ];
 
+export const SUPPORTED_FLOPPY_TYPES = [
+  160, 180, 200, 320, 360, 400, 720, 1200, 1440, 1722, 2880,
+];
+
 export const rndDefaults = {
   bounds: "main",
   cancel: ".cancel",

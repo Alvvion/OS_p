@@ -5,7 +5,13 @@ import useTitle from "@/components/system/Window/useTitle";
 import { useFileSystem } from "@/context/FileSystem";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 
-import { BOOT_CD_FD_HD, BOOT_FD_CD_HD, config as v86Config } from "./config";
+import {
+  BOOT_CD_FD_HD,
+  BOOT_FD_CD_HD,
+  config as v86Config,
+  libs,
+} from "./config";
+import getImageType from "./funtions";
 import type { V86, V86Starter } from "./types";
 
 const useV86 = (
@@ -23,7 +29,7 @@ const useV86 = (
   useEffect(() => {
     if (!emulator && fs && url && ref?.current) {
       fs.readFile(url, (_err, contents = Buffer.from("")) => {
-        loadFiles(["/libs/v86/libv86.js"]).then(() => {
+        loadFiles(libs).then(() => {
           const extention = extname(url).toLowerCase();
           const isISO = extention === ".iso";
           const { deviceMemory = 8 } = navigator;
@@ -31,17 +37,21 @@ const useV86 = (
           const memoryRatio = deviceMemory / 8;
           const bufferUrl = bufferToUrl(contents);
 
-          const v86 = new window.V86Starter({
-            memory_size: memoryRatio * 1024 * 1024 * 1024,
-            vga_memory_size: memoryRatio * 32 * 1024 * 1024,
-            boot_order: isISO ? BOOT_CD_FD_HD : BOOT_FD_CD_HD,
-            [isISO ? "cdrom" : "fda"]: {
+          const v86ImageType = {
+            [getImageType(isISO, contents.length)]: {
               async: false,
               size: contents.length,
               url: bufferUrl,
               use_parts: false,
             },
+          };
+
+          const v86 = new window.V86Starter({
+            memory_size: memoryRatio * 1024 * 1024 * 1024,
+            vga_memory_size: memoryRatio * 32 * 1024 * 1024,
+            boot_order: isISO ? BOOT_CD_FD_HD : BOOT_FD_CD_HD,
             screen_container: ref.current,
+            ...v86ImageType,
             ...v86Config,
           });
 
