@@ -29,9 +29,11 @@ const addFileToZip = (
     });
   });
 
-const addJSDOSConfig = async (buffer: Buffer, fs: FSModule): Promise<Buffer> =>
+// eslint-disable-next-line import/prefer-default-export
+export const addJSDOSConfig = async (
+  buffer: Buffer,
+  fs: FSModule
+): Promise<Buffer> =>
   (await isFileInZip(buffer, zipConfigPath))
     ? buffer
     : addFileToZip(buffer, defaultConfig, zipConfigPath, fs);
-
-export default addJSDOSConfig;

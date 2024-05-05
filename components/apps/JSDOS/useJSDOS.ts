@@ -7,7 +7,7 @@ import useWindowSize from "@/hooks/useWindowSize";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 
 import { libs, pathPrefix } from "./config";
-import addJSDOSConfig from "./functions";
+import { addJSDOSConfig } from "./functions";
 import type { DosCI } from "./types";
 
 const useJSDOS = (

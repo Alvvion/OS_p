@@ -34,6 +34,7 @@ const TaskbarButtons: React.FC<TaskbarButtonProps> = ({
         maxWidth: buttonWidth,
         backgroundColor:
           isHover || (reqBottomNotch && !bottomnotch) ? "#292929" : "inherit",
+        transition: "background-color 0.5s",
       }}
       className="m-[5px] p-[5px] rounded-[0.25rem] relative cursor-context-menu"
       onMouseEnter={() => setIsHover(true)}

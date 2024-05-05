@@ -5,6 +5,7 @@ import { defaultWindowSize } from "@/context/Context Factory/initialContextState
 import { useSession } from "@/context/Session";
 import { rndDefaults } from "@/utils/constants";
 
+import { reRouteFoucs } from "./functions";
 import type { RndWindowProps } from "./types";
 import useRnd from "./useRnd";
 
@@ -22,6 +23,13 @@ const RndWindow: React.FC<RndWindowProps> = ({
 
   useEffect(() => {
     const { current } = rndRef || {};
+
+    const [windowContainer, resizeHandleContainer] =
+      current?.resizableElement?.current?.children || [];
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    const resizeHandles = [...resizeHandleContainer?.children];
+
+    resizeHandles.forEach(reRouteFoucs(windowContainer as HTMLElement));
     return () =>
       setWindowStates((currentState) => ({
         ...currentState,

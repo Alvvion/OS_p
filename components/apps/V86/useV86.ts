@@ -11,7 +11,7 @@ import {
   config as v86Config,
   libs,
 } from "./config";
-import getImageType from "./funtions";
+import { getImageType } from "./funtions";
 import type { V86, V86Starter } from "./types";
 
 const useV86 = (
