@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 
+import { writeUniqueName } from "./functions";
 import type { FileDrop } from "./types";
 
 const haltDragEvent = (event: React.DragEvent<HTMLElement>): void => {
@@ -23,10 +24,11 @@ const useFileDrop = (
         const reader = new FileReader();
 
         reader.onload = ({ target }) => {
-          fs?.writeFile(
+          writeUniqueName(
             `${directory}/${file.name}`,
             Buffer.from(new Uint8Array(target?.result as ArrayBuffer)),
-            (e) => !e && updateFiles(file.name)
+            updateFiles,
+            fs
           );
         };
 
