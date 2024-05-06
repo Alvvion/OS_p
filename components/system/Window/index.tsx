@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 import { useProcesses } from "@/context/Process";
+import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 
 import RndWindow from "./RndWindow";
@@ -19,10 +20,14 @@ const Window: React.FC<WindowComponentProps> = ({
     },
   } = useProcesses();
 
+  const { foregroundId } = useSession();
+
+  const isForeground = useMemo(() => id === foregroundId, [foregroundId, id]);
+
   const {
     currentTheme: {
       sizes: {
-        window: { boxShadow, outline },
+        window: { boxShadow, outline, outlineInactive, boxShadowInactive },
       },
     },
   } = useTheme();
@@ -35,8 +40,8 @@ const Window: React.FC<WindowComponentProps> = ({
       <section
         style={{
           backgroundColor,
-          boxShadow,
-          outline,
+          boxShadow: isForeground ? boxShadow : boxShadowInactive,
+          outline: isForeground ? outline : outlineInactive,
           display: minimized ? "none" : "block",
         }}
         ref={windowRef}

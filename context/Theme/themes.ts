@@ -22,7 +22,11 @@ const themes: Themes = {
         text: "#E2E2E2",
         backgroundHover: "bg-titlebar-backgroundHover",
         closeHover: "bg-titlebar-closeHover",
-        disabled: "bg-titlebar-button-disabled",
+        disabled: "fill-titlebar-button-disabled",
+        backgroundActive: "bg-titlebar-backgroundActive",
+        closeActive: "bg-titlebar-closeActive",
+        buttonInactive: "fill-titlebar-buttonInactive",
+        disabledInactive: "fill-titlebar-button-disabledInactive",
       },
       fileEntry: {
         text: "#fff",
@@ -80,9 +84,11 @@ const themes: Themes = {
         height: "51px",
       },
       window: {
-        outline: "1px solid rgba(0, 0, 0, 20%)",
+        outline: "hsl(0deg 0% 25% / 75%)",
+        outlineInactive: "hsl(0deg 0% 30% / 75%)",
         lineHeight: "14px",
         boxShadow: "0 0 20px 0 rgba(0, 0, 0, 50%)",
+        boxShadowInactive: "0 0 12px 0 rgba(0, 0, 0, 50%)",
       },
     },
     formats: {

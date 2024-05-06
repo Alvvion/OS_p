@@ -16,6 +16,10 @@ export interface DefaultTheme {
       backgroundHover: string;
       closeHover: string;
       disabled: string;
+      backgroundActive: string;
+      closeActive: string;
+      buttonInactive: string;
+      disabledInactive: string;
     };
     fileEntry: {
       text: string;
@@ -57,6 +61,8 @@ export interface DefaultTheme {
       outline: string;
       lineHeight: string;
       boxShadow: string;
+      outlineInactive: string;
+      boxShadowInactive: string;
     };
     fileExplorer: {
       height: string;

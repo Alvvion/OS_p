@@ -1,5 +1,9 @@
+/* eslint-disable no-nested-ternary */
+import { useMemo } from "react";
+
 import { Button } from "@/components/common";
 import { useProcesses } from "@/context/Process";
+import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
 
@@ -9,6 +13,11 @@ const _tailwind = [
   "hover:bg-titlebar-backgroundHover",
   "bg-titlebar-button-disabled",
   "hover:bg-titlebar-closeHover",
+  "active:bg-titlebar-backgroundActive",
+  "active:bg-titlebar-closeActive",
+  "fill-titlebar-button-disabled",
+  "fill-titlebar-button-disabledInactive",
+  "fill-titlebar-buttonInactive",
 ];
 
 const WindowActionButton = ({ id }: { id: string }) => {
@@ -19,13 +28,25 @@ const WindowActionButton = ({ id }: { id: string }) => {
     },
   } = useProcesses();
 
+  const { foregroundId } = useSession();
+
+  const isForeground = useMemo(() => id === foregroundId, [foregroundId, id]);
+
   const {
     currentTheme: {
       sizes: {
         titlebar: { buttonWidth },
       },
       colors: {
-        titlebar: { backgroundHover, disabled, closeHover },
+        titlebar: {
+          backgroundHover,
+          disabled,
+          closeHover,
+          backgroundActive,
+          closeActive,
+          disabledInactive,
+          buttonInactive,
+        },
       },
     },
   } = useTheme();
@@ -33,7 +54,7 @@ const WindowActionButton = ({ id }: { id: string }) => {
   return (
     <nav className="cancel flex justify-center">
       <Button
-        extraStyles={`h-full flex place-content-center place-items-center hover:${backgroundHover}`}
+        extraStyles={`h-full flex place-content-center place-items-center hover:${backgroundHover} active:${backgroundActive} `}
         style={{
           width: buttonWidth,
           boxSizing: "border-box",
@@ -41,12 +62,14 @@ const WindowActionButton = ({ id }: { id: string }) => {
         }}
         onClick={onMinimize}
       >
-        <MinimizeIcon />
+        <MinimizeIcon
+          extraStyles={`${isForeground ? "fill-white" : buttonInactive}`}
+        />
       </Button>
       <Button
         extraStyles={`h-full flex place-content-center place-items-center ${
           autoSizing ? disabled : `hover:${backgroundHover}`
-        }`}
+        } active:${backgroundActive}`}
         style={{
           width: buttonWidth,
           boxSizing: "border-box",
@@ -55,10 +78,26 @@ const WindowActionButton = ({ id }: { id: string }) => {
         onClick={onMaximize}
         disabled={autoSizing}
       >
-        {maximized ? <MaximizedIcon /> : <MaximizeIcon />}
+        {maximized ? (
+          <MaximizedIcon
+            extraStyles={`${isForeground ? "fill-white" : buttonInactive}`}
+          />
+        ) : (
+          <MaximizeIcon
+            extraStyles={`${
+              autoSizing
+                ? isForeground
+                  ? disabled
+                  : disabledInactive
+                : isForeground
+                ? "fill-white"
+                : buttonInactive
+            }`}
+          />
+        )}
       </Button>
       <Button
-        extraStyles={`h-full rounded-tr-[5px] flex place-content-center place-items-center hover:${closeHover}`}
+        extraStyles={`h-full rounded-tr-[5px] flex place-content-center place-items-center hover:${closeHover} active:${closeActive}`}
         style={{
           width: buttonWidth,
           boxSizing: "border-box",
@@ -66,7 +105,9 @@ const WindowActionButton = ({ id }: { id: string }) => {
         }}
         onClick={onClose}
       >
-        <CloseIcon />
+        <CloseIcon
+          extraStyles={`${isForeground ? "fill-white" : buttonInactive}`}
+        />
       </Button>
     </nav>
   );
