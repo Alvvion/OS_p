@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { AiOutlineWifi } from "react-icons/ai";
 import { GiSpeaker } from "react-icons/gi";
 import { TbBattery4 } from "react-icons/tb";
@@ -10,6 +9,8 @@ import { useTheme } from "@/context/Theme";
 import Clock from "./Clock";
 import TaskbarButtons from "./TaskbarButtons";
 import TaskbarEntry from "./TaskbarEntry";
+
+const _tailwind = ["hover:bg-taskbar-button-hover"];
 
 const Taskbar = () => {
   const { processes } = useProcesses();
@@ -35,11 +36,6 @@ const Taskbar = () => {
       },
     },
   } = useTheme();
-
-  const [isHover, setIsHover] = useState({
-    lang: false,
-    taskButtons: false,
-  });
 
   return (
     <nav
@@ -92,31 +88,19 @@ const Taskbar = () => {
       </div>
       <div className="flex flex-row justify-center items-center h-[88%] py-[5px] px-[10px] rounded-md">
         <div
-          className="text-xs flex flex-col"
+          className={`text-xs flex flex-col hover:${buttonHover} py-[2px] px-[10px] rounded-md border border-transparent hover:border hover:border-[#333333]`}
           style={{
             color: text,
-            backgroundColor: isHover.lang ? buttonHover : "inherit",
           }}
-          onMouseEnter={() => setIsHover((prev) => ({ ...prev, lang: true }))}
-          onMouseLeave={() => setIsHover((prev) => ({ ...prev, lang: false }))}
         >
           <span className="m-px text-center">ENG</span>
           <span className="m-px text-center">IN</span>
         </div>
         <Button
-          extraStyles="rounded-md flex flex-row justify-between items-center p-3"
+          extraStyles={`rounded-md flex flex-row justify-between items-center p-3 hover:${buttonHover} border border-transparent hover:border hover:border-[#333333]`}
           style={{
             color: text,
-            backgroundColor: isHover.taskButtons
-              ? "rgba(255, 255, 255, 0.1)"
-              : "inherit",
           }}
-          onMouseEnter={() =>
-            setIsHover((prev) => ({ ...prev, taskButtons: true }))
-          }
-          onMouseLeave={() =>
-            setIsHover((prev) => ({ ...prev, taskButtons: false }))
-          }
         >
           <AiOutlineWifi className="pr-[2px]" size={19} />
           <GiSpeaker className="pr-[2px]" size={19} />

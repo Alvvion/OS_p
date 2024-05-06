@@ -32,7 +32,11 @@
     ],
     "@typescript-eslint/no-unused-vars": [
       "error",
-      { "argsIgnorePattern": "^_" }
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
     ],
     "comma-dangle": "off",
     "import/extensions": [
@@ -53,6 +57,7 @@
       }
     ],
     "linebreak-style": "off",
+    "no-underscore-dangle": "off",
     "quotes": ["error", "double"],
     "react/function-component-definition": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],

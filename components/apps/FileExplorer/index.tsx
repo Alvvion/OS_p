@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FaArrowLeft, FaArrowRight, FaArrowUp } from "react-icons/fa6";
 import { IoMdRefresh } from "react-icons/io";
 
@@ -8,7 +8,9 @@ import { useTheme } from "@/context/Theme";
 import type { ComponentProps } from "@/types/common";
 
 import FileManager from "../../system/FileManager";
-import type { ButtonOnNavType, HoverState } from "./types";
+import type { ButtonOnNavType } from "./types";
+
+const _tailwind = ["hover:bg-titlebar-backgroundHover"];
 
 const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
   const {
@@ -28,13 +30,6 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
       },
     },
   } = useTheme();
-
-  const [isHover, setIsHover] = useState<HoverState>({
-    leftArrow: false,
-    rightArrow: false,
-    upArrow: false,
-    refresh: false,
-  });
 
   const buttonsOnNav: ButtonOnNavType[] = [
     {
@@ -69,18 +64,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
         {buttonsOnNav.map(({ iconHover, Component, size }) => (
           <Button
             key={iconHover}
-            extraStyles="p-2 rounded-md mt-1 ml-4 mr-1"
-            onMouseEnter={() =>
-              setIsHover((prev) => ({ ...prev, [iconHover]: true }))
-            }
-            onMouseLeave={() =>
-              setIsHover((prev) => ({ ...prev, [iconHover]: false }))
-            }
-            style={{
-              backgroundColor: isHover[iconHover]
-                ? backgroundHover
-                : "transparent",
-            }}
+            extraStyles={`p-2 rounded-md mt-1 ml-4 mr-1 hover:${backgroundHover}`}
           >
             <Component style={{ color: text }} size={size} />
           </Button>

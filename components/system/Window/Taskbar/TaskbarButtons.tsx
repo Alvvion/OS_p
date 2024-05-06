@@ -1,9 +1,9 @@
-import { useState } from "react";
-
 import { Icon } from "@/components/common";
 import { useTheme } from "@/context/Theme";
 
 import type { TaskbarButtonProps } from "./types";
+
+const _tailwind = ["hover:bg-taskbar-button-hover", "bg-taskbar-button-hover"];
 
 const TaskbarButtons: React.FC<TaskbarButtonProps> = ({
   src,
@@ -22,23 +22,22 @@ const TaskbarButtons: React.FC<TaskbarButtonProps> = ({
           startButton: { width: buttonWidth },
         },
       },
+      colors: {
+        taskbar: { buttonHover },
+      },
     },
   } = useTheme();
-
-  const [isHover, setIsHover] = useState(false);
 
   return (
     <button
       type="button"
       style={{
         maxWidth: buttonWidth,
-        backgroundColor:
-          isHover || (reqBottomNotch && !bottomnotch) ? "#292929" : "inherit",
         transition: "background-color 0.5s",
       }}
-      className="m-[5px] p-[5px] rounded-[0.25rem] relative cursor-context-menu"
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
+      className={`m-[5px] p-[5px] rounded-[0.25rem] relative cursor-context-menu hover:${buttonHover} border border-transparent hover:border-[#373737] ${
+        reqBottomNotch && !bottomnotch ? buttonHover : ""
+      }`}
       ref={reference}
       {...buttonProps}
     >

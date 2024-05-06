@@ -13,6 +13,12 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      backgroundColor: {
+        "taskbar-button-hover": "#292929",
+        "titlebar-backgroundHover": "#373737",
+        "titlebar-button-disabled": "rgb(50,50,50)",
+        "titlebar-closeHover": "#E81123",
+      },
     },
   },
   plugins: [],

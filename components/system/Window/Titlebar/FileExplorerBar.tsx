@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { IoAddOutline, IoCloseOutline } from "react-icons/io5";
 
 import { Button, Icon } from "@/components/common";
@@ -7,6 +6,8 @@ import { useTheme } from "@/context/Theme";
 import type { ComponentProps } from "@/types/common";
 
 import WindowActionButton from "./WindowActionButton";
+
+const _tailwind = ["hover:bg-titlebar-backgroundHover"];
 
 const FileExplorerBar: React.FC<ComponentProps> = ({ id }) => {
   const {
@@ -25,8 +26,6 @@ const FileExplorerBar: React.FC<ComponentProps> = ({ id }) => {
       [id]: { icon, title },
     },
   } = useProcesses();
-
-  const [isHover, setIsHover] = useState({ close: false, add: false });
 
   return (
     <header
@@ -55,28 +54,12 @@ const FileExplorerBar: React.FC<ComponentProps> = ({ id }) => {
               {title}
             </figcaption>
           </figure>
-          <Button
-            extraStyles="p-[2px] rounded-sm"
-            onMouseEnter={() =>
-              setIsHover((prev) => ({ ...prev, close: true }))
-            }
-            onMouseLeave={() =>
-              setIsHover((prev) => ({ ...prev, close: false }))
-            }
-            style={{
-              backgroundColor: isHover.close ? backgroundHover : "transparent",
-            }}
-          >
+          <Button extraStyles={`p-[2px] rounded-sm hover:${backgroundHover}`}>
             <IoCloseOutline style={{ color: text }} />
           </Button>
         </div>
         <Button
-          extraStyles="p-[2px] rounded-lg mt-1"
-          onMouseEnter={() => setIsHover((prev) => ({ ...prev, add: true }))}
-          onMouseLeave={() => setIsHover((prev) => ({ ...prev, add: false }))}
-          style={{
-            backgroundColor: isHover.add ? backgroundHover : "transparent",
-          }}
+          extraStyles={`p-[2px] rounded-lg mt-1 hover:${backgroundHover}`}
         >
           <IoAddOutline style={{ color: text }} />
         </Button>
