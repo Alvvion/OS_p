@@ -17,15 +17,11 @@ export const writeUniqueName = (
 ): void => {
   const writePath = !iteration ? path : iterateFileNames(path, iteration);
 
-  fs?.stat(writePath, (statError) => {
-    if (statError?.code === "ENOENT") {
-      fs?.writeFile(
-        writePath,
-        fileBuffer,
-        (writeError) => !writeError && updateFiles(writePath)
-      );
-    } else {
-      writeUniqueName(path, fileBuffer, updateFiles, fs, iteration + 1);
+  fs?.writeFile(writePath, fileBuffer, { flag: "wx" }, (error) => {
+    if (error?.code === "EEXIST") {
+      writeUniqueName(writePath, fileBuffer, updateFiles, fs, iteration + 1);
+    } else if (!error) {
+      updateFiles(writePath);
     }
   });
 };
