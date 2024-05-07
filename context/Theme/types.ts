@@ -24,6 +24,12 @@ export interface DefaultTheme {
     fileEntry: {
       text: string;
       textShadow: string;
+      background: string;
+      backgroundFocused: string;
+      backgroundFocusedHover: string;
+      border: string;
+      borderFocused: string;
+      borderFocusedHover: string;
     };
   };
   sizes: {

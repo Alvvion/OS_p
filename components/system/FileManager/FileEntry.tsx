@@ -10,6 +10,15 @@ import useDoubleClick from "@/hooks/useDoubleClick";
 import type { FileEntryProps } from "./types";
 import useFileInfo from "./useFileInfo";
 
+const _tailwind = [
+  "hover:bg-file-background",
+  "hover:before:border-file-border",
+  "focus-within:bg-file-backgroundFocused",
+  "focus-within:before:border-file-borderFocused",
+  "focus-within:hover:bg-file-backgroundFocusedHover",
+  "focus-within:hover:before:border-file-borderFocusedHover",
+];
+
 const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
   const { icon, pid, url } = useFileInfo(path);
   const { openProcess, processes, minimize } = useProcesses();
@@ -30,13 +39,26 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
         fileEntry: { iconSize, fontSize, letterSpacing },
       },
       colors: {
-        fileEntry: { text, textShadow },
+        fileEntry: {
+          text,
+          textShadow,
+          background,
+          border,
+          backgroundFocused,
+          borderFocused,
+          backgroundFocusedHover,
+          borderFocusedHover,
+        },
       },
     },
   } = useTheme();
 
+  const extraStyles = `hover:relative hover:before:absolute hover:before:-top-px hover:before:-bottom-px hover:before:-left-px hover:before:-right-px hover:${background} hover:before:${border} focus-within:${backgroundFocused} focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover} focus-within:hover:before:${borderFocusedHover}`;
+
   return (
-    <li className="flex justify-center p-[2px] overflow-hidden hover:bg-[#80808040] hover:border-solid hover:border-[2px] hover:border-[#80808040] hover:relative hover:p-0 hover:before:content-none hover:before:border hover:before:border-solid hover:before:border-[#B3B3B38C] hover:before:absolute hover:before:top-[-1px] hover:before:left-[-1px] hover:before:right-[-1px] hover:before:bottom-[-1px]">
+    <li
+      className={`flex justify-center p-[2px] overflow-hidden h-min border-2 border-transparent [&_figcaption]:focus-within:[-webkit-line-clamp:initial] [&_figcaption]:focus-within:z-[1] ${extraStyles}`}
+    >
       <Button
         type="button"
         extraStyles="relative"
@@ -46,7 +68,7 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
           <Icon src={icon} alt={name} size={iconSize} />
           <figcaption
             style={{ fontSize, color: text, letterSpacing, textShadow }}
-            className="py-[2px]"
+            className="py-[2px] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden break-all"
           >
             {name}
           </figcaption>

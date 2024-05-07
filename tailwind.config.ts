@@ -19,12 +19,19 @@ const config: Config = {
         "titlebar-closeHover": "#E81123",
         "titlebar-backgroundActive": "rgb(51,51,51)",
         "titlebar-closeActive": "rgb(139,10,20)",
+        "file-background": "hsl(207deg 30% 72% / 25%)",
+        "file-backgroundFocused": "hsl(207deg 60% 72% / 30%)",
+        "file-backgroundFocusedHover": "hsl(207deg 90% 72% / 35%)",
       },
-
       fill: {
         "titlebar-button-disabled": "rgb(50,50,50)",
         "titlebar-button-disabledInactive": "rgb(60,60,60)",
         "titlebar-buttonInactive": "rgb(128,128,128)",
+      },
+      borderColor: {
+        "file-border": "hsl(207deg 30% 72% / 30%)",
+        "file-borderFocused": "hsl(207deg 60% 72% / 35%)",
+        "file-borderFocusedHover": "hsl(207deg 90% 72% / 40%)",
       },
     },
   },

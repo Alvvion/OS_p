@@ -32,6 +32,12 @@ const themes: Themes = {
       },
       fileEntry: {
         text: "#fff",
+        border: "border-file-border",
+        background: "bg-file-background",
+        borderFocused: "border-file-borderFocused",
+        backgroundFocused: "bg-file-backgroundFocused",
+        borderFocusedHover: "border-file-borderFocusedHover",
+        backgroundFocusedHover: "bg-file-backgroundFocusedHover",
         textShadow: `
       0 0 1px rgba(0, 0, 0, 75%),
       0 0 2px rgba(0, 0, 0, 50%),
