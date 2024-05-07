@@ -1,12 +1,7 @@
 import { PROCESS_DELIMITER } from "@/utils/constants";
 
 import { processDir } from "./directory";
-import type {
-  Process,
-  ProcessElement,
-  Processes,
-  ProcessToggle,
-} from "./types";
+import type { Process, ProcessElement, Processes } from "./types";
 
 export const closingProcess =
   (processId: string) =>
@@ -15,6 +10,19 @@ export const closingProcess =
 
 export const createPid = (processId: string, url?: string): string =>
   url ? `${processId}${PROCESS_DELIMITER}${url}` : processId;
+
+export const setProcessSetting =
+  (processId: string, setting: Partial<Process>) =>
+  (currentProcesses: Processes): Processes => {
+    const { ...newProcesses } = currentProcesses;
+
+    newProcesses[processId] = {
+      ...newProcesses[processId],
+      ...setting,
+    };
+
+    return newProcesses;
+  };
 
 export const openingProcess =
   (processId: string, url?: string) =>
@@ -31,47 +39,19 @@ export const openingProcess =
         };
   };
 
-export const toggleProcessSetting =
-  (processId: string, setting: keyof ProcessToggle) =>
-  (currentProcesses: Processes): Processes => {
-    const updatedProcesses: Processes = {};
-
-    Object.keys(currentProcesses).forEach((key) => {
-      if (key === processId) {
-        updatedProcesses[key] = {
-          ...currentProcesses[key],
-          [setting]: !currentProcesses[processId][setting],
-        };
-      } else {
-        updatedProcesses[key] = currentProcesses[key];
-      }
-    });
-
-    return updatedProcesses;
-  };
-
 export const maximizeProcess =
   (processId: string) =>
-  (processes: Processes): Processes =>
-    toggleProcessSetting(processId, "maximized")(processes);
+  (currentProcesses: Processes): Processes =>
+    setProcessSetting(processId, {
+      maximized: !currentProcesses[processId].maximized,
+    })(currentProcesses);
 
 export const minimizeProcess =
   (processId: string) =>
-  (processes: Processes): Processes =>
-    toggleProcessSetting(processId, "minimized")(processes);
-
-export const setProcessSetting =
-  (processId: string, setting: Partial<Process>) =>
-  (currentProcesses: Processes): Processes => {
-    const { ...newProcesses } = currentProcesses;
-
-    newProcesses[processId] = {
-      ...newProcesses[processId],
-      ...setting,
-    };
-
-    return newProcesses;
-  };
+  (currentProcesses: Processes): Processes =>
+    setProcessSetting(processId, {
+      minimized: !currentProcesses[processId].minimized,
+    })(currentProcesses);
 
 export const setProcessElement =
   (processId: string, name: keyof ProcessElement, element: HTMLElement) =>

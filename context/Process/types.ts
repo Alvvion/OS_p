@@ -4,22 +4,18 @@ export type ProcessElement = {
   taskbarEntry?: HTMLElement;
 };
 
-export type ProcessToggle = {
+export type Process = ProcessElement & {
+  Component: React.ComponentType<ComponentProps>;
+  hasWindow?: boolean;
+  icon: string;
+  autoSizing?: boolean;
+  title: string;
+  url?: string;
+  backgroundColor?: string;
+  titlebarStyle?: "File Explorer" | "Default";
   maximized?: boolean;
   minimized?: boolean;
 };
-
-export type Process = ProcessElement &
-  ProcessToggle & {
-    Component: React.ComponentType<ComponentProps>;
-    hasWindow?: boolean;
-    icon: string;
-    autoSizing?: boolean;
-    title: string;
-    url?: string;
-    backgroundColor?: string;
-    titlebarStyle?: "File Explorer" | "Default";
-  };
 
 export type Processes = {
   [id: string]: Process;
