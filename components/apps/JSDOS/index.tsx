@@ -17,7 +17,7 @@ const JSDOS: React.FC<ComponentProps> = ({ id }) => {
 
   return (
     <div
-      className="bg-black w-full h-full [&_canvas]:!top-0 [&_canvas]:h-full [&_canvas]:w-full [&_div]:hidden"
+      className="bg-black w-full h-full [&_canvas]:!top-0 [&_canvas]:h-full [&_canvas]:w-full [&_div]:hidden [&_canvas]:[image-rendering:pixelated]"
       ref={screenRef}
     />
   );
