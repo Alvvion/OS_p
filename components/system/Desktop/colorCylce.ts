@@ -1,8 +1,6 @@
 import { adjustHue } from "polished";
 
-type ColorCycle = {
-  onDestroy: () => void;
-};
+import type { ColorCycle } from "./types";
 
 const colorCycle = (
   initialColor: number,
@@ -34,9 +32,9 @@ const colorCycle = (
 
   animationFrameId = requestAnimationFrame(updateColor);
 
-  const onDestroy = () => cancelAnimationFrame(animationFrameId);
+  const stop = () => cancelAnimationFrame(animationFrameId);
 
-  return { onDestroy };
+  return { stop };
 };
 
 export default colorCycle;

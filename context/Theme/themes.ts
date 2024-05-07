@@ -1,3 +1,5 @@
+import vantaWaves from "@/components/system/Desktop/vanta";
+
 import type { DefaultTheme } from "./types";
 
 type Themes = {
@@ -109,6 +111,13 @@ const themes: Themes = {
         year: "numeric",
       },
     },
+    wallpaper: vantaWaves({
+      color: 0x192b34,
+      shininess: 35,
+      waveHeight: 15,
+      waveSpeed: 0.25,
+      zoom: 0.9,
+    }),
   },
 };
 
