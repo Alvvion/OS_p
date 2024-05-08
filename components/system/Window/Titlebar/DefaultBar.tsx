@@ -7,9 +7,7 @@ import WindowActionButton from "./WindowActionButton";
 
 const DefaultBar: React.FC<ComponentProps> = ({ id }) => {
   const {
-    processes: {
-      [id]: { icon, title },
-    },
+    processes: { [id]: { icon = "", title = "" } = {} },
   } = useProcesses();
 
   const {

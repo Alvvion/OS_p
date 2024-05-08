@@ -22,9 +22,7 @@ const FileExplorerBar: React.FC<ComponentProps> = ({ id }) => {
   } = useTheme();
 
   const {
-    processes: {
-      [id]: { icon, title },
-    },
+    processes: { [id]: { icon = "", title = "" } = {} },
   } = useProcesses();
 
   return (

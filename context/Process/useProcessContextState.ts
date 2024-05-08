@@ -17,7 +17,8 @@ const useProcessContextState = (): ProcessContextType => {
   );
 
   const closeProcess = useCallback(
-    (processId: string) => setProcesses(closingProcess(processId)),
+    (processId: string, closing?: boolean) =>
+      setProcesses(closingProcess(processId, closing)),
     []
   );
 

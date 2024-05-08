@@ -23,9 +23,7 @@ const _tailwind = [
 const WindowActionButton = ({ id }: { id: string }) => {
   const { onMinimize, onMaximize, onClose } = useWindowActions(id);
   const {
-    processes: {
-      [id]: { autoSizing, maximized },
-    },
+    processes: { [id]: { autoSizing = false, maximized = false } = {} },
   } = useProcesses();
 
   const { foregroundId } = useSession();

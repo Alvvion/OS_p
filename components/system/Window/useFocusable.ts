@@ -13,9 +13,7 @@ const useFocusable = (
     useSession();
 
   const {
-    processes: {
-      [id]: { taskbarEntry },
-    },
+    processes: { [id]: { taskbarEntry = undefined } = {} },
   } = useProcesses();
 
   const zIndex = stackOrder.length - stackOrder.indexOf(id) + 1;

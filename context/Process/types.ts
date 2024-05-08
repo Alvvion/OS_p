@@ -16,6 +16,7 @@ export type Process = ProcessElement & {
   maximized?: boolean;
   minimized?: boolean;
   lockAspectRatio?: boolean;
+  closing?: boolean;
 };
 
 export type Processes = {
@@ -30,7 +31,7 @@ export type ProcessMap = (
 export type ProcessContextType = {
   processes: Processes | Record<string, never>;
   openProcess: (processId: string, url?: string) => void;
-  closeProcess: (processId: string) => void;
+  closeProcess: (processId: string, closing?: boolean) => void;
   maximize: (id: string) => void;
   minimize: (id: string) => void;
   linkElement: (

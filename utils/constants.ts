@@ -97,3 +97,5 @@ export const DEFAULT_WINDOW_SIZE: Size = {
   height: "200px",
   width: "250px",
 };
+
+export const DEFAULT_WINDOW_TRANSITION_DURATION = 250;

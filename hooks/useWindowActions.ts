@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
+import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
 
 import useNextFocusable from "./useNextFocusable";
 
@@ -19,8 +20,9 @@ const useWindowActions = (id: string) => {
     setStackOrder((currentOrder) =>
       currentOrder.filter((stackId) => stackId !== id)
     );
+    closeProcess(id, true);
+    setTimeout(() => closeProcess(id), DEFAULT_WINDOW_TRANSITION_DURATION);
     setForegroundId(nextFocusableId);
-    return closeProcess(id);
   }, [setStackOrder, setForegroundId, nextFocusableId, closeProcess, id]);
 
   return { onMaximize, onMinimize, onClose };

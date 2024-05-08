@@ -3,14 +3,6 @@ import { PROCESS_DELIMITER } from "@/utils/constants";
 import { processDir } from "./directory";
 import type { Process, ProcessElement, Processes } from "./types";
 
-export const closingProcess =
-  (processId: string) =>
-  ({ [processId]: _closedProcess, ...remaingProcesses }): Processes =>
-    remaingProcesses;
-
-export const createPid = (processId: string, url?: string): string =>
-  url ? `${processId}${PROCESS_DELIMITER}${url}` : processId;
-
 export const setProcessSetting =
   (processId: string, setting: Partial<Process>) =>
   (currentProcesses: Processes): Processes => {
@@ -23,6 +15,21 @@ export const setProcessSetting =
 
     return newProcesses;
   };
+
+export const closingProcess =
+  (processId: string, closing?: boolean) =>
+  (currentProcesses: Processes): Processes => {
+    if (closing) {
+      return setProcessSetting(processId, { closing })(currentProcesses);
+    }
+    const { [processId]: _closedProcess, ...remainingProcesses } =
+      currentProcesses;
+
+    return remainingProcesses;
+  };
+
+export const createPid = (processId: string, url?: string): string =>
+  url ? `${processId}${PROCESS_DELIMITER}${url}` : processId;
 
 export const openingProcess =
   (processId: string, url?: string) =>

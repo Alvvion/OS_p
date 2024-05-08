@@ -74,16 +74,18 @@ const Taskbar = () => {
           />
         </div>
         <div className="flex flex-row justify-center items-center h-full relative">
-          {Object.entries(processes).map(([id, process]) => (
-            <TaskbarEntry
-              key={id}
-              src={process.icon}
-              width={32}
-              height={32}
-              name={id}
-              pid={id}
-            />
-          ))}
+          {Object.entries(processes)
+            .filter(([_id, { closing }]) => !closing)
+            .map(([id, process]) => (
+              <TaskbarEntry
+                key={id}
+                src={process.icon}
+                width={32}
+                height={32}
+                name={id}
+                pid={id}
+              />
+            ))}
         </div>
       </div>
       <div className="flex flex-row justify-center items-center h-[88%] py-[5px] px-[10px] rounded-md">

@@ -14,6 +14,7 @@ const useDoubleClick: DoubleClickType = (handler, timeout = 500) => {
         clearTimeout(timer.current);
         event.stopPropagation();
         handler(event);
+        timer.current = null;
       }
     },
     [handler, timeout]

@@ -16,9 +16,7 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
 }) => {
   const {
     minimize,
-    processes: {
-      [pid]: { minimized },
-    },
+    processes: { [pid]: { minimized = false } = {} },
     linkElement,
   } = useProcesses();
   const { foregroundId, setForegroundId } = useSession();

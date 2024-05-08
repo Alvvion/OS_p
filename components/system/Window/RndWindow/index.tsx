@@ -11,9 +11,7 @@ import useRnd from "./useRnd";
 
 const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
   const {
-    processes: {
-      [id]: { autoSizing, maximized },
-    },
+    processes: { [id]: { autoSizing = false, maximized = false } = {} },
   } = useProcesses();
 
   const rndProps = useRnd(id, maximized);

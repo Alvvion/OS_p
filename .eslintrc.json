@@ -35,7 +35,8 @@
       {
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_"
+        "caughtErrorsIgnorePattern": "^_",
+        "ignoreRestSiblings": true
       }
     ],
     "comma-dangle": "off",

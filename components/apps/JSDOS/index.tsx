@@ -7,9 +7,7 @@ import useJSDOS from "./useJSDOS";
 
 const JSDOS: React.FC<ComponentProps> = ({ id }) => {
   const {
-    processes: {
-      [id]: { url = "" },
-    },
+    processes: { [id]: { url = "" } = {} },
   } = useProcesses();
   const screenRef = useRef<HTMLDivElement | null>(null);
 

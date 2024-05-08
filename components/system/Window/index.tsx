@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useMemo, useRef } from "react";
 
 import { useProcesses } from "@/context/Process";
@@ -5,6 +6,7 @@ import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 
 import RndWindow from "./RndWindow";
+import { windowOpenCloseTransition } from "./RndWindow/animation";
 import Titlebar from "./Titlebar";
 import type { WindowComponentProps } from "./types";
 import useFocusable from "./useFocusable";
@@ -15,9 +17,7 @@ const Window: React.FC<WindowComponentProps> = ({
   children,
 }) => {
   const {
-    processes: {
-      [id]: { minimized, backgroundColor },
-    },
+    processes: { [id]: { minimized = false, backgroundColor = "" } = {} },
   } = useProcesses();
 
   const { foregroundId } = useSession();
@@ -37,7 +37,8 @@ const Window: React.FC<WindowComponentProps> = ({
 
   return (
     <RndWindow id={id} style={{ zIndex }}>
-      <section
+      <motion.section
+        {...windowOpenCloseTransition}
         style={{
           backgroundColor,
           boxShadow: isForeground ? boxShadow : boxShadowInactive,
@@ -50,7 +51,7 @@ const Window: React.FC<WindowComponentProps> = ({
       >
         <Titlebar id={id} bar={titlebarStyle} />
         {children}
-      </section>
+      </motion.section>
     </RndWindow>
   );
 };

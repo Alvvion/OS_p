@@ -13,9 +13,7 @@ import useStateSize from "./useStateSize";
 
 const useRnd = (id: string, maximized = false) => {
   const {
-    processes: {
-      [id]: { autoSizing, lockAspectRatio },
-    },
+    processes: { [id]: { autoSizing = false, lockAspectRatio = false } = {} },
   } = useProcesses();
 
   const { windowStates: { [id]: windowState } = {} } = useSession();

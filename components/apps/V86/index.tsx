@@ -8,9 +8,7 @@ import useV86ScreenSize from "./useV86ScreenSize";
 
 const V86: React.FC<ComponentProps> = ({ id }) => {
   const {
-    processes: {
-      [id]: { url = "" },
-    },
+    processes: { [id]: { url = "" } = {} },
   } = useProcesses();
   const screenRef = useRef<HTMLDivElement | null>(null);
   const { emulator, lockMouse } = useV86(id, url, screenRef);
