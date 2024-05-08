@@ -1,5 +1,3 @@
-import type { ChildrenProp } from "@/types/common";
-
 export type ComponentProps = {
   id: string;
 };
@@ -14,14 +12,4 @@ export type Focusable = {
   tabIndex: number;
   onBlur: (event: React.FocusEvent<HTMLElement>) => void;
   onFocus: (event: React.FocusEvent<HTMLElement>) => void;
-};
-
-export type RndWindowProps = ChildrenProp & {
-  maximized?: boolean;
-  id: string;
-  style: React.CSSProperties;
-};
-
-export type Title = {
-  appendFileToTitle: (url: string) => void;
 };

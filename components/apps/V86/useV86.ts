@@ -1,7 +1,7 @@
 import { extname } from "path";
 import { useCallback, useEffect, useState } from "react";
 
-import useTitle from "@/components/system/Window/useTitle";
+import useTitle from "@/components/system/Window/RndWindow/useTitle";
 import { useFileSystem } from "@/context/FileSystem";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 

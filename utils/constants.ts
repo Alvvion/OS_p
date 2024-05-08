@@ -1,3 +1,5 @@
+import type { Position, Size } from "@/types/common";
+
 export const IMAGE_FILE_EXTENSION = [
   ".apng",
   ".avif",
@@ -86,3 +88,12 @@ export const rndDefaults = {
 export const LOCALE = "en";
 export const MILLISEC_IN_SEC = 1000;
 export const PROCESS_DELIMITER = "_";
+export const DEFAULT_WINDOW_POSITION: Position = {
+  x: 0,
+  y: 0,
+};
+
+export const DEFAULT_WINDOW_SIZE: Size = {
+  height: "200px",
+  width: "250px",
+};

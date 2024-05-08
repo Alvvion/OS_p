@@ -2,21 +2,21 @@ import { useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 
 import { defaultWindowSize } from "@/context/Context Factory/initialContextStates";
+import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
-import { rndDefaults } from "@/utils/constants";
 
 import { reRouteFoucs } from "./functions";
 import type { RndWindowProps } from "./types";
 import useRnd from "./useRnd";
 
-const RndWindow: React.FC<RndWindowProps> = ({
-  children,
-  maximized,
-  id,
-  style,
-}) => {
-  const { height, width, updateSize, x, y, updatePosition, autoSizing } =
-    useRnd(id, maximized);
+const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
+  const {
+    processes: {
+      [id]: { autoSizing, maximized },
+    },
+  } = useProcesses();
+
+  const rndProps = useRnd(id, maximized);
 
   const rndRef = useRef<Rnd | null>(null);
   const { setWindowStates } = useSession();
@@ -38,20 +38,10 @@ const RndWindow: React.FC<RndWindowProps> = ({
           size: autoSizing ? defaultWindowSize : current?.props?.size,
         },
       }));
-  }, [setWindowStates, id, autoSizing]);
+  }, [setWindowStates, id, autoSizing, maximized]);
 
   return (
-    <Rnd
-      disableDragging={maximized}
-      size={{ height, width }}
-      enableResizing={!maximized && !autoSizing}
-      onResize={updateSize}
-      style={style}
-      position={{ x, y }}
-      onDragStop={updatePosition}
-      ref={rndRef}
-      {...rndDefaults}
-    >
+    <Rnd style={style} ref={rndRef} {...rndProps}>
       {children}
     </Rnd>
   );

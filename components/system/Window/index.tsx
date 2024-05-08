@@ -16,7 +16,7 @@ const Window: React.FC<WindowComponentProps> = ({
 }) => {
   const {
     processes: {
-      [id]: { maximized, minimized, backgroundColor },
+      [id]: { minimized, backgroundColor },
     },
   } = useProcesses();
 
@@ -36,7 +36,7 @@ const Window: React.FC<WindowComponentProps> = ({
   const { zIndex, ...focusableProps } = useFocusable(id, windowRef);
 
   return (
-    <RndWindow maximized={maximized} id={id} style={{ zIndex }}>
+    <RndWindow id={id} style={{ zIndex }}>
       <section
         style={{
           backgroundColor,
