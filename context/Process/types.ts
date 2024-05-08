@@ -15,6 +15,7 @@ export type Process = ProcessElement & {
   titlebarStyle?: "File Explorer" | "Default";
   maximized?: boolean;
   minimized?: boolean;
+  lockAspectRatio?: boolean;
 };
 
 export type Processes = {

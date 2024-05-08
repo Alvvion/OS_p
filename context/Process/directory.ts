@@ -11,12 +11,6 @@ export const processDir: Processes = {
     backgroundColor: "#191919",
     titlebarStyle: "File Explorer",
   },
-  HelloWorld: {
-    Component: dynamic(() => import("@/components/apps/HelloWorld")),
-    icon: "/assets/win-file-explorer.ico",
-    hasWindow: true,
-    title: "Hello World",
-  },
   JSDOS: {
     autoSizing: true,
     backgroundColor: "#000",
@@ -24,6 +18,7 @@ export const processDir: Processes = {
     hasWindow: true,
     icon: "/assets/jsdos.png",
     title: "JSDOS",
+    lockAspectRatio: true,
   },
   V86: {
     Component: dynamic(() => import("@/components/apps/V86")),

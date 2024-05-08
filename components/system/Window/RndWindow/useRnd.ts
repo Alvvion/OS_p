@@ -14,7 +14,7 @@ import useStateSize from "./useStateSize";
 const useRnd = (id: string, maximized = false) => {
   const {
     processes: {
-      [id]: { autoSizing },
+      [id]: { autoSizing, lockAspectRatio },
     },
   } = useProcesses();
 
@@ -57,7 +57,9 @@ const useRnd = (id: string, maximized = false) => {
 
   return {
     disableDragging: maximized,
-    enableResizing: !maximized && !autoSizing,
+    enableResizing:
+      !maximized && (!autoSizing || (autoSizing && lockAspectRatio)),
+    lockAspectRatio,
     onDragStop,
     onResizeStop,
     position,
