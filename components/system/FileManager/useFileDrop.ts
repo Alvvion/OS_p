@@ -18,21 +18,23 @@ const useFileDrop = (
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLElement>) => {
       haltDragEvent(event);
-      const { files: [file] = [] } = event.dataTransfer || {};
 
-      if (file) {
-        const reader = new FileReader();
+      if (event?.dataTransfer?.files.length) {
+        const files = [...event.dataTransfer.files];
 
-        reader.onload = ({ target }) => {
-          writeUniqueName(
-            `${directory}/${file.name}`,
-            Buffer.from(new Uint8Array(target?.result as ArrayBuffer)),
-            updateFiles,
-            fs
-          );
-        };
+        files.forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = ({ target }) => {
+            writeUniqueName(
+              `${directory}/${file.name}`,
+              Buffer.from(new Uint8Array(target?.result as ArrayBuffer)),
+              updateFiles,
+              fs
+            );
+          };
 
-        reader.readAsArrayBuffer(file);
+          reader.readAsArrayBuffer(file);
+        });
       }
     },
     [directory, fs, updateFiles]
