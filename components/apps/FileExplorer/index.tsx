@@ -49,11 +49,13 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
     },
   ];
 
-  const path = url || "/";
+  useEffect(() => {
+    if (url) {
+      title(id, url);
+    }
+  }, [id, title, url]);
 
-  useEffect(() => title(id, path), [id, path, title]);
-
-  return (
+  return url ? (
     <>
       <header
         style={{ height }}
@@ -68,8 +70,11 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
           </Button>
         ))}
       </header>
-      <FileManager directory={path} />
+      <FileManager directory={url} />
     </>
+  ) : (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <></>
   );
 };
 

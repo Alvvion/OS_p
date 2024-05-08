@@ -16,10 +16,11 @@ export const centerPosition = (
   size: Size,
   taskbarHeight: string
 ): Position => ({
-  x: (window.innerWidth - Number(stripUnit(size.width))) / 2,
-  y:
+  x: Math.floor((window.innerWidth - Number(stripUnit(size.width))) / 2),
+  y: Math.floor(
     (window.innerHeight -
       Number(stripUnit(taskbarHeight)) -
       Number(stripUnit(size.width))) /
-    2,
+      2
+  ),
 });
