@@ -1,16 +1,30 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
-import JSZip from "jszip";
+import { unzip, zip } from "fflate";
+import type { AsyncZippable } from "fflate/node";
 
 import { defaultConfig, globals, zipConfigPath } from "./config";
 
 const isFileInZip = (buffer: Buffer, zipFilePath: string): Promise<boolean> =>
   new Promise((resolve) => {
-    new JSZip()
-      .loadAsync(buffer)
-      .then((zipFile) =>
-        resolve(Object.keys(zipFile.files).includes(zipFilePath))
-      );
+    unzip(buffer, (_unzipError, content) =>
+      resolve(Object.keys(content).includes(zipFilePath))
+    );
   });
+
+export const addFileToZippable = (path: string, file: Buffer) => {
+  const zippableData: AsyncZippable = {};
+
+  path.split("/").reduce((walkedPath, partPath, index, { length }) => {
+    const endofPath = index === length - 1;
+    const currentPath = `${walkedPath}${partPath}${endofPath ? "" : "/"}`;
+    zippableData[currentPath] = endofPath
+      ? [file, { level: 0 }]
+      : new Uint8Array();
+    return currentPath;
+  }, "");
+
+  return zippableData;
+};
 
 const addFileToZip = (
   buffer: Buffer,
@@ -19,17 +33,18 @@ const addFileToZip = (
   fs: FSModule
 ): Promise<Buffer> =>
   new Promise((resolve) => {
-    new JSZip().loadAsync(buffer).then((zipFile) => {
-      fs.readFile(filePath, (_err, contents = Buffer.from("")) =>
-        zipFile
-          .file(zipFilePath, contents)
-          .generateAsync({ type: "nodebuffer" })
-          .then((newZipFile) => resolve(newZipFile))
-      );
+    unzip(buffer, (_unzipError, zipData) => {
+      fs.readFile(filePath, (_readError, contents = Buffer.from("")) => {
+        zip(
+          { ...zipData, ...addFileToZippable(zipFilePath, contents) },
+          (_zipError, newZipData) => {
+            resolve(newZipData as Buffer);
+          }
+        );
+      });
     });
   });
 
-// eslint-disable-next-line import/prefer-default-export
 export const addJSDOSConfig = async (
   buffer: Buffer,
   fs: FSModule
