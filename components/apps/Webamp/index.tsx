@@ -54,32 +54,36 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
         webamp
           .renderWhenReady(containerRef?.current as HTMLDivElement)
           .then(() => {
-            closeEqualizer(webamp);
-            if (previousX === -1) {
-              const webampSize = [
-                ...getWebampElement().getElementsByClassName("window"),
-              ].reduce(
-                (acc, element) => {
-                  const { height, width } = element.getBoundingClientRect();
+            if (containerRef?.current) {
+              if (containerRef?.current) {
+                closeEqualizer(webamp);
+                if (previousX === -1) {
+                  const webampSize = [
+                    ...getWebampElement().getElementsByClassName("window"),
+                  ].reduce(
+                    (acc, element) => {
+                      const { height, width } = element.getBoundingClientRect();
 
-                  return {
-                    height: acc.height + height,
-                    width,
-                  };
-                },
-                { height: 0, width: 0 }
-              );
-              const { x: centerX, y: centerY } = centerPosition(
-                webampSize,
-                taskbarHeight
-              );
+                      return {
+                        height: acc.height + height,
+                        width,
+                      };
+                    },
+                    { height: 0, width: 0 }
+                  );
+                  const { x: centerX, y: centerY } = centerPosition(
+                    webampSize,
+                    taskbarHeight
+                  );
 
-              updateWindowPositions(webamp, centerX, centerY);
-            } else {
-              updateWindowPositions(webamp, previousX, previousY);
+                  updateWindowPositions(webamp, centerX, centerY);
+                } else {
+                  updateWindowPositions(webamp, previousX, previousY);
+                }
+
+                containerRef?.current?.appendChild(getWebampElement());
+              }
             }
-
-            containerRef?.current?.appendChild(getWebampElement());
           });
       });
     }

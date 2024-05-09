@@ -25,7 +25,7 @@ const useJSDOS = (
   const { appendFileToTitle } = useTitle(id);
 
   useEffect(() => {
-    if (!dos && fs && url && ref?.current) {
+    if (!dos && fs && url) {
       fs.readFile(url, (_err, contents = Buffer.from("")) =>
         loadFiles(libs).then(async () => {
           const isZip = extname(url).toLowerCase() === ".zip";
@@ -33,17 +33,19 @@ const useJSDOS = (
             isZip ? await addJSDOSConfig(contents, fs) : contents
           );
 
-          window.emulators.pathPrefix = pathPrefix;
+          if (ref?.current) {
+            window.emulators.pathPrefix = pathPrefix;
 
-          window
-            .Dos(ref.current as HTMLDivElement)
-            .run(objectURL)
-            .then((ci) => {
-              setDos(ci);
-              appendFileToTitle(url);
-              cleanUpBufferUrl(objectURL);
-              cleanUpLoader();
-            });
+            window
+              .Dos(ref.current as HTMLDivElement)
+              .run(objectURL)
+              .then((ci) => {
+                setDos(ci);
+                appendFileToTitle(url);
+                cleanUpBufferUrl(objectURL);
+                cleanUpLoader();
+              });
+          }
         })
       );
     }
