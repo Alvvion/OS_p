@@ -6,7 +6,6 @@ export const processDir: Processes = {
   FileExplorer: {
     Component: dynamic(() => import("@/components/apps/FileExplorer")),
     icon: "/assets/win-file-explorer.ico",
-    hasWindow: true,
     title: "File Explorer",
     backgroundColor: "#191919",
     titlebarStyle: "File Explorer",
@@ -15,14 +14,12 @@ export const processDir: Processes = {
     autoSizing: true,
     backgroundColor: "#000",
     Component: dynamic(() => import("@/components/apps/JSDOS")),
-    hasWindow: true,
     icon: "/assets/jsdos.png",
     title: "JSDOS",
     lockAspectRatio: true,
   },
   V86: {
     Component: dynamic(() => import("@/components/apps/V86")),
-    hasWindow: true,
     icon: "/assets/V86.ico",
     title: "V86",
     autoSizing: true,

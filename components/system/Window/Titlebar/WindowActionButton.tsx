@@ -23,12 +23,22 @@ const _tailwind = [
 const WindowActionButton = ({ id }: { id: string }) => {
   const { onMinimize, onMaximize, onClose } = useWindowActions(id);
   const {
-    processes: { [id]: { autoSizing = false, maximized = false } = {} },
+    processes: {
+      [id]: {
+        autoSizing = false,
+        maximized = false,
+        lockAspectRatio = false,
+      } = {},
+    },
   } = useProcesses();
 
   const { foregroundId } = useSession();
 
   const isForeground = useMemo(() => id === foregroundId, [foregroundId, id]);
+  const isMaximizable = useMemo(
+    () => autoSizing && !lockAspectRatio,
+    [autoSizing, lockAspectRatio]
+  );
 
   const {
     currentTheme: {
@@ -74,7 +84,7 @@ const WindowActionButton = ({ id }: { id: string }) => {
           transition: "background-color 0.25 ease",
         }}
         onClick={onMaximize}
-        disabled={autoSizing}
+        disabled={isMaximizable}
       >
         {maximized ? (
           <MaximizedIcon
@@ -83,7 +93,7 @@ const WindowActionButton = ({ id }: { id: string }) => {
         ) : (
           <MaximizeIcon
             extraStyles={`${
-              autoSizing
+              isMaximizable
                 ? isForeground
                   ? disabled
                   : disabledInactive

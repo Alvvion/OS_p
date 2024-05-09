@@ -1,7 +1,7 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import JSZip from "jszip";
 
-import { defaultConfig, zipConfigPath } from "./config";
+import { defaultConfig, globals, zipConfigPath } from "./config";
 
 const isFileInZip = (buffer: Buffer, zipFilePath: string): Promise<boolean> =>
   new Promise((resolve) => {
@@ -37,3 +37,6 @@ export const addJSDOSConfig = async (
   (await isFileInZip(buffer, zipConfigPath))
     ? buffer
     : addFileToZip(buffer, defaultConfig, zipConfigPath, fs);
+
+export const cleanUpLoader = () =>
+  globals.forEach((global) => delete (window as never)[global]);

@@ -12,7 +12,7 @@ const ProcessLoader: React.FC = () => {
       {Object.entries(processes)
         .filter(([_id, { closing }]) => !closing)
         .map(
-          ([id, { Component, hasWindow = false, titlebarStyle = "Default" }]) =>
+          ([id, { Component, hasWindow = true, titlebarStyle = "Default" }]) =>
             hasWindow ? (
               <Window key={id} id={id} titlebarStyle={titlebarStyle}>
                 <Component id={id} />
