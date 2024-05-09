@@ -37,7 +37,9 @@ const DefaultBar: React.FC<ComponentProps> = ({ id }) => {
               margin: iconMargin,
             }}
           />
-          <figcaption>{title}</figcaption>
+          <figcaption className="text-ellipsis tracking-[-0.1px] overflow-hidden whitespace-nowrap">
+            {title}
+          </figcaption>
         </figure>
       </h1>
       <WindowActionButton id={id} />

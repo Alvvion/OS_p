@@ -68,7 +68,7 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
           <Icon src={icon} alt={name} size={iconSize} />
           <figcaption
             style={{ fontSize, color: text, letterSpacing, textShadow }}
-            className="py-[2px] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden break-all"
+            className="py-[2px] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden break-words tracking-[-0.1px]"
           >
             {name}
           </figcaption>

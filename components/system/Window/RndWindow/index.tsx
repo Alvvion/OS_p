@@ -36,7 +36,7 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
           size: autoSizing ? defaultWindowSize : current?.props?.size,
         },
       }));
-  }, [setWindowStates, id, autoSizing, maximized]);
+  }, [setWindowStates, id, autoSizing]);
 
   return (
     <Rnd style={style} ref={rndRef} {...rndProps}>

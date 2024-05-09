@@ -32,8 +32,8 @@ const Clock: React.FC = () => {
       suppressHydrationWarning
       style={{ color: text, fontSize }}
     >
-      <span className="text-right w-full">{time}</span>
-      <span className="text-right w-full">{date}</span>
+      <span className="text-right w-full tracking-[-0.1px]">{time}</span>
+      <span className="text-right w-full tracking-[-0.1px]">{date}</span>
     </time>
   );
 };
