@@ -25,6 +25,12 @@ export const processDir: Processes = {
     autoSizing: true,
     backgroundColor: "#000",
   },
+  Webamp: {
+    Component: dynamic(() => import("@/components/apps/Webamp")),
+    hasWindow: false,
+    icon: "/assets/webamp_48.png",
+    title: "Webamp",
+  },
 };
 
 export const getProcess = (processes: string[]): Processes =>
