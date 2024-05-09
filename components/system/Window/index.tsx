@@ -6,10 +6,10 @@ import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 
 import RndWindow from "./RndWindow";
-import { windowOpenCloseTransition } from "./RndWindow/animation";
 import Titlebar from "./Titlebar";
 import type { WindowComponentProps } from "./types";
 import useFocusable from "./useFocusable";
+import useWindowTransitions from "./useWindowTransitions";
 
 const Window: React.FC<WindowComponentProps> = ({
   id,
@@ -17,7 +17,7 @@ const Window: React.FC<WindowComponentProps> = ({
   children,
 }) => {
   const {
-    processes: { [id]: { minimized = false, backgroundColor = "" } = {} },
+    processes: { [id]: { backgroundColor = "" } = {} },
   } = useProcesses();
 
   const { foregroundId } = useSession();
@@ -35,15 +35,16 @@ const Window: React.FC<WindowComponentProps> = ({
   const windowRef = useRef<HTMLElement | null>(null);
   const { zIndex, ...focusableProps } = useFocusable(id, windowRef);
 
+  const windowTransition = useWindowTransitions(id, windowRef);
+
   return (
     <RndWindow id={id} style={{ zIndex }}>
       <motion.section
-        {...windowOpenCloseTransition}
+        {...windowTransition}
         style={{
           backgroundColor,
           boxShadow: isForeground ? boxShadow : boxShadowInactive,
           outline: isForeground ? outline : outlineInactive,
-          display: minimized ? "none" : "block",
         }}
         ref={windowRef}
         className="absolute w-full h-full overflow-hidden rounded-[5px]"

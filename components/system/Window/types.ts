@@ -13,3 +13,14 @@ export type Focusable = {
   onBlur: (event: React.FocusEvent<HTMLElement>) => void;
   onFocus: (event: React.FocusEvent<HTMLElement>) => void;
 };
+
+export type Variant = {
+  opacity: number;
+  scale: number;
+  width?: string | number;
+};
+
+export type Variants = {
+  active: Variant;
+  initial: Variant;
+};

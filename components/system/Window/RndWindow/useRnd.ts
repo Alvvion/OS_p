@@ -27,9 +27,8 @@ const useRnd = (id: string, maximized = false) => {
     },
   } = useTheme();
 
-  const [size, setSize] = useStateSize(maximized, autoSizing, stateSize);
+  const [size, setSize] = useStateSize(autoSizing, stateSize);
   const [position, setPosition] = useStatePosition(
-    maximized,
     statePosition || centerPosition(size, taskbarHeight)
   );
 
