@@ -32,7 +32,7 @@ export const rndDefaults = {
   enableUserSelectHack: false,
   dragHandleClassName: "handle",
   minHeight: "206px",
-  minWidth: "400px",
+  minWidth: "410px",
   resizeHandleStyles: {
     bottom: {
       bottom: "-3px",
@@ -95,7 +95,7 @@ export const DEFAULT_WINDOW_POSITION: Position = {
 
 export const DEFAULT_WINDOW_SIZE: Size = {
   height: "200px",
-  width: "250px",
+  width: "410px",
 };
 
 export const DEFAULT_WINDOW_TRANSITION_DURATION = 250;
