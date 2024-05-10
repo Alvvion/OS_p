@@ -18,6 +18,7 @@ export type Variant = {
   opacity: number;
   scale: number;
   width?: string | number;
+  height?: string | number;
 };
 
 export type Variants = {
