@@ -99,3 +99,5 @@ export const DEFAULT_WINDOW_SIZE: Size = {
 };
 
 export const DEFAULT_WINDOW_TRANSITION_DURATION = 250;
+
+export const MAIN_HEIGHT = 116;

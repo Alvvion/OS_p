@@ -27,11 +27,20 @@ export type WebampCI = {
   };
 };
 
-type WebampOptions = {
+type Track = {
+  metaData: {
+    artist?: string;
+    title: string;
+  };
+  url: string;
+};
+
+export type WebampOptions = {
+  __butterchurnOptions: unknown;
   initialSkin?: {
     url: string;
   };
-  initialTracks?: string[];
+  initialTracks?: Track[];
   zIndex?: number;
 };
 
@@ -41,6 +50,15 @@ interface WebampConstructor {
 
 declare global {
   interface Window {
+    butterchurn: unknown;
+    butterchurnPresets: {
+      getPresets: () => { [preset: string]: unknown };
+    };
     Webamp: WebampConstructor;
   }
 }
+
+export type Options = {
+  zIndex?: number;
+  initialTracks?: Track[];
+};

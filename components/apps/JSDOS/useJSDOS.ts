@@ -25,7 +25,7 @@ const useJSDOS = (
   const { appendFileToTitle } = useTitle(id);
 
   useEffect(() => {
-    if (!dos && fs && url) {
+    if (!dos && fs && url && window.Dos) {
       fs.readFile(url, (_err, contents = Buffer.from("")) =>
         loadFiles(libs).then(async () => {
           const isZip = extname(url).toLowerCase() === ".zip";

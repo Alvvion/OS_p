@@ -27,7 +27,7 @@ const useV86 = (
   const { appendFileToTitle } = useTitle(id);
 
   useEffect(() => {
-    if (!emulator && fs && url) {
+    if (!emulator && fs && url && window.V86Starter) {
       fs.readFile(url, (_err, contents = Buffer.from("")) => {
         loadFiles(libs).then(() => {
           if (ref?.current) {
