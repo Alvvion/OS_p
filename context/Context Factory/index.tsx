@@ -6,12 +6,16 @@ import type { ContextFactory } from "./types";
 
 const contextFactory: ContextFactory = (
   initialContextState,
-  useContextState
+  useContextState,
+  ContextComponent
 ) => {
   const Context = createContext(initialContextState);
 
   const Provider: React.FC<ChildrenProp> = ({ children }) => (
-    <Context.Provider value={useContextState()}>{children}</Context.Provider>
+    <Context.Provider value={useContextState()}>
+      {children}
+      {ContextComponent && <ContextComponent />}
+    </Context.Provider>
   );
 
   return { Provider, useContext: () => useContext(Context) };

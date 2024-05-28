@@ -1,4 +1,5 @@
 import type { FileSystemStateType } from "../FileSystem/types";
+import type { MenuContextType } from "../Menu/types";
 import type { ProcessContextType } from "../Process/types";
 import type { SessionContextType } from "../Session/types";
 import themes from "../Theme/themes";
@@ -41,4 +42,10 @@ export const defaultWindowSize = {
 export const defaultWindowPosition = {
   x: 0,
   y: 0,
+};
+
+export const initialMenuState: MenuContextType = {
+  menu: {},
+  setMenu: () => undefined,
+  contextMenu: () => () => undefined,
 };
