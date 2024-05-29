@@ -36,6 +36,7 @@ const config: Config = {
         "file-borderFocused": "hsl(207deg 60% 72% / 35%)",
         "file-borderFocusedHover": "hsl(207deg 90% 72% / 40%)",
         "context-border": "rgb(160,160,160)",
+        "rename-box-border": "rgb(100,100,100)",
       },
     },
   },

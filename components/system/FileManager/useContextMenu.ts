@@ -3,21 +3,30 @@ import { processDir } from "@/context/Process/directory";
 
 import useFile from "./useFile";
 
-const useContextMenu = (url: string, pid: string) => {
+const useContextMenu = (
+  url: string,
+  pid: string,
+  deleteFile: () => void,
+  renameFile: () => void
+) => {
   const { openFile } = useFile(url, pid);
   const { icon: pidIcon } = processDir[pid] || {};
 
-  const menuItems: MenuItem[] = [];
+  const menuItems: MenuItem[] = [
+    { label: "Delete", action: deleteFile },
+    { label: "Rename", action: renameFile },
+  ];
 
   if (pid) {
-    menuItems.push({
-      icon: pidIcon,
-      label: "Open",
-      primary: true,
-      action: openFile,
-    });
-  } else {
-    menuItems.push({ label: "Empty" });
+    menuItems.unshift(
+      {
+        icon: pidIcon,
+        label: "Open",
+        primary: true,
+        action: openFile,
+      },
+      { separator: 1 }
+    );
   }
 
   return menuItems;
