@@ -51,6 +51,10 @@ const themes: Themes = {
       0 2px 2px rgba(0, 0, 0, 50%),
       0 2px 3px rgba(0, 0, 0, 25%)`,
       },
+      contextMenu: {
+        boxShadow: `1px 1px 1px hsla(0, 0%, 20%, 70%),
+    2px 2px 2px hsla(0, 0%, 10%, 70%)`,
+      },
     },
     sizes: {
       taskbar: {

@@ -31,6 +31,9 @@ export interface DefaultTheme {
       borderFocused: string;
       borderFocusedHover: string;
     };
+    contextMenu: {
+      boxShadow: string;
+    };
   };
   sizes: {
     taskbar: {

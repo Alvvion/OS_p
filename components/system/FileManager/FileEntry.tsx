@@ -1,13 +1,11 @@
-import { useCallback } from "react";
-
 import { Button, Icon } from "@/components/common";
-import { useProcesses } from "@/context/Process";
-import { createPid } from "@/context/Process/functions";
-import { useSession } from "@/context/Session";
+import { useMenu } from "@/context/Menu";
 import { useTheme } from "@/context/Theme";
 import useDoubleClick from "@/hooks/useDoubleClick";
 
 import type { FileEntryProps } from "./types";
+import useContextMenu from "./useContextMenu";
+import useFile from "./useFile";
 import useFileInfo from "./useFileInfo";
 
 const _tailwind = [
@@ -21,18 +19,9 @@ const _tailwind = [
 
 const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
   const { icon, pid, url } = useFileInfo(path);
-  const { openProcess, processes, minimize } = useProcesses();
-  const { setForegroundId } = useSession();
-  const onActivate = useCallback(() => {
-    const id = createPid(pid, url);
-    if (processes[id]) {
-      if (processes[id].minimized) minimize(id);
-      setForegroundId(id);
-    } else {
-      openProcess(pid, url);
-    }
-  }, [minimize, openProcess, pid, processes, setForegroundId, url]);
-
+  const { openFile } = useFile(url, pid);
+  const menu = useContextMenu(url, pid);
+  const { contextMenu } = useMenu();
   const {
     currentTheme: {
       sizes: {
@@ -62,7 +51,8 @@ const FileEntry: React.FC<FileEntryProps> = ({ name, path }) => {
       <Button
         type="button"
         extraStyles="relative"
-        onClick={useDoubleClick(onActivate)}
+        onClick={useDoubleClick(openFile)}
+        onContextMenu={contextMenu(menu)}
       >
         <figure className="flex flex-col items-center -mb-1">
           <Icon src={icon} alt={name} size={iconSize} />

@@ -22,6 +22,9 @@ const config: Config = {
         "file-background": "hsl(207deg 30% 72% / 25%)",
         "file-backgroundFocused": "hsl(207deg 60% 72% / 30%)",
         "file-backgroundFocusedHover": "hsl(207deg 90% 72% / 35%)",
+        "context-background": "rgb(43,43,43)",
+        "context-sperator": "rgb(128,128,128)",
+        "context-fig-hover": "rgb(65,65,65)",
       },
       fill: {
         "titlebar-button-disabled": "rgb(50,50,50)",
@@ -32,6 +35,7 @@ const config: Config = {
         "file-border": "hsl(207deg 30% 72% / 30%)",
         "file-borderFocused": "hsl(207deg 60% 72% / 35%)",
         "file-borderFocusedHover": "hsl(207deg 90% 72% / 40%)",
+        "context-border": "rgb(160,160,160)",
       },
     },
   },
