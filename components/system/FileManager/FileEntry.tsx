@@ -53,11 +53,11 @@ const FileEntry: React.FC<FileEntryProps> = ({
     },
   } = useTheme();
 
-  const extraStyles = `hover:relative hover:before:absolute hover:before:-top-px hover:before:-bottom-px hover:before:-left-px hover:before:-right-px hover:${background} hover:before:${border} focus-within:${backgroundFocused} focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover} focus-within:hover:before:${borderFocusedHover}`;
+  const extraStyles = `hover:relative hover:before:absolute hover:before:-top-px hover:before:-bottom-px hover:before:-left-px hover:before:-right-px hover:${background} hover:before:${border} focus-within:${backgroundFocused} focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover}focus-within:hover:before:${borderFocusedHover}`;
 
   return (
     <li
-      className={`flex justify-center p-[2px] overflow-hidden h-min border-2 border-transparent [&_figcaption]:focus-within:[-webkit-line-clamp:initial] [&_figcaption]:focus-within:z-[1] ${extraStyles}`}
+      className={`flex justify-center p-[2px] overflow-hidden h-min border-2 border-transparent [&_figcaption]:focus-within:[-webkit-line-clamp:initial] focus-within:z-[1] ${extraStyles}`}
     >
       <Button
         type="button"

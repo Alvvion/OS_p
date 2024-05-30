@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 
-import { defaultWindowSize } from "@/context/Context Factory/initialContextStates";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 
@@ -11,7 +10,7 @@ import useRnd from "./useRnd";
 
 const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
   const {
-    processes: { [id]: { autoSizing = false, maximized = false } = {} },
+    processes: { [id]: { maximized = false } = {} },
   } = useProcesses();
 
   const rndProps = useRnd(id, maximized);
@@ -33,10 +32,10 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
         ...currentState,
         [id]: {
           position: current?.props?.position,
-          size: autoSizing ? defaultWindowSize : current?.props?.size,
+          size: current?.props?.size,
         },
       }));
-  }, [setWindowStates, id, autoSizing, maximized]);
+  }, [setWindowStates, id, maximized]);
 
   return (
     <Rnd style={style} ref={rndRef} {...rndProps}>

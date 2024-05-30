@@ -32,7 +32,7 @@ const useJSDOS = (
             isZip ? await addJSDOSConfig(contents, fs) : contents
           );
 
-          if (ref?.current) {
+          if (ref?.current && window.emulators) {
             window.emulators.pathPrefix = pathPrefix;
 
             window
