@@ -1,6 +1,8 @@
 import { stripUnit } from "polished";
 
+import type { ProcessContextType } from "@/context/Process/types";
 import type { Position, Size } from "@/types/common";
+import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
 
 export const reRouteFoucs =
   (focusElement: HTMLElement) =>
@@ -24,3 +26,11 @@ export const centerPosition = (
       2
   ),
 });
+
+export const closeWithTransition = (
+  close: ProcessContextType["closeProcess"],
+  id: string
+) => {
+  close(id, true);
+  setTimeout(() => close(id), DEFAULT_WINDOW_TRANSITION_DURATION);
+};

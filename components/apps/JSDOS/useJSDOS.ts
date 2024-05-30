@@ -1,6 +1,7 @@
 import { extname } from "path";
 import { useEffect, useState } from "react";
 
+import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
 import useTitle from "@/components/system/Window/RndWindow/useTitle";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
@@ -16,16 +17,14 @@ const useJSDOS = (
   url: string,
   ref: React.MutableRefObject<HTMLDivElement | null>
 ): void => {
+  const { appendFileToTitle } = useTitle(id);
   const { updateWindowSize } = useWindowSize(id);
+  const [dos, setDos] = useState<DosCI | null>(null);
   const { fs } = useFileSystem();
   const { closeProcess } = useProcesses();
 
-  const [dos, setDos] = useState<DosCI | null>(null);
-
-  const { appendFileToTitle } = useTitle(id);
-
   useEffect(() => {
-    if (!dos && fs && url && window.Dos) {
+    if (!dos && fs && url) {
       fs.readFile(url, (_err, contents = Buffer.from("")) =>
         loadFiles(libs).then(async () => {
           const isZip = extname(url).toLowerCase() === ".zip";
@@ -68,7 +67,8 @@ const useJSDOS = (
             .replace("Parsing command line: ", "")
             .split(" ");
 
-          if (dosMessage.toUpperCase() === "EXIT") closeProcess(id);
+          if (dosMessage.toUpperCase() === "EXIT")
+            closeWithTransition(closeProcess, id);
         }
       });
 

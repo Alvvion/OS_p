@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 
+import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
@@ -61,7 +62,7 @@ const useWebamp = (id: string) => {
           const [main] = getWebampElement().getElementsByClassName("window");
           const { x, y } = main.getBoundingClientRect();
 
-          closeProcess(id);
+          closeWithTransition(closeProcess, id);
           setWindowStates((currentWindowStates) => ({
             ...currentWindowStates,
             [id]: {
