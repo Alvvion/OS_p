@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
@@ -28,6 +28,8 @@ const useWebamp = (id: string) => {
     },
   } = useTheme();
 
+  const [webampCI, setWebampCI] = useState<WebampCI | null>(null);
+
   const loadWebamp = useCallback(
     (element: HTMLDivElement | null, file?: Buffer) => {
       if (element && window.Webamp) {
@@ -44,7 +46,7 @@ const useWebamp = (id: string) => {
             },
             butterchurnOpen: true,
           },
-          zIndex: 1,
+          zIndex: 3,
         };
 
         if (file) {
@@ -83,12 +85,14 @@ const useWebamp = (id: string) => {
 
           element?.appendChild(getWebampElement());
         });
+
+        setWebampCI(webamp);
       }
     },
     [closeProcess, id, minimize, position, setWindowStates, taskbarHeight]
   );
 
-  return { loadWebamp };
+  return { loadWebamp, webampCI };
 };
 
 export default useWebamp;

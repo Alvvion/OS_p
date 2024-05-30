@@ -1,25 +1,19 @@
 import type { Position } from "react-rnd";
 
 import { centerPosition } from "@/components/system/Window/RndWindow/functions";
-import { MAIN_HEIGHT } from "@/utils/constants";
 
 import type { WebampCI } from "./types";
+
+const BASE_WINDOW_SIZE = {
+  height: 116,
+  width: 275,
+};
 
 export const closeEqualizer = (webamp: WebampCI): void =>
   webamp.store.dispatch({
     type: "CLOSE_WINDOW",
     windowId: "equalizer",
   });
-
-export const updateWindowPositions = (webamp: WebampCI, x = 0, y = 0): void => {
-  webamp.store.dispatch({
-    type: "UPDATE_WINDOW_POSITIONS",
-    positions: {
-      main: { x, y },
-      playlist: { x, y: MAIN_HEIGHT + y },
-    },
-  });
-};
 
 export const getWebampElement = (): HTMLDivElement =>
   document.getElementById("webamp") as HTMLDivElement;
@@ -29,28 +23,31 @@ export const updateWebampPostion = (
   taskbarHeight: string,
   position?: Position
 ): void => {
-  if (!position) {
-    const webampSize = [
-      ...getWebampElement().getElementsByClassName("window"),
-    ].reduce(
-      (acc, element) => {
-        const { height, width } = element.getBoundingClientRect();
+  const { height, width } = BASE_WINDOW_SIZE;
+  const { x, y } =
+    position || centerPosition({ height: height * 3, width }, taskbarHeight);
 
-        return {
-          height: acc.height + height,
-          width,
-        };
-      },
-      { height: 0, width: 0 }
-    );
-    const { x: centerX, y: centerY } = centerPosition(
-      webampSize,
-      taskbarHeight
-    );
-
-    updateWindowPositions(webamp, centerX, centerY);
-  } else {
-    const { x: previousX, y: previousY } = position || {};
-    updateWindowPositions(webamp, previousX, previousY);
-  }
+  webamp.store.dispatch({
+    type: "UPDATE_WINDOW_POSITIONS",
+    positions: {
+      main: { x, y },
+      playlist: { x, y: height + y },
+      milkdrop: { x, y: height * 2 + y },
+    },
+  });
 };
+
+export const focusWindow = (webamp: WebampCI, window: string): void =>
+  webamp.store.dispatch({ type: "SET_FOCUSED_WINDOW", window });
+
+export const unFocusWindow = (webamp: WebampCI): void =>
+  webamp.store.dispatch({
+    type: "SET_FOCUSED_WINDOW",
+    window: "",
+  });
+
+export const setZIndex = (webamp: WebampCI, zIndex: number): void =>
+  webamp.store.dispatch({
+    type: "SET_Z_INDEX",
+    zIndex,
+  });

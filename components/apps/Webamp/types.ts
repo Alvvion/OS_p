@@ -1,21 +1,20 @@
 import type { Position } from "react-rnd";
 
-type WebampCloseWindowDispatch = {
-  windowId: string;
-};
-
-type WebampUpdateWindowPositionsDispatch = {
-  absolute: boolean;
-  positions: {
+type WebampDispatchProps = {
+  absolute?: boolean;
+  positions?: {
     main: Position;
     playlist: Position;
+    milkdrop: Position;
   };
+  windowId?: string;
+  window?: string;
+  zIndex?: number;
 };
 
-type WebampDispatch = Partial<WebampCloseWindowDispatch> &
-  Partial<WebampUpdateWindowPositionsDispatch> & {
-    type: string;
-  };
+type WebampDispatch = WebampDispatchProps & {
+  type: string;
+};
 
 export type WebampCI = {
   dispose: () => void;
