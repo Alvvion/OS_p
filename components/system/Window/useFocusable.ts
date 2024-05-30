@@ -13,10 +13,11 @@ const useFocusable = (
     useSession();
 
   const {
-    processes: { [id]: { taskbarEntry = undefined } = {} },
+    processes: { [id]: { taskbarEntry = undefined, minimized = false } = {} },
   } = useProcesses();
 
-  const zIndex = stackOrder.length - stackOrder.indexOf(id) + 1;
+  const zIndex =
+    stackOrder.length + (minimized ? 1 : -stackOrder.indexOf(id)) + 1;
 
   const isForeground = useMemo(() => id === foregroundId, [id, foregroundId]);
 

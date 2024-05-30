@@ -3,4 +3,6 @@
 Problems
 
 - No zip and iso support (stream 20)
-- Minimize doesn't work when window is maximized
+
+### Dated 30th May 2024
+- Minimize doesn't work when window is maximized (solved)
