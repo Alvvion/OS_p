@@ -18,6 +18,8 @@ const useWebamp = (id: string) => {
 
   const {
     setWindowStates,
+    stackOrder,
+    setStackOrder,
     windowStates: { [id]: { position = undefined } = {} } = {},
   } = useSession();
 
@@ -33,7 +35,7 @@ const useWebamp = (id: string) => {
 
   const loadWebamp = useCallback(
     (element: HTMLDivElement | null, file?: Buffer) => {
-      if (element && window.Webamp) {
+      if (element && window.Webamp && !webampCI) {
         const options: WebampOptions = {
           __butterchurnOptions: {
             importButterchurn: () => Promise.resolve(window.butterchurn),
@@ -47,7 +49,7 @@ const useWebamp = (id: string) => {
             },
             butterchurnOpen: true,
           },
-          zIndex: 3,
+          zIndex: stackOrder.length + 1,
         };
 
         if (file) {
@@ -58,7 +60,8 @@ const useWebamp = (id: string) => {
 
         const webamp: WebampCI = new window.Webamp(options);
 
-        webamp.onClose(() => {
+        webamp.onWillClose((cancel) => {
+          cancel();
           const [main] = getWebampElement().getElementsByClassName("window");
           const { x, y } = main.getBoundingClientRect();
 
@@ -69,6 +72,10 @@ const useWebamp = (id: string) => {
               position: { x, y },
             },
           }));
+
+          setStackOrder((currentStackOrder) =>
+            currentStackOrder.filter((stackId) => stackId !== id)
+          );
 
           if (options.initialTracks) {
             const [{ url: objectUrl }] = options.initialTracks;
@@ -90,7 +97,17 @@ const useWebamp = (id: string) => {
         setWebampCI(webamp);
       }
     },
-    [closeProcess, id, minimize, position, setWindowStates, taskbarHeight]
+    [
+      closeProcess,
+      id,
+      minimize,
+      position,
+      setStackOrder,
+      setWindowStates,
+      stackOrder.length,
+      taskbarHeight,
+      webampCI,
+    ]
   );
 
   return { loadWebamp, webampCI };
