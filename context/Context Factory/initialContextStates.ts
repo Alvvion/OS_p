@@ -23,6 +23,10 @@ export const initialSessionState: SessionContextType = {
   setForegroundId: () => undefined,
   setStackOrder: () => undefined,
   stackOrder: [],
+  startMenuVisible: false,
+  toggleStartMenu: () => undefined,
+  prependToStack: () => undefined,
+  removeFromStack: () => undefined,
 };
 
 export const initialThemeState = {

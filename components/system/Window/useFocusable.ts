@@ -9,7 +9,7 @@ const useFocusable = (
   id: string,
   ref: React.MutableRefObject<HTMLElement | null>
 ): Focusable => {
-  const { foregroundId, setForegroundId, stackOrder, setStackOrder } =
+  const { foregroundId, setForegroundId, stackOrder, prependToStack } =
     useSession();
 
   const {
@@ -28,14 +28,18 @@ const useFocusable = (
     [isForeground, setForegroundId, taskbarEntry]
   );
 
-  const moveToFront = useCallback(() => {
-    setStackOrder((currentOrder) => {
-      if (currentOrder)
-        return [id, ...currentOrder.filter((stackId) => stackId !== id)];
-      return [id];
-    });
-    setForegroundId(id);
-  }, [id, setForegroundId, setStackOrder]);
+  const moveToFront = useCallback(
+    (event?: React.FocusEvent<HTMLElement> | React.MouseEvent<HTMLElement>) => {
+      const { relatedTarget } = event || {};
+      if (ref?.current?.contains(document.activeElement)) {
+        prependToStack(id);
+        setForegroundId(id);
+      } else if (!relatedTarget || document.activeElement === taskbarEntry) {
+        ref?.current?.focus();
+      }
+    },
+    [id, prependToStack, ref, setForegroundId, taskbarEntry]
+  );
 
   useEffect(() => {
     if (isForeground) moveToFront();

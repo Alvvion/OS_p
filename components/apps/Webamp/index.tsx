@@ -25,7 +25,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
   const windowTranistion = useWindowTransitions(id, containerRef);
 
   const { loadWebamp, webampCI } = useWebamp(id);
-  const { foregroundId, setForegroundId, stackOrder, setStackOrder } =
+  const { foregroundId, setForegroundId, stackOrder, prependToStack } =
     useSession();
 
   const zIndex = useMemo(
@@ -65,10 +65,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
       ref={containerRef}
       tabIndex={-1}
       onFocus={() => {
-        setStackOrder((currentStackOrder) => [
-          id,
-          ...currentStackOrder.filter((stackId) => stackId !== id),
-        ]);
+        prependToStack(id);
         setForegroundId(id);
       }}
       onBlur={({ relatedTarget }) => {

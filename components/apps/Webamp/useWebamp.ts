@@ -19,7 +19,7 @@ const useWebamp = (id: string) => {
   const {
     setWindowStates,
     stackOrder,
-    setStackOrder,
+    removeFromStack,
     windowStates: { [id]: { position = undefined } = {} } = {},
   } = useSession();
 
@@ -73,9 +73,7 @@ const useWebamp = (id: string) => {
             },
           }));
 
-          setStackOrder((currentStackOrder) =>
-            currentStackOrder.filter((stackId) => stackId !== id)
-          );
+          removeFromStack(id);
 
           if (options.initialTracks) {
             const [{ url: objectUrl }] = options.initialTracks;
@@ -102,7 +100,7 @@ const useWebamp = (id: string) => {
       id,
       minimize,
       position,
-      setStackOrder,
+      removeFromStack,
       setWindowStates,
       stackOrder.length,
       taskbarHeight,

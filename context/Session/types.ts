@@ -15,7 +15,10 @@ export type SessionContextType = {
   foregroundId: string;
   setForegroundId: React.Dispatch<React.SetStateAction<string>>;
   stackOrder: string[];
-  setStackOrder: React.Dispatch<React.SetStateAction<string[]>>;
   setThemeName: React.Dispatch<React.SetStateAction<string>>;
   setWindowStates: React.Dispatch<React.SetStateAction<WindowStates>>;
+  startMenuVisible: boolean;
+  toggleStartMenu: (showMenu?: boolean) => void;
+  prependToStack: (id: string) => void;
+  removeFromStack: (id: string) => void;
 };

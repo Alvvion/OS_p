@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "../FileSystem";
 import type { SessionContextType, WindowStates } from "./types";
@@ -11,8 +11,32 @@ const useSessionContextState = (): SessionContextType => {
   const [sessionLoaded, setSessionLoaded] = useState<boolean>(false);
   const [foregroundId, setForegroundId] = useState("");
   const [stackOrder, setStackOrder] = useState<string[]>([]);
+  const [startMenuVisible, setStartMenuVisible] = useState<boolean>(false);
 
   const { fs } = useFileSystem();
+
+  const toggleStartMenu = useCallback(
+    (showMenu?: boolean) =>
+      setStartMenuVisible((current) => showMenu ?? !current),
+    [setStartMenuVisible]
+  );
+
+  const prependToStack = useCallback(
+    (id: string) =>
+      setStackOrder((currentStackOrder) => [
+        id,
+        ...currentStackOrder.filter((stackId) => stackId !== id),
+      ]),
+    []
+  );
+
+  const removeFromStack = useCallback(
+    (id: string) =>
+      setStackOrder((currentStackOrder) =>
+        currentStackOrder.filter((stackId) => stackId !== id)
+      ),
+    []
+  );
 
   useEffect(() => {
     if (sessionLoaded) {
@@ -48,7 +72,10 @@ const useSessionContextState = (): SessionContextType => {
     foregroundId,
     setForegroundId,
     stackOrder,
-    setStackOrder,
+    startMenuVisible,
+    toggleStartMenu,
+    prependToStack,
+    removeFromStack,
   };
 };
 

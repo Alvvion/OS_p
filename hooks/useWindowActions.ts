@@ -8,7 +8,7 @@ import useNextFocusable from "./useNextFocusable";
 
 const useWindowActions = (id: string) => {
   const { minimize, maximize, closeProcess } = useProcesses();
-  const { setStackOrder, setForegroundId } = useSession();
+  const { removeFromStack, setForegroundId } = useSession();
   const nextFocusableId = useNextFocusable(id);
 
   const onMinimize = useCallback(() => {
@@ -17,12 +17,10 @@ const useWindowActions = (id: string) => {
   }, [id, minimize, nextFocusableId, setForegroundId]);
   const onMaximize = useCallback(() => maximize(id), [id, maximize]);
   const onClose = useCallback(() => {
-    setStackOrder((currentOrder) =>
-      currentOrder.filter((stackId) => stackId !== id)
-    );
+    removeFromStack(id);
     closeWithTransition(closeProcess, id);
     setForegroundId(nextFocusableId);
-  }, [setStackOrder, setForegroundId, nextFocusableId, closeProcess, id]);
+  }, [removeFromStack, id, closeProcess, setForegroundId, nextFocusableId]);
 
   return { onMaximize, onMinimize, onClose };
 };
