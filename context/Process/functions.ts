@@ -34,6 +34,18 @@ export const createPid = (processId: string, url?: string): string =>
 export const openingProcess =
   (processId: string, url?: string) =>
   (currentProcesses: Processes): Processes => {
+    if (processDir[processId]?.singleton) {
+      const currentPid = Object.keys(currentProcesses).find(
+        (pid) =>
+          pid === processId ||
+          pid.startsWith(`${processId}${PROCESS_DELIMITER}`)
+      );
+
+      if (currentPid) {
+        return setProcessSetting(currentPid, { url })(currentProcesses);
+      }
+    }
+
     const id = createPid(processId, url);
     return currentProcesses[id] || !processDir[processId]
       ? currentProcesses

@@ -2,7 +2,7 @@ import { AiOutlineWifi } from "react-icons/ai";
 import { GiSpeaker } from "react-icons/gi";
 import { TbBattery4 } from "react-icons/tb";
 
-import { Button, Icon } from "@/components/common";
+import { Button } from "@/components/common";
 import StartMenu from "@/components/system/StartMenu";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
@@ -20,22 +20,10 @@ const Taskbar = () => {
   const {
     currentTheme: {
       colors: {
-        taskbar: { bgColor, searchBgColor, text, buttonHover },
+        taskbar: { bgColor, text, buttonHover },
       },
       sizes: {
-        taskbar: {
-          height,
-          search: {
-            iconTop,
-            iconLeft,
-            fontSize,
-            width,
-            borderRadius,
-            margin,
-            padding,
-            height: searchHeight,
-          },
-        },
+        taskbar: { height },
       },
     },
   } = useTheme();
@@ -48,7 +36,6 @@ const Taskbar = () => {
         className="absolute z-[1000] w-[100vw] flex flex-row justify-between items-center bottom-0 left-0 right-0"
         tabIndex={-1}
       >
-        <div />
         <div className="h-full flex place-content-center place-items-center">
           <TaskbarButtons
             src="/assets/windows11.png"
@@ -57,29 +44,6 @@ const Taskbar = () => {
             name="Start Button"
             onClick={() => toggleStartMenu()}
           />
-          <div className="relative h-full">
-            <Icon
-              src="/assets/search.png"
-              width={22}
-              height={22}
-              alt="Search"
-              className="absolute z-10"
-              style={{ top: iconTop, left: iconLeft }}
-            />
-            <input
-              style={{
-                backgroundColor: searchBgColor,
-                height: searchHeight,
-                width,
-                fontSize,
-                margin,
-                padding,
-                borderRadius,
-              }}
-              placeholder="Search"
-              type="text"
-            />
-          </div>
           <div className="flex flex-row justify-center items-center h-full relative">
             {Object.entries(processes)
               .filter(([_id, { closing }]) => !closing)

@@ -30,6 +30,7 @@ export const processDir: Processes = {
     hasWindow: false,
     icon: "/assets/webamp_48.png",
     title: "Webamp",
+    singleton: true,
   },
 };
 

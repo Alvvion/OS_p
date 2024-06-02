@@ -3,7 +3,7 @@
 import Desktop from "@/components/system/Desktop";
 import FileManager from "@/components/system/FileManager";
 import ProcessLoader from "@/components/system/Window/ProcessLoader";
-import Taskbar from "@/components/system/Window/Taskbar";
+import Taskbar from "@/components/system/Taskbar";
 import { FileSystemProvider } from "@/context/FileSystem";
 import { MenuProvider } from "@/context/Menu";
 import { ProcessProvider } from "@/context/Process";

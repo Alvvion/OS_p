@@ -5,18 +5,19 @@ export type ProcessElement = {
 };
 
 export type Process = ProcessElement & {
+  autoSizing?: boolean;
+  backgroundColor?: string;
+  closing?: boolean;
   Component: React.ComponentType<ComponentProps>;
   hasWindow?: boolean;
   icon: string;
-  autoSizing?: boolean;
-  title: string;
-  url?: string;
-  backgroundColor?: string;
-  titlebarStyle?: "File Explorer" | "Default";
+  lockAspectRatio?: boolean;
   maximized?: boolean;
   minimized?: boolean;
-  lockAspectRatio?: boolean;
-  closing?: boolean;
+  singleton?: boolean;
+  title: string;
+  titlebarStyle?: "File Explorer" | "Default";
+  url?: string;
 };
 
 export type Processes = {
