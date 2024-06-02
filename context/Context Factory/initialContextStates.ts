@@ -21,7 +21,6 @@ export const initialSessionState: SessionContextType = {
   setThemeName: () => undefined,
   foregroundId: "",
   setForegroundId: () => undefined,
-  setStackOrder: () => undefined,
   stackOrder: [],
   startMenuVisible: false,
   toggleStartMenu: () => undefined,
