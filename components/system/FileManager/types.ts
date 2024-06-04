@@ -1,5 +1,6 @@
 export type FileManagerProps = {
   directory: string;
+  view?: "default" | "start";
 };
 
 export type FileEntryProps = {
@@ -7,6 +8,7 @@ export type FileEntryProps = {
   path: string;
   deleteFile: (path: string) => void;
   renameFile: (path: string, name?: string) => void;
+  view: "default" | "start";
 };
 
 export type FileInfo = {

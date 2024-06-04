@@ -7,7 +7,10 @@ import type { FileManagerProps } from "./types";
 import useFileDrop from "./useFileDrop";
 import useFiles from "./useFiles";
 
-const FileManager: React.FC<FileManagerProps> = ({ directory }) => {
+const FileManager: React.FC<FileManagerProps> = ({
+  directory,
+  view = "default",
+}) => {
   const { files, updateFiles, deleteFile, renameFile } = useFiles(directory);
   const {
     currentTheme: {
@@ -31,6 +34,7 @@ const FileManager: React.FC<FileManagerProps> = ({ directory }) => {
           path={resolve(directory, file)}
           deleteFile={deleteFile}
           renameFile={renameFile}
+          view={view}
         />
       ))}
     </ol>

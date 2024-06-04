@@ -25,6 +25,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   path,
   deleteFile,
   renameFile,
+  view,
 }) => {
   const { icon, pid, url } = useFileInfo(path);
   const [renaming, setRenaming] = useState(false);
@@ -53,6 +54,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
     },
   } = useTheme();
 
+  const singleClick = view === "start";
+
   const extraStyles = `hover:relative hover:before:absolute hover:before:-top-px hover:before:-bottom-px hover:before:-left-px hover:before:-right-px hover:${background} hover:before:${border} focus-within:${backgroundFocused} focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover}focus-within:hover:before:${borderFocusedHover}`;
 
   return (
@@ -62,7 +65,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
       <Button
         type="button"
         extraStyles="relative"
-        onClick={useDoubleClick(openFile)}
+        onClick={useDoubleClick(openFile, singleClick)}
         onContextMenu={contextMenu(menu)}
       >
         <figure className="flex flex-col items-center -mb-1">

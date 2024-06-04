@@ -12,16 +12,18 @@ const StartMenu: React.FC = () => {
 
   const maybeCloseMenu = useCallback(
     ({ relatedTarget }: React.FocusEvent) => {
-      if (
-        ![
-          relatedTarget,
-          relatedTarget?.parentElement,
-          relatedTarget?.parentElement?.parentElement,
-        ].includes(menuRef.current?.nextSibling as EventTarget & Element)
-      ) {
-        toggleStartMenu(false);
-      } else {
-        menuRef?.current?.focus();
+      if (!menuRef?.current?.contains(relatedTarget)) {
+        if (
+          ![
+            relatedTarget,
+            relatedTarget?.parentElement,
+            relatedTarget?.parentElement?.parentElement,
+          ].includes(menuRef.current?.nextSibling as EventTarget & Element)
+        ) {
+          toggleStartMenu(false);
+        } else {
+          menuRef?.current?.focus();
+        }
       }
     },
     [toggleStartMenu]

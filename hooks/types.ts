@@ -1,5 +1,6 @@
 export type DoubleClickType = (
   handler: React.MouseEventHandler,
+  singleClick?: boolean,
   timeout?: number
 ) => React.MouseEventHandler;
 
