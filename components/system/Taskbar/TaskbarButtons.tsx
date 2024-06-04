@@ -1,4 +1,5 @@
 import { Icon } from "@/components/common";
+import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 
 import type { TaskbarButtonProps } from "./types";
@@ -15,6 +16,8 @@ const TaskbarButtons: React.FC<TaskbarButtonProps> = ({
   bottomnotch = false,
   ...buttonProps
 }) => {
+  const { startMenuVisible } = useSession();
+
   const {
     currentTheme: {
       sizes: {
@@ -37,7 +40,7 @@ const TaskbarButtons: React.FC<TaskbarButtonProps> = ({
       }}
       className={`m-[5px] p-[5px] rounded-[0.25rem] relative cursor-context-menu hover:${buttonHover} border border-transparent hover:border-[#373737] ${
         reqBottomNotch && !bottomnotch ? buttonHover : ""
-      }`}
+      } ${!reqBottomNotch && startMenuVisible ? buttonHover : ""}`}
       ref={reference}
       {...buttonProps}
     >

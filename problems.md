@@ -6,3 +6,7 @@ Problems
 
 ### Dated 30th May 2024
 - Minimize doesn't work when window is maximized (solved)
+
+
+### Dated 4th June 2024
+- After Minimize titlebar disappears.
