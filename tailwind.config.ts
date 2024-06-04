@@ -39,6 +39,13 @@ const config: Config = {
         "context-border": "rgb(160,160,160)",
         "rename-box-border": "rgb(100,100,100)",
       },
+      gridTemplateColumns: {
+        filemanager: "repeat(auto-fill, 74px)",
+        startmenu: "repeat(6, 1fr)",
+      },
+      gridTemplateRows: {
+        filemanager: "repeat(auto-fill, 85px)",
+      },
     },
   },
   plugins: [],

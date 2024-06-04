@@ -57,7 +57,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   return (
     <li
-      className={`flex justify-center p-[2px] overflow-hidden h-min border-2 border-transparent [&_figcaption]:focus-within:[-webkit-line-clamp:initial] focus-within:z-[1] ${extraStyles}`}
+      className={`flex justify-center p-[2px] overflow-hidden h-min border-2 border-transparent [&_figcaption]:focus-within:[-webkit-line-clamp:initial] focus-within:z-[1] ${extraStyles} [nav_&]:pb-5 [nav_&]:pt-2`}
     >
       <Button
         type="button"
@@ -79,7 +79,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
           ) : (
             <figcaption
               style={{ fontSize, color: text, letterSpacing, textShadow }}
-              className="p-[3px] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden break-words tracking-[-0.1px] leading-4"
+              className="p-[3px] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden break-words tracking-[-0.1px] leading-4 [nav_&]:![text-shadow:none]"
             >
               {name}
             </figcaption>

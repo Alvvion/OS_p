@@ -18,10 +18,8 @@ const FileManager: React.FC<FileManagerProps> = ({ directory }) => {
   } = useTheme();
   return (
     <ol
-      className="grid grid-flow-col gap-x-px gap-y-[10px] py-[5px] [main>&]:pb-5 [section_&]:grid-flow-row"
+      className="grid grid-flow-col gap-x-px gap-y-[10px] py-[5px] [main>&]:pb-5 [section_&]:grid-flow-row grid-cols-filemanager grid-rows-filemanager [nav_&]:grid-cols-startmenu"
       style={{
-        gridTemplateColumns: "repeat(auto-fill, 74px)",
-        gridTemplateRows: "repeat(auto-fill, 85px)",
         height: `calc(100% - ${height})`,
       }}
       {...useFileDrop(directory, updateFiles)}
