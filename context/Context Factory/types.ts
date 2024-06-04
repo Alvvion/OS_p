@@ -1,4 +1,4 @@
-import type { ChildrenProp } from "@/types/common";
+import type { ChildrenProp } from "@/components/common/types";
 
 export type ContextFactory = <T>(
   initialContextState: T,

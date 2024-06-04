@@ -1,7 +1,7 @@
 import { useRef } from "react";
 
+import type { ComponentProps } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
-import type { ComponentProps } from "@/types/common";
 
 import useV86 from "./useV86";
 import useV86ScreenSize from "./useV86ScreenSize";

@@ -1,4 +1,4 @@
-import type { Position, Size } from "@/types/common";
+import type { Position, Size } from "@/components/common/types";
 
 export type WindowState = {
   position?: Position;

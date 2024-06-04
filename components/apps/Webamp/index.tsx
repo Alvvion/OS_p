@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
 
+import type { ComponentProps } from "@/components/common/types";
 import useWindowTransitions from "@/components/system/Window/useWindowTransitions";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
-import type { ComponentProps } from "@/types/common";
 import { loadFiles } from "@/utils/functions";
 
 import { focusWindow, setZIndex, unFocusWindow } from "./functions";

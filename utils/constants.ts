@@ -1,4 +1,4 @@
-import type { Position, Size } from "@/types/common";
+import type { Position, Size } from "@/components/common/types";
 
 export const IMAGE_FILE_EXTENSION = [
   ".apng",

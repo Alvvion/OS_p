@@ -1,4 +1,4 @@
-import type { ChildrenProp, Position, Size } from "@/types/common";
+import type { ChildrenProp, Position, Size } from "@/components/common/types";
 
 export type RndWindowProps = ChildrenProp & {
   id: string;

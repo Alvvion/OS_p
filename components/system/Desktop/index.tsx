@@ -1,7 +1,7 @@
 import { useRef } from "react";
 
+import type { ChildrenProp } from "@/components/common/types";
 import { useTheme } from "@/context/Theme";
-import type { ChildrenProp } from "@/types/common";
 
 import useWallpaper from "./useWallpaper";
 

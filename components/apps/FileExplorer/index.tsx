@@ -3,9 +3,9 @@ import { FaArrowLeft, FaArrowRight, FaArrowUp } from "react-icons/fa6";
 import { IoMdRefresh } from "react-icons/io";
 
 import { Button } from "@/components/common";
+import type { ComponentProps } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
-import type { ComponentProps } from "@/types/common";
 
 import FileManager from "../../system/FileManager";
 import type { ButtonOnNavType } from "./types";

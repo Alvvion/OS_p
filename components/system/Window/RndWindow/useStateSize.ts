@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import type { Size } from "@/types/common";
+import type { Size } from "@/components/common/types";
 import { DEFAULT_WINDOW_SIZE } from "@/utils/constants";
 
 import type { StateSize } from "./types";

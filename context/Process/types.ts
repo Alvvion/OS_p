@@ -1,4 +1,4 @@
-import type { ComponentProps } from "@/types/common";
+import type { ComponentProps } from "@/components/common/types";
 
 export type ProcessElement = {
   taskbarEntry?: HTMLElement;

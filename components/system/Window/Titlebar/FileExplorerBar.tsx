@@ -1,9 +1,9 @@
 import { IoAddOutline, IoCloseOutline } from "react-icons/io5";
 
 import { Button, Icon } from "@/components/common";
+import type { ComponentProps } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
-import type { ComponentProps } from "@/types/common";
 
 import WindowActionButton from "./WindowActionButton";
 

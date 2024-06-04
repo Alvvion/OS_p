@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { Position } from "@/types/common";
+import type { Position } from "@/components/common/types";
 import { DEFAULT_WINDOW_POSITION } from "@/utils/constants";
 
 import type { StatePosition } from "./types";

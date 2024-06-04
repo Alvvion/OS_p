@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import type { ChildrenProp } from "@/types/common";
+import type { ChildrenProp } from "@/components/common/types";
 
 import type { ContextFactory } from "./types";
 

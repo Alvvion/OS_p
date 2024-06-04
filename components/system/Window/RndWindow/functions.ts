@@ -1,7 +1,7 @@
 import { stripUnit } from "polished";
 
+import type { Position, Size } from "@/components/common/types";
 import type { ProcessContextType } from "@/context/Process/types";
-import type { Position, Size } from "@/types/common";
 import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
 
 export const reRouteFoucs =

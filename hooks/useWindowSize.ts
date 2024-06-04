@@ -3,7 +3,8 @@ import { useCallback } from "react";
 
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
-import type { WindowSize } from "@/types/hooks/WindowSize";
+
+import type { WindowSize } from "./types";
 
 const useWindowSize = (id: string): WindowSize => {
   const { setWindowStates } = useSession();

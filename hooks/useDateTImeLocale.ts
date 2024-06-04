@@ -1,6 +1,7 @@
 import { useTheme } from "@/context/Theme";
-import type { LocaleDateTime } from "@/types/hooks/DateTimeLocale";
 import { LOCALE } from "@/utils/constants";
+
+import type { LocaleDateTime } from "./types";
 
 const useLocaleDateTime = (now: Date): LocaleDateTime => {
   const {
