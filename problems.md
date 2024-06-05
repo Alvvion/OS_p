@@ -2,11 +2,12 @@
 
 Problems
 
-- No zip and iso support (stream 20)
+- No zip and iso support (stream 20).
 
 ### Dated 30th May 2024
-- Minimize doesn't work when window is maximized (solved)
+- Minimize doesn't work when window is maximized (solved).
 
 
 ### Dated 4th June 2024
-- After Minimize titlebar disappears.
+- After Minimize titlebar disappears (only for FileExploerer).
+- After Minimize/ Maximize from taskbar white border appers (solved).

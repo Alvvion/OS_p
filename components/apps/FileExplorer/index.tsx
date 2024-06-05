@@ -56,7 +56,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
   }, [id, title, url]);
 
   return url ? (
-    <>
+    <div>
       <header
         style={{ height }}
         className="bg-[#2C2C2C] flex flex-row border-b-[0.5px] border-b-[#3A3A3A] items-center"
@@ -71,7 +71,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
         ))}
       </header>
       <FileManager directory={url} />
-    </>
+    </div>
   ) : (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <></>
