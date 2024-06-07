@@ -40,7 +40,7 @@ export interface V86Constructor {
 
 export type V86 = {
   emulator: V86Starter | null;
-  lockMouse: () => void;
+  lockMouse?: () => void;
 };
 
 declare global {

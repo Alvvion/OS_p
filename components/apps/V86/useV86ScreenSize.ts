@@ -1,5 +1,5 @@
 import { stripUnit } from "polished";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useTheme } from "@/context/Theme";
 import useWindowSize from "@/hooks/useWindowSize";
@@ -26,27 +26,20 @@ const useV86ScreenSize = (
 
   const { updateWindowSize } = useWindowSize(id);
 
-  const setScreenGfx = useCallback<SizeCallback>(
-    ([width, height]) => updateWindowSize(height, width),
-    [updateWindowSize]
-  );
+  useEffect(() => {
+    const setScreenMode: ModeCallback = (isGfxMode) =>
+      setIsGraphical(isGfxMode);
 
-  const setScreenText = useCallback<SizeCallback>(
-    ([cols, rows]) => {
+    const setScreenText: SizeCallback = ([cols, rows]) => {
       updateWindowSize(
         rows * Number(stripUnit(lineHeight)) + 3,
         (cols / 2 + 4) * Number(stripUnit(lineHeight))
       );
-    },
-    [lineHeight, updateWindowSize]
-  );
+    };
 
-  const setScreenMode = useCallback<ModeCallback>(
-    (isGfxMode) => setIsGraphical(isGfxMode),
-    []
-  );
+    const setScreenGfx: SizeCallback = ([width, height]) =>
+      updateWindowSize(height, width);
 
-  useEffect(() => {
     emulator?.add_listener?.(SET_SCREEN_GFX, setScreenGfx);
     emulator?.add_listener(SET_SCREEN_TXT, setScreenText);
     emulator?.add_listener(SET_SCREEN_MODE, setScreenMode);
@@ -56,7 +49,7 @@ const useV86ScreenSize = (
       emulator?.remove_listener?.(SET_SCREEN_GFX, setScreenGfx);
       emulator?.remove_listener?.(SET_SCREEN_MODE, setScreenMode);
     };
-  }, [emulator, setScreenGfx, setScreenMode, setScreenText]);
+  }, [emulator, lineHeight, updateWindowSize]);
 
   return {
     font: `${lineHeight} monospace`,

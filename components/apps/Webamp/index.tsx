@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import type { ComponentProps } from "@/components/common/types";
 import useWindowTransitions from "@/components/system/Window/useWindowTransitions";
@@ -8,7 +8,7 @@ import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { loadFiles } from "@/utils/functions";
 
-import { focusWindow, setZIndex, unFocusWindow } from "./functions";
+import { focusWindow, unFocusWindow } from "./functions";
 import useWebamp from "./useWebamp";
 
 const Webamp: React.FC<ComponentProps> = ({ id }) => {
@@ -28,10 +28,8 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
   const { foregroundId, setForegroundId, stackOrder, prependToStack } =
     useSession();
 
-  const zIndex = useMemo(
-    () => stackOrder.length + (minimized ? 1 : -stackOrder.indexOf(id)) + 1,
-    [id, minimized, stackOrder]
-  );
+  const zIndex =
+    stackOrder.length + (minimized ? 1 : -stackOrder.indexOf(id)) + 1;
 
   useEffect(() => {
     fs?.readFile(url, (_error, contents = Buffer.from("")) => {
@@ -48,17 +46,15 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
   useEffect(() => containerRef?.current?.focus(), []);
 
   useEffect(() => {
-    if (webampCI) {
-      if (
-        foregroundId === id &&
-        !containerRef?.current?.contains(document.activeElement)
-      ) {
-        focusWindow(webampCI, "main");
-        containerRef?.current?.focus();
-      }
-      setZIndex(webampCI, zIndex);
+    if (
+      webampCI &&
+      foregroundId === id &&
+      !containerRef?.current?.contains(document.activeElement)
+    ) {
+      focusWindow(webampCI, "main");
+      containerRef?.current?.focus();
     }
-  }, [foregroundId, id, webampCI, zIndex]);
+  }, [foregroundId, id, webampCI]);
 
   return (
     <motion.div
@@ -73,7 +69,8 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
           setForegroundId("");
         if (webampCI) unFocusWindow(webampCI);
       }}
-      className="absolute top-0 right-0 bottom-0 left-0"
+      className="absolute top-0 right-0 bottom-0 left-0 pointer-events-none [&_div:first-child]:pointer-events-auto"
+      style={{ zIndex }}
       {...windowTranistion}
     />
   );

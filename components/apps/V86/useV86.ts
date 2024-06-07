@@ -1,5 +1,5 @@
 import { extname } from "path";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import useTitle from "@/components/system/Window/RndWindow/useTitle";
 import { useFileSystem } from "@/context/FileSystem";
@@ -20,7 +20,6 @@ const useV86 = (
   ref: React.MutableRefObject<HTMLDivElement | null>
 ): V86 => {
   const [emulator, setEmulator] = useState<V86Starter | null>(null);
-  const lockMouse = useCallback(() => emulator?.lock_mouse?.(), [emulator]);
 
   const { fs } = useFileSystem();
 
@@ -70,7 +69,7 @@ const useV86 = (
     return () => emulator?.destroy?.();
   }, [emulator, ref, url, fs, appendFileToTitle]);
 
-  return { emulator, lockMouse };
+  return { emulator, lockMouse: emulator?.lock_mouse };
 };
 
 export default useV86;
