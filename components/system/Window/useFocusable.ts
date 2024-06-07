@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
@@ -19,14 +19,11 @@ const useFocusable = (
   const zIndex =
     stackOrder.length + (minimized ? 1 : -stackOrder.indexOf(id)) + 1;
 
-  const isForeground = useMemo(() => id === foregroundId, [id, foregroundId]);
+  const isForeground = id === foregroundId;
 
-  const onBlur = useCallback(
-    ({ relatedTarget }: React.FocusEvent<HTMLElement>) => {
-      if (isForeground && relatedTarget !== taskbarEntry) setForegroundId("");
-    },
-    [isForeground, setForegroundId, taskbarEntry]
-  );
+  const onBlur: React.FocusEventHandler = ({ relatedTarget }) => {
+    if (isForeground && relatedTarget !== taskbarEntry) setForegroundId("");
+  };
 
   const moveToFront = useCallback(
     (event?: React.FocusEvent<HTMLElement> | React.MouseEvent<HTMLElement>) => {
@@ -43,12 +40,9 @@ const useFocusable = (
 
   useEffect(() => {
     if (isForeground) moveToFront();
-  }, [isForeground, moveToFront, zIndex]);
+  }, [isForeground, moveToFront]);
 
-  useEffect(() => {
-    moveToFront();
-    ref.current?.focus();
-  }, [moveToFront, ref]);
+  useEffect(() => setForegroundId(id), [id, setForegroundId]);
 
   return { zIndex, tabIndex: -1, onFocus: moveToFront, onBlur };
 };

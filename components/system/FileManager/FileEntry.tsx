@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 import { Button, Icon } from "@/components/common";
 import { useMenu } from "@/context/Menu";
@@ -29,10 +29,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
 }) => {
   const { icon, pid, url } = useFileInfo(path);
   const [renaming, setRenaming] = useState(false);
-  const { openFile } = useFile(url, pid);
-  const deleteEntry = useCallback(() => deleteFile(path), [deleteFile, path]);
-  const renameEntry = () => setRenaming(true);
-  const menu = useContextMenu(url, pid, deleteEntry, renameEntry);
+  const openFile = useFile(url, pid);
+  const menu = useContextMenu(
+    url,
+    pid,
+    () => deleteFile(path),
+    () => setRenaming(true)
+  );
   const { contextMenu } = useMenu();
   const {
     currentTheme: {

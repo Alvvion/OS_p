@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { useSession } from "@/context/Session";
 
@@ -10,24 +10,21 @@ const StartMenu: React.FC = () => {
   const { toggleStartMenu } = useSession();
   const menuRef = useRef<HTMLElement | null>(null);
 
-  const maybeCloseMenu = useCallback(
-    ({ relatedTarget }: React.FocusEvent) => {
-      if (!menuRef?.current?.contains(relatedTarget)) {
-        if (
-          ![
-            relatedTarget,
-            relatedTarget?.parentElement,
-            relatedTarget?.parentElement?.parentElement,
-          ].includes(menuRef.current?.nextSibling as EventTarget & Element)
-        ) {
-          toggleStartMenu(false);
-        } else {
-          menuRef?.current?.focus();
-        }
+  const maybeCloseMenu = ({ relatedTarget }: React.FocusEvent) => {
+    if (!menuRef?.current?.contains(relatedTarget)) {
+      if (
+        ![
+          relatedTarget,
+          relatedTarget?.parentElement,
+          relatedTarget?.parentElement?.parentElement,
+        ].includes(menuRef.current?.nextSibling as EventTarget & Element)
+      ) {
+        toggleStartMenu(false);
+      } else {
+        menuRef?.current?.focus();
       }
-    },
-    [toggleStartMenu]
-  );
+    }
+  };
 
   useEffect(() => menuRef?.current?.focus(), []);
 

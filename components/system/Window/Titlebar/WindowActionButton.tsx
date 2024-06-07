@@ -1,6 +1,4 @@
 /* eslint-disable no-nested-ternary */
-import { useMemo } from "react";
-
 import { Button } from "@/components/common";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
@@ -34,11 +32,8 @@ const WindowActionButton = ({ id }: { id: string }) => {
 
   const { foregroundId } = useSession();
 
-  const isForeground = useMemo(() => id === foregroundId, [foregroundId, id]);
-  const isMaximizable = useMemo(
-    () => autoSizing && !lockAspectRatio,
-    [autoSizing, lockAspectRatio]
-  );
+  const isForeground = id === foregroundId;
+  const isMaximizable = autoSizing && !lockAspectRatio;
 
   const {
     currentTheme: {

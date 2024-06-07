@@ -1,15 +1,24 @@
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useTheme } from "@/context/Theme";
 import useLocaleDateTime from "@/hooks/useDateTImeLocale";
-
-import useSyncedClock from "./useSyncedClock";
 
 const Clock: React.FC = () => {
   const [now, setNow] = useState<Date>(new Date());
   const { date, time, datetime, tooltip } = useLocaleDateTime(now);
 
-  useSyncedClock(useCallback(() => setNow(new Date()), []));
+  const updateClock = () => setNow(new Date());
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    timeoutId = setTimeout(() => {
+      updateClock();
+      timeoutId = setInterval(updateClock, 1000);
+    }, 1000 - new Date().getMilliseconds());
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   const {
     currentTheme: {

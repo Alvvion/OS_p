@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { useMenu } from "@/context/Menu";
 import { useTheme } from "@/context/Theme";
@@ -7,7 +7,7 @@ import MenuItemEntry from "./MenuItemEntry";
 
 const Menu: React.FC = () => {
   const { menu: { items, x = 0, y = 0 } = {}, setMenu } = useMenu();
-  const resetMenu = useCallback(() => setMenu({}), [setMenu]);
+  const resetMenu = () => setMenu({});
   const menuRef = useRef<HTMLElement | null>(null);
   const {
     currentTheme: {

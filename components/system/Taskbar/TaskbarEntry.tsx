@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
@@ -21,26 +21,19 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   } = useProcesses();
   const { foregroundId, setForegroundId } = useSession();
   const nextFocusableId = useNextFocusable(pid);
-  const isForeground = useMemo(() => foregroundId === pid, [foregroundId, pid]);
+  const isForeground = foregroundId === pid;
 
-  const isBottomNotch = useCallback(() => {
+  const isBottomNotch = () => {
     if (minimized || !isForeground) {
       return true;
     }
     return false;
-  }, [isForeground, minimized]);
+  };
 
-  const onClick = useCallback(() => {
+  const onClick = () => {
     if (minimized || isForeground) minimize(pid);
     setForegroundId(isForeground ? nextFocusableId : pid);
-  }, [
-    isForeground,
-    minimize,
-    minimized,
-    nextFocusableId,
-    pid,
-    setForegroundId,
-  ]);
+  };
 
   const linkTaskbarEntry = useCallback(
     (taskbarEntry: HTMLButtonElement | null) => {

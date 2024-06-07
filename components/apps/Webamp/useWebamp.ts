@@ -1,9 +1,8 @@
 import { useState } from "react";
 
-import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
-import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
+import useWindowActions from "@/hooks/useWindowActions";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
 import {
@@ -14,7 +13,7 @@ import {
 import type { WebampCI, WebampOptions } from "./types";
 
 const useWebamp = (id: string) => {
-  const { closeProcess, minimize } = useProcesses();
+  const { onClose, onMinimize } = useWindowActions(id);
 
   const {
     setWindowStates,
@@ -64,7 +63,7 @@ const useWebamp = (id: string) => {
         const [main] = getWebampElement().getElementsByClassName("window");
         const { x, y } = main.getBoundingClientRect();
 
-        closeWithTransition(closeProcess, id);
+        onClose();
         setWindowStates((currentWindowStates) => ({
           ...currentWindowStates,
           [id]: {
@@ -81,7 +80,7 @@ const useWebamp = (id: string) => {
         }
       });
 
-      webamp.onMinimize(() => minimize(id));
+      webamp.onMinimize(() => onMinimize());
 
       webamp.renderWhenReady(element).then(() => {
         closeEqualizer(webamp);

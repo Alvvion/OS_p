@@ -7,7 +7,7 @@ import {
   getProcessByFileExtension,
   getShortcut,
 } from "@/context/FileSystem/functions";
-import { IMAGE_FILE_EXTENSION } from "@/utils/constants";
+import { IMAGE_FILE_EXTENSION, SHORTCUT } from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
 import type { FileInfo } from "./types";
@@ -42,7 +42,7 @@ const useFileInfo = (path: string): FileInfo => {
             url: path,
           });
         });
-      } else if (extension === ".url") {
+      } else if (extension === SHORTCUT) {
         getShortcut(path, fs)
           .then(({ BaseURL: pid, URL: url, IconFile: icon }) =>
             setInfo({ icon, pid, url })

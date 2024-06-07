@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import type { DraggableEventHandler } from "react-draggable";
 import type { RndResizeCallback } from "react-rnd";
 
@@ -32,25 +31,21 @@ const useRnd = (id: string, maximized = false) => {
     statePosition || centerPosition(size, taskbarHeight)
   );
 
-  const onDragStop = useCallback<DraggableEventHandler>(
-    (_event, { x: positionX, y: positionY }) =>
-      setPosition({ x: positionX, y: positionY }),
-    [setPosition]
-  );
+  const onDragStop: DraggableEventHandler = (
+    _event,
+    { x: positionX, y: positionY }
+  ) => setPosition({ x: positionX, y: positionY });
 
-  const onResizeStop = useCallback<RndResizeCallback>(
-    (
-      _event,
-      _direction,
-      { style: { height: elementHeight, width: elementWidth } },
-      _delta,
-      { x: positionX, y: positionY }
-    ) => {
-      setSize({ height: elementHeight, width: elementWidth });
-      setPosition({ x: positionX, y: positionY });
-    },
-    [setPosition, setSize]
-  );
+  const onResizeStop: RndResizeCallback = (
+    _event,
+    _direction,
+    { style: { height: elementHeight, width: elementWidth } },
+    _delta,
+    { x: positionX, y: positionY }
+  ) => {
+    setSize({ height: elementHeight, width: elementWidth });
+    setPosition({ x: positionX, y: positionY });
+  };
 
   return {
     disableDragging: maximized,

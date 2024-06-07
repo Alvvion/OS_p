@@ -1,6 +1,7 @@
-import { basename, extname, resolve } from "path";
+import { basename, resolve } from "path";
 
 import { useTheme } from "@/context/Theme";
+import { SHORTCUT } from "@/utils/constants";
 
 import FileEntry from "./FileEntry";
 import type { FileManagerProps } from "./types";
@@ -30,7 +31,7 @@ const FileManager: React.FC<FileManagerProps> = ({
       {files.map((file) => (
         <FileEntry
           key={file}
-          name={basename(file, extname(file))}
+          name={basename(file, SHORTCUT)}
           path={resolve(directory, file)}
           deleteFile={deleteFile}
           renameFile={renameFile}

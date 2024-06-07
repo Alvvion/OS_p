@@ -9,7 +9,7 @@ const useContextMenu = (
   deleteFile: () => void,
   renameFile: () => void
 ) => {
-  const { openFile } = useFile(url, pid);
+  const openFile = useFile(url, pid);
   const { icon: pidIcon } = processDir[pid] || {};
 
   const menuItems: MenuItem[] = [

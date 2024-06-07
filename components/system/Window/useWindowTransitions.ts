@@ -47,12 +47,13 @@ const useWindowTransitions = (
 
   useEffect(() => {
     const {
-      // height: taskbarHeight = 0,
+      height: taskbarHeight = 0,
+      width: taskbarWidth = 0,
       x: taskbarX = 0,
       y: taskbarY = 0,
     } = taskbarEntry?.getBoundingClientRect() || {};
     const {
-      // height: windowHeight = 0,
+      height: windowHeight = 0,
       width: windowWidth = 0,
       x: windowX = 0,
       y: windowY = 0,
@@ -60,8 +61,10 @@ const useWindowTransitions = (
 
     setMinimize({
       ...staticMinimizeVariant,
-      x: taskbarX - (windowX + windowWidth / 2),
-      y: taskbarY - windowY,
+      // x: taskbarX - (windowX + windowWidth / 2),
+      x: taskbarX - windowX - windowWidth / 2 + taskbarWidth / 2,
+      // y: taskbarY - windowY,
+      y: taskbarY - windowY - windowHeight / 2 + taskbarHeight / 2,
     });
   }, [minimized, taskbarEntry, ref]);
 

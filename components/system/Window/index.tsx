@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
@@ -22,7 +22,7 @@ const Window: React.FC<WindowComponentProps> = ({
 
   const { foregroundId } = useSession();
 
-  const isForeground = useMemo(() => id === foregroundId, [foregroundId, id]);
+  const isForeground = id === foregroundId;
 
   const {
     currentTheme: {
