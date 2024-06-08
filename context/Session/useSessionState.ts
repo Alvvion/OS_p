@@ -15,11 +15,8 @@ const useSessionContextState = (): SessionContextType => {
 
   const { fs } = useFileSystem();
 
-  const toggleStartMenu = useCallback(
-    (showMenu?: boolean) =>
-      setStartMenuVisible((current) => showMenu ?? !current),
-    [setStartMenuVisible]
-  );
+  const toggleStartMenu = (showMenu?: boolean) =>
+    setStartMenuVisible((current) => showMenu ?? !current);
 
   const prependToStack = useCallback(
     (id: string) =>
