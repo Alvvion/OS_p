@@ -18,7 +18,6 @@ const useWebamp = (id: string) => {
   const {
     setWindowStates,
     stackOrder,
-    removeFromStack,
     windowStates: { [id]: { position = undefined } = {} } = {},
   } = useSession();
 
@@ -58,8 +57,7 @@ const useWebamp = (id: string) => {
 
       const webamp: WebampCI = new window.Webamp(options);
 
-      webamp.onWillClose((cancel) => {
-        cancel();
+      webamp.onWillClose(() => {
         const [main] = getWebampElement().getElementsByClassName("window");
         const { x, y } = main.getBoundingClientRect();
 
@@ -70,8 +68,6 @@ const useWebamp = (id: string) => {
             position: { x, y },
           },
         }));
-
-        removeFromStack(id);
 
         if (options.initialTracks) {
           const [{ url: objectUrl }] = options.initialTracks;
