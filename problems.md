@@ -11,3 +11,6 @@ Problems
 ### Dated 4th June 2024
 - After Minimize titlebar disappears (only for FileExploerer).
 - After Minimize/ Maximize from taskbar white border appers (solved).
+
+### Dated 9th June 2024
+- After Minimize titlebar disappears ~(only for FileExploerer)~ (scaling issue when minimizing scale 0.1 now) (solved).

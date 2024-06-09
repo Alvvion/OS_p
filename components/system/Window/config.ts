@@ -5,7 +5,7 @@ export const staticBaseVariants: Variants = {
   initial: { opacity: 0, scale: 0.75, height: "inherit", width: "inherit" },
 };
 
-export const staticMinimizeVariant: Variant = { opacity: 0, scale: 0 };
+export const staticMinimizeVariant: Variant = { opacity: 0, scale: 0.1 };
 
 export const staticMaximizeVariant: Variant = {
   opacity: 1,
