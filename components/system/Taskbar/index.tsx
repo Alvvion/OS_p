@@ -42,6 +42,7 @@ const Taskbar = () => {
             width={32}
             height={32}
             name="Start Button"
+            visibility
             onClick={() => toggleStartMenu()}
           />
           <div className="flex flex-row justify-center items-center h-full relative">

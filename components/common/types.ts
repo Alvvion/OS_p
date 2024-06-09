@@ -1,6 +1,7 @@
 import type { Props } from "react-rnd";
 
 export interface ImageProps extends React.ComponentPropsWithoutRef<"img"> {
+  visibility?: boolean;
   size?: number | string;
   src?: string;
 }

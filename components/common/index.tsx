@@ -1,4 +1,3 @@
-import { basename, dirname } from "path";
 import { memo, useEffect } from "react";
 
 import { cleanUpBufferUrl } from "@/utils/functions";
@@ -11,6 +10,7 @@ const onLoad: React.ReactEventHandler<HTMLImageElement> = ({ target }) =>
 const IconComponent: React.FC<ImageProps> = ({
   size,
   src,
+  visibility,
   className,
   ...restProps
 }) => {
@@ -20,6 +20,7 @@ const IconComponent: React.FC<ImageProps> = ({
     },
     [src]
   );
+
   return (
     // eslint-disable-next-line jsx-a11y/alt-text
     <img
@@ -27,12 +28,8 @@ const IconComponent: React.FC<ImageProps> = ({
       onLoad={onLoad}
       height={size}
       width={size}
-      src={
-        !src || src.startsWith("blob:")
-          ? src
-          : `${dirname(src)}/${basename(src)}`
-      }
-      className={`${className} invisible`}
+      src={src}
+      className={`${className} ${visibility ? "" : "invisible"}`}
       {...restProps}
     />
   );

@@ -13,6 +13,7 @@ const TaskbarButtons: React.FC<TaskbarButtonProps> = ({
   name,
   reference,
   reqBottomNotch,
+  visibility,
   bottomnotch = false,
   ...buttonProps
 }) => {
@@ -49,6 +50,7 @@ const TaskbarButtons: React.FC<TaskbarButtonProps> = ({
         width={width}
         height={height}
         alt={name}
+        visibility={visibility}
         className="active:transform active:scale-[0.85]"
       />
       {reqBottomNotch && (

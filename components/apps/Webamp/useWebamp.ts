@@ -1,3 +1,4 @@
+import { parseBuffer } from "music-metadata-browser";
 import { useState } from "react";
 
 import { useSession } from "@/context/Session";
@@ -31,7 +32,11 @@ const useWebamp = (id: string) => {
 
   const [webampCI, setWebampCI] = useState<WebampCI | null>(null);
 
-  const loadWebamp = (element: HTMLDivElement | null, file?: Buffer) => {
+  const loadWebamp = async (
+    element: HTMLDivElement | null,
+    fileName: string,
+    file?: Buffer
+  ): Promise<void> => {
     if (element && window.Webamp && !webampCI) {
       const options: WebampOptions = {
         __butterchurnOptions: {
@@ -50,8 +55,11 @@ const useWebamp = (id: string) => {
       };
 
       if (file) {
+        const { common: { artist = "", title = fileName } = {} } =
+          (await parseBuffer(file)) || {};
+
         options.initialTracks = [
-          { metaData: { title: "", artist: "" }, url: bufferToUrl(file) },
+          { metaData: { title, artist }, url: bufferToUrl(file) },
         ];
       }
 

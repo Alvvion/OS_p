@@ -1,5 +1,6 @@
 export interface TaskbarButtonProps
   extends React.ComponentPropsWithoutRef<"button"> {
+  visibility?: boolean;
   src: string;
   width: number;
   height: number;

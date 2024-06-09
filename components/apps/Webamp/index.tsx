@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { basename } from "path";
 import { useEffect, useRef } from "react";
 
 import type { ComponentProps } from "@/components/common/types";
@@ -38,7 +39,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
         "/libs/webamp/butterchurn.min.js",
         "/libs/webamp/butterchurnPresets.min.js",
       ]).then(() => {
-        loadWebamp(containerRef?.current, contents);
+        loadWebamp(containerRef?.current, basename(url), contents);
       });
     });
   }, [fs, loadWebamp, url]);
