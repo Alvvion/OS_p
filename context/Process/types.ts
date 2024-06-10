@@ -2,6 +2,7 @@ import type { ComponentProps } from "@/components/common/types";
 
 export type ProcessElement = {
   taskbarEntry?: HTMLElement;
+  componentWindow?: HTMLElement;
 };
 
 export type Process = ProcessElement & {
