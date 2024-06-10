@@ -14,3 +14,13 @@ export type LocaleDateTime = {
   datetime: string;
   tooltip: string;
 };
+
+export type Events = {
+  onBlur: (event: React.FocusEvent<HTMLElement>) => void;
+  onFocus: (event?: React.FocusEvent<HTMLElement>) => void;
+};
+
+export type Focusable = Events & {
+  zIndex: number;
+  tabIndex: number;
+};
