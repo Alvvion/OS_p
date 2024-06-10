@@ -1,5 +1,5 @@
 import { basename } from "path";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import { SHORTCUT } from "@/utils/constants";
@@ -8,14 +8,17 @@ const useFiles = (directory: string) => {
   const { fs } = useFileSystem();
   const [files, setFiles] = useState<string[]>([]);
 
-  const updateFiles = (appendFiles?: string) =>
-    fs?.readdir(directory, (_err, contents = []) =>
-      setFiles((currentFiles) =>
-        appendFiles && contents.length !== 0
-          ? [...currentFiles, basename(appendFiles)]
-          : contents
-      )
-    );
+  const updateFiles = useCallback(
+    (appendFiles?: string) =>
+      fs?.readdir(directory, (_err, contents = []) =>
+        setFiles((currentFiles) =>
+          appendFiles && contents.length !== 0
+            ? [...currentFiles, basename(appendFiles)]
+            : contents
+        )
+      ),
+    [directory, fs]
+  );
 
   const deleteFile = (path: string) => {
     fs?.unlink(path, () => {
@@ -41,7 +44,7 @@ const useFiles = (directory: string) => {
     }
   };
 
-  useEffect(updateFiles, [directory, fs]);
+  useEffect(updateFiles, [updateFiles]);
 
   return { files, updateFiles, deleteFile, renameFile };
 };

@@ -85,7 +85,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
           ) : (
             <figcaption
               style={{ fontSize, color: text, letterSpacing, textShadow }}
-              className="p-[3px] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden break-words tracking-[-0.1px] leading-4 [nav_&]:![text-shadow:none]"
+              className="py-0.5 px-px [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden break-words tracking-[-0.1px] leading-4 [nav_&]:![text-shadow:none] my-px mx-0"
             >
               {name}
             </figcaption>
