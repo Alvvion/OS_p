@@ -28,6 +28,7 @@ export const getIconByFileExtension = (extention: string): string => {
     case ".zip":
       return "/assets/compressed.png";
     case ".mp3":
+    case ".wsz":
       return "/assets/music_48.png";
     default:
       return "/assets/ICON2_1.ico";
@@ -43,6 +44,7 @@ export const getProcessByFileExtension = (extention: string) => {
     case ".zip":
       return "JSDOS";
     case ".mp3":
+    case ".wsz":
       return "Webamp";
     default:
       return "";

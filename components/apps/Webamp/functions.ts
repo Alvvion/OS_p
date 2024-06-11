@@ -3,7 +3,7 @@ import { parseBuffer } from "music-metadata-browser";
 import type { Position } from "react-rnd";
 
 import { centerPosition } from "@/components/system/Window/RndWindow/functions";
-import { bufferToBlob } from "@/utils/functions";
+import { bufferToBlob, cleanUpBufferUrl } from "@/utils/functions";
 
 import type { Track, WebampCI } from "./types";
 
@@ -12,10 +12,29 @@ const BASE_WINDOW_SIZE = {
   width: 275,
 };
 
+export const BASE_WEBAMP_SKINS = {
+  availableSins: [
+    { url: "/skins/Aqua_X.wsz", name: "Aqua X" },
+    { url: "/skins/Nucleo_NLog_v102.wsz", name: "Nucleo NLog v2G" },
+    {
+      url: "/skins/SpyAMP_Professional_Edition_v5.wsz",
+      name: "SpyAMP Professional Edition v5",
+    },
+  ],
+};
+
 export const closeEqualizer = (webamp: WebampCI): void =>
   webamp.store.dispatch({
     type: "CLOSE_WINDOW",
     windowId: "equalizer",
+  });
+
+export const cleanBufferOnSkinLoad = (
+  webamp: WebampCI,
+  url = ""
+): Promise<void> =>
+  webamp.skinIsLoaded().then(() => {
+    if (url) cleanUpBufferUrl(url);
   });
 
 export const getWebampElement = (): HTMLDivElement =>

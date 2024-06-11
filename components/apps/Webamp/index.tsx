@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { basename } from "path";
+import { basename, extname } from "path";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { ComponentProps } from "@/components/common/types";
@@ -7,9 +7,14 @@ import useWindowTransitions from "@/components/system/Window/useWindowTransition
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useFocusable from "@/hooks/useFocusable";
-import { loadFiles } from "@/utils/functions";
+import { bufferToUrl, loadFiles } from "@/utils/functions";
 
-import { focusWindow, parseTrack, unFocusWindow } from "./functions";
+import {
+  cleanBufferOnSkinLoad,
+  focusWindow,
+  parseTrack,
+  unFocusWindow,
+} from "./functions";
 import useWebamp from "./useWebamp";
 
 const Webamp: React.FC<ComponentProps> = ({ id }) => {
@@ -23,13 +28,9 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
 
   const { loadWebamp, webampCI } = useWebamp(id);
   const [currentUrl, setCurrentUrl] = useState(url);
-  console.log(`This is url ${url}`);
 
   useEffect(() => {
-    fs?.readFile(url, (error, contents = Buffer.from("")) => {
-      if (error) {
-        console.log(error.message, url);
-      }
+    fs?.readFile(url, (_error, contents = Buffer.from("")) => {
       loadFiles(["/libs/webamp/webamp.bundle.min.js"]).then(() => {
         loadWebamp(containerRef?.current, url, contents);
       });
@@ -49,10 +50,17 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
   useEffect(() => {
     if (url && url !== currentUrl && webampCI) {
       fs?.readFile(url, (_e, content = Buffer.from("")) => {
-        parseTrack(content, basename(url)).then((track) => {
-          setCurrentUrl(url);
-          webampCI?.appendTracks([track]);
-        });
+        if (extname(url) === ".mp3") {
+          parseTrack(content, basename(url)).then((track) => {
+            setCurrentUrl(url);
+            webampCI?.appendTracks([track]);
+          });
+        } else {
+          const bufferUrl = bufferToUrl(content);
+
+          cleanBufferOnSkinLoad(webampCI, bufferUrl);
+          webampCI.setSkinFromUrl(bufferUrl);
+        }
       });
     }
   }, [currentUrl, fs, url, webampCI]);

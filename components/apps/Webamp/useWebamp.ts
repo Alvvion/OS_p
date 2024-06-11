@@ -1,4 +1,4 @@
-import { basename } from "path";
+import { basename, extname } from "path";
 import { useState } from "react";
 
 import { useProcesses } from "@/context/Process";
@@ -7,8 +7,11 @@ import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
 import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
+import { bufferToUrl } from "@/utils/functions";
 
 import {
+  BASE_WEBAMP_SKINS,
+  cleanBufferOnSkinLoad,
   closeEqualizer,
   getWebampElement,
   parseTrack,
@@ -63,7 +66,10 @@ const useWebamp = (id: string) => {
       // };
 
       const runWebamp = (options?: WebampOptions) => {
-        const webamp: WebampCI = new window.Webamp(options);
+        const webamp: WebampCI = new window.Webamp({
+          ...BASE_WEBAMP_SKINS,
+          ...options,
+        });
 
         const setupElement = () => {
           const webampElement = getWebampElement();
@@ -98,6 +104,10 @@ const useWebamp = (id: string) => {
           webamp.onMinimize(() => onMinimize()),
         ];
 
+        if (options?.initialSkin?.url) {
+          cleanBufferOnSkinLoad(webamp, options.initialSkin.url);
+        }
+
         webamp.renderWhenReady(element).then(() => {
           closeEqualizer(webamp);
           updateWebampPostion(webamp, taskbarHeight, position);
@@ -108,9 +118,11 @@ const useWebamp = (id: string) => {
       };
 
       if (file && url) {
-        parseTrack(file, basename(url)).then((track) =>
-          runWebamp({ initialTracks: [track] })
-        );
+        if (extname(url) === ".mp3") {
+          parseTrack(file, basename(url)).then((track) =>
+            runWebamp({ initialTracks: [track] })
+          );
+        } else runWebamp({ initialSkin: { url: bufferToUrl(file) } });
       } else runWebamp();
     }
   };

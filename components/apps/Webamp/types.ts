@@ -30,6 +30,8 @@ export type WebampCI = {
   onWillClose: (cb: (cancel: () => void) => void) => () => void;
   onMinimize: (cb: () => void) => () => void;
   renderWhenReady: (domNode: HTMLElement) => Promise<void>;
+  setSkinFromUrl: (url: string) => void;
+  skinIsLoaded: () => Promise<void>;
   store: {
     dispatch: (command: WebampDispatch) => void;
   };
@@ -37,9 +39,9 @@ export type WebampCI = {
 
 export type WebampOptions = {
   // __butterchurnOptions: unknown;
-  // initialSkin?: {
-  //   url: string;
-  // };
+  initialSkin?: {
+    url: string;
+  };
   initialTracks?: Track[];
 };
 

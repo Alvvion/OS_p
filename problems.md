@@ -4,13 +4,6 @@ Problems
 
 - No zip and iso support (stream 20).
 
-### Dated 30th May 2024
-- Minimize doesn't work when window is maximized (solved).
-
-
-### Dated 4th June 2024
-- After Minimize titlebar disappears (only for FileExploerer).
-- After Minimize/ Maximize from taskbar white border appers (solved).
-
-### Dated 9th June 2024
-- After Minimize titlebar disappears ~(only for FileExploerer)~ (scaling issue when minimizing scale 0.1 now) (solved).
+### Dated 11th June 2024
+- No Window Peak support (stream 25)
+- Skins do not load on context menu
