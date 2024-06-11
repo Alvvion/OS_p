@@ -1,7 +1,6 @@
 import type { Position } from "react-rnd";
 
 type WebampDispatchProps = {
-  absolute?: boolean;
   positions?: {
     main: Position;
     playlist: Position;
@@ -9,7 +8,15 @@ type WebampDispatchProps = {
   };
   windowId?: string;
   window?: string;
-  zIndex?: number;
+};
+
+export type Track = {
+  blob: Blob;
+  duration: number;
+  metaData: {
+    artist?: string;
+    title: string;
+  };
 };
 
 type WebampDispatch = WebampDispatchProps & {
@@ -17,6 +24,8 @@ type WebampDispatch = WebampDispatchProps & {
 };
 
 export type WebampCI = {
+  appendTracks: (tracks: Track[]) => void;
+  close: () => void;
   dispose: () => void;
   onWillClose: (cb: (cancel: () => void) => void) => () => void;
   onMinimize: (cb: () => void) => () => void;
@@ -26,21 +35,12 @@ export type WebampCI = {
   };
 };
 
-type Track = {
-  metaData: {
-    artist?: string;
-    title: string;
-  };
-  url: string;
-};
-
 export type WebampOptions = {
-  __butterchurnOptions: unknown;
-  initialSkin?: {
-    url: string;
-  };
+  // __butterchurnOptions: unknown;
+  // initialSkin?: {
+  //   url: string;
+  // };
   initialTracks?: Track[];
-  zIndex?: number;
 };
 
 interface WebampConstructor {
@@ -49,15 +49,10 @@ interface WebampConstructor {
 
 declare global {
   interface Window {
-    butterchurn: unknown;
-    butterchurnPresets: {
-      getPresets: () => { [preset: string]: unknown };
-    };
+    // butterchurn: unknown;
+    // butterchurnPresets: {
+    //   getPresets: () => { [preset: string]: unknown };
+    // };
     Webamp: WebampConstructor;
   }
 }
-
-export type Options = {
-  zIndex?: number;
-  initialTracks?: Track[];
-};
