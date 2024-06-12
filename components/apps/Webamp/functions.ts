@@ -13,7 +13,7 @@ const BASE_WINDOW_SIZE = {
 };
 
 export const BASE_WEBAMP_SKINS = {
-  availableSins: [
+  availableSkins: [
     { url: "/skins/Aqua_X.wsz", name: "Aqua X" },
     { url: "/skins/Nucleo_NLog_v102.wsz", name: "Nucleo NLog v2G" },
     {

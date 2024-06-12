@@ -59,7 +59,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
           const bufferUrl = bufferToUrl(content);
 
           cleanBufferOnSkinLoad(webampCI, bufferUrl);
-          webampCI.setSkinFromUrl(bufferUrl);
+          webampCI?.setSkinFromUrl(bufferUrl);
         }
       });
     }

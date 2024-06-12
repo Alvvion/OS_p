@@ -6,4 +6,4 @@ Problems
 
 ### Dated 11th June 2024
 - No Window Peak support (stream 25)
-- Skins do not load on context menu
+- Skins do not load on context menu (solved availableSkins was availableSins)
