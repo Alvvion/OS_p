@@ -1,7 +1,7 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import ini from "ini";
 
-import type { Shortcut } from "./types";
+import type { Extentions, Shortcut } from "./types";
 
 export const getShortcut = (path: string, fs: FSModule): Promise<Shortcut> =>
   new Promise((resolve, reject) => {
@@ -19,34 +19,37 @@ export const getShortcut = (path: string, fs: FSModule): Promise<Shortcut> =>
     });
   });
 
-export const getIconByFileExtension = (extention: string): string => {
-  switch (extention) {
-    case ".img":
-    case ".iso":
-      return "/assets/imageres_5205.ico";
-    case ".jsdos":
-    case ".zip":
-      return "/assets/compressed.png";
-    case ".mp3":
-    case ".wsz":
-      return "/assets/music_48.png";
-    default:
-      return "/assets/ICON2_1.ico";
-  }
+export const extentions: Extentions = {
+  ".img": {
+    icon: "/assets/imageres_5205.ico",
+    process: ["V86"],
+  },
+  ".iso": {
+    icon: "/assets/imageres_5205.ico",
+    process: ["V86"],
+  },
+  ".jsdos": {
+    icon: "/assets/compressed.png",
+    process: ["JSDOS"],
+  },
+  ".zip": {
+    icon: "/assets/compressed.png",
+    process: ["JSDOS"],
+  },
+  ".mp3": {
+    icon: "/assets/music_48.png",
+    process: ["Webamp"],
+  },
+  ".wsz": {
+    icon: "/assets/music_48.png",
+    process: ["Webamp"],
+  },
 };
 
-export const getProcessByFileExtension = (extention: string) => {
-  switch (extention) {
-    case ".img":
-    case ".iso":
-      return "V86";
-    case ".jsdos":
-    case ".zip":
-      return "JSDOS";
-    case ".mp3":
-    case ".wsz":
-      return "Webamp";
-    default:
-      return "";
-  }
-};
+export const getIconByFileExtension = (extention: string): string =>
+  extentions[extention]?.icon || "/assets/ICON2_1.ico";
+
+export const getProcessByFileExtension = (
+  extention: string,
+  openWith = 0
+): string => extentions[extention]?.process[openWith] || "";
