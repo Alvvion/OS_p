@@ -33,6 +33,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const menu = useContextMenu(
     url,
     pid,
+    path,
     () => deleteFile(path),
     () => setRenaming(true)
   );
