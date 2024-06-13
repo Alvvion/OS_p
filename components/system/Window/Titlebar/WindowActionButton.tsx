@@ -1,11 +1,15 @@
 /* eslint-disable no-nested-ternary */
 import { Button } from "@/components/common";
+import {
+  CloseIcon,
+  MaximizedIcon,
+  MaximizeIcon,
+  MinimizeIcon,
+} from "@/components/common/Icons";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
-
-import { CloseIcon, MaximizedIcon, MaximizeIcon, MinimizeIcon } from "./Icons";
 
 const _tailwind = [
   "hover:bg-titlebar-backgroundHover",

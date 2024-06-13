@@ -1,4 +1,4 @@
-import type { IconProps } from "./types";
+import type { IconProps } from "../system/Window/Titlebar/types";
 
 export const MinimizeIcon: React.FC<IconProps> = ({ extraStyles }) => (
   <svg className={`w-[10px] mr-px mb-[1px] ${extraStyles}`} viewBox="0 0 10 1">
@@ -36,4 +36,10 @@ export const Avatar: React.FC<IconProps> = ({ extraStyles }) => (
       <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
     </svg>
   </span>
+);
+
+export const ChevronRight = (): JSX.Element => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <path d="M8.047 30.547L22.578 16 8.047 1.453 9.453.047 25.422 16 9.453 31.953l-1.406-1.406z" />
+  </svg>
 );
