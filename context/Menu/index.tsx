@@ -8,7 +8,7 @@ import useMenuContextState from "./useMenuContextState";
 const { Provider, useContext } = contextFactory<MenuContextType>(
   initialMenuState,
   useMenuContextState,
-  Menu
+  () => <Menu />
 );
 
 export { Provider as MenuProvider, useContext as useMenu };

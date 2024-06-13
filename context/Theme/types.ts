@@ -36,6 +36,9 @@ export interface DefaultTheme {
     };
   };
   sizes: {
+    contextMenu: {
+      subMenuOffset: number;
+    };
     taskbar: {
       height: string;
       clock: {

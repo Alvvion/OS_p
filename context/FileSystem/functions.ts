@@ -19,14 +19,14 @@ export const getShortcut = (path: string, fs: FSModule): Promise<Shortcut> =>
     });
   });
 
-export const extentions: Extentions = {
+export const extensions: Extentions = {
   ".img": {
     icon: "/assets/imageres_5205.ico",
     process: ["V86"],
   },
   ".iso": {
     icon: "/assets/imageres_5205.ico",
-    process: ["V86"],
+    process: ["V86", "JSDOS"],
   },
   ".jsdos": {
     icon: "/assets/compressed.png",
@@ -47,9 +47,7 @@ export const extentions: Extentions = {
 };
 
 export const getIconByFileExtension = (extention: string): string =>
-  extentions[extention]?.icon || "/assets/ICON2_1.ico";
+  extensions[extention]?.icon || "/assets/ICON2_1.ico";
 
-export const getProcessByFileExtension = (
-  extention: string,
-  openWith = 0
-): string => extentions[extention]?.process[openWith] || "";
+export const getProcessByFileExtension = (extention: string): string =>
+  extensions[extention]?.process[0] || "";

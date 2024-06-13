@@ -57,6 +57,9 @@ const themes: Themes = {
       },
     },
     sizes: {
+      contextMenu: {
+        subMenuOffset: 3,
+      },
       taskbar: {
         height: "2.8em",
         clock: {
