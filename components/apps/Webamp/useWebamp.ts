@@ -54,7 +54,7 @@ const useWebamp = (id: string) => {
         zIndex: stackOrder.length + 1,
       };
 
-      if (file) {
+      if (file && fileName) {
         const { common: { artist = "", title = fileName } = {} } =
           (await parseBuffer(file)) || {};
 
