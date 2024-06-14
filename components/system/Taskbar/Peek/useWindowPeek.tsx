@@ -27,11 +27,17 @@ const useWindowPeak = (id: string): WindowPeak => {
   const [previewSrc, setPreviewSrc] = useState("");
   const { onClose } = useWindowActions(id);
   const PeakWindow = (): JSX.Element => (
-    <div>
-      <img alt={title} src={previewSrc} />
-      <Button onClick={onClose} title="Close">
-        <CloseIcon />
-      </Button>
+    <div
+      className="absolute z-50 w-40 bottom-14 -left-1/2 bg-[#292929] rounded-lg"
+      //   style={{ bottom: height }}
+    >
+      <div className="flex justify-between items-center mx-2">
+        <h1 className="text-white">{title}</h1>
+        <Button extraStyles="h-8" onClick={onClose} title="Close">
+          <CloseIcon extraStyles="fill-white w-3" />
+        </Button>
+      </div>
+      <img className="w-full p-2 pt-0" alt={title} src={previewSrc} />
     </div>
   );
   const onMouseEnter = () => {
@@ -70,6 +76,7 @@ const useWindowPeak = (id: string): WindowPeak => {
 
   return {
     PeakComponent: showPeak && previewSrc ? PeakWindow : undefined,
+    // PeakComponent: PeakWindow,
     peakEvents: minimized
       ? {}
       : {

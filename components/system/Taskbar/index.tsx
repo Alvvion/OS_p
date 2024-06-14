@@ -33,7 +33,7 @@ const Taskbar = () => {
       {startMenuVisible && <StartMenu />}
       <nav
         style={{ backgroundColor: bgColor, height }}
-        className="absolute z-[1000] w-[100vw] flex flex-row justify-between items-center bottom-0 left-0 right-0 overflow-hidden"
+        className="absolute z-[1000] w-[100vw] flex flex-row justify-between items-center bottom-0 left-0 right-0"
         tabIndex={-1}
       >
         <div className="h-full flex place-content-center place-items-center">

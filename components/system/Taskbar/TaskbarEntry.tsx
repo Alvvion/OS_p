@@ -4,6 +4,7 @@ import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import useNextFocusable from "@/hooks/useNextFocusable";
 
+import useWindowPeak from "./Peek/useWindowPeek";
 import TaskbarButtons from "./TaskbarButtons";
 import type { TaskbarEntryProps } from "./types";
 
@@ -43,17 +44,22 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
     [pid, linkElement]
   );
 
+  const { PeakComponent, peakEvents } = useWindowPeak(pid);
+
   return (
-    <TaskbarButtons
-      src={src}
-      width={width}
-      height={height}
-      name={name}
-      reqBottomNotch
-      bottomnotch={isBottomNotch()}
-      onClick={onClick}
-      reference={linkTaskbarEntry}
-    />
+    <div {...peakEvents}>
+      {PeakComponent && <PeakComponent />}
+      <TaskbarButtons
+        src={src}
+        width={width}
+        height={height}
+        name={name}
+        reqBottomNotch
+        bottomnotch={isBottomNotch()}
+        onClick={onClick}
+        reference={linkTaskbarEntry}
+      />
+    </div>
   );
 };
 
