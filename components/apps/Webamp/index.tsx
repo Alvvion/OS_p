@@ -1,15 +1,20 @@
 import { motion } from "framer-motion";
-import { basename } from "path";
-import { useEffect, useMemo, useRef } from "react";
+import { basename, extname } from "path";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { ComponentProps } from "@/components/common/types";
 import useWindowTransitions from "@/components/system/Window/useWindowTransitions";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useFocusable from "@/hooks/useFocusable";
-import { loadFiles } from "@/utils/functions";
+import { bufferToUrl, loadFiles } from "@/utils/functions";
 
-import { focusWindow, unFocusWindow } from "./functions";
+import {
+  cleanBufferOnSkinLoad,
+  focusWindow,
+  parseTrack,
+  unFocusWindow,
+} from "./functions";
 import useWebamp from "./useWebamp";
 
 const Webamp: React.FC<ComponentProps> = ({ id }) => {
@@ -22,6 +27,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
   const windowTranistion = useWindowTransitions(id, containerRef);
 
   const { loadWebamp, webampCI } = useWebamp(id);
+  const [currentUrl, setCurrentUrl] = useState(url);
 
   useEffect(() => {
     fs?.readFile(url, (_error, contents = Buffer.from("")) => {
@@ -30,10 +36,28 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
         "/libs/webamp/butterchurn.min.js",
         "/libs/webamp/butterchurnPresets.min.js",
       ]).then(() => {
-        loadWebamp(containerRef?.current, basename(url), contents);
+        loadWebamp(containerRef?.current, url, contents);
       });
     });
   }, [fs, loadWebamp, url]);
+
+  useEffect(() => {
+    if (url && url !== currentUrl && webampCI) {
+      fs?.readFile(url, (_e, content = Buffer.from("")) => {
+        if (extname(url) === ".mp3") {
+          parseTrack(content, basename(url)).then((track) => {
+            setCurrentUrl(url);
+            webampCI?.appendTracks([track]);
+          });
+        } else {
+          const bufferUrl = bufferToUrl(content);
+
+          cleanBufferOnSkinLoad(webampCI, bufferUrl);
+          webampCI.setSkinFromUrl(bufferUrl);
+        }
+      });
+    }
+  }, [currentUrl, fs, url, webampCI]);
 
   const focusEvents = useMemo(
     () => ({

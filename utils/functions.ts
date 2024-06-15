@@ -50,8 +50,11 @@ export const loadFiles = (files: string[]): Promise<Event[]> =>
     }, [])
   );
 
+export const bufferToBlob = (buffer: Buffer): Blob =>
+  new Blob([new Uint8Array(buffer)]);
+
 export const bufferToUrl = (buffer: Buffer): string =>
-  URL.createObjectURL(new Blob([new Uint8Array(buffer)]));
+  URL.createObjectURL(bufferToBlob(buffer));
 
 export const pxToNumber = (px: string): number =>
   parseInt(px.slice(0, px.length - 2), 10);
