@@ -4,11 +4,11 @@ import { useRef } from "react";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
+import useFocusable from "@/hooks/useFocusable";
 
 import RndWindow from "./RndWindow";
 import Titlebar from "./Titlebar";
 import type { WindowComponentProps } from "./types";
-import useFocusable from "./useFocusable";
 import useWindowTransitions from "./useWindowTransitions";
 
 const Window: React.FC<WindowComponentProps> = ({

@@ -3,11 +3,12 @@ import { useCallback, useEffect } from "react";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 
-import type { Focusable } from "./types";
+import type { Events, Focusable } from "./types";
 
 const useFocusable = (
   id: string,
-  ref: React.MutableRefObject<HTMLElement | null>
+  ref: React.MutableRefObject<HTMLElement | null>,
+  callbackEvents?: Partial<Events>
 ): Focusable => {
   const { foregroundId, setForegroundId, stackOrder, prependToStack } =
     useSession();
@@ -21,21 +22,25 @@ const useFocusable = (
 
   const isForeground = id === foregroundId;
 
-  const onBlur: React.FocusEventHandler = ({ relatedTarget }) => {
+  const onBlur: React.FocusEventHandler<HTMLElement> = (event) => {
+    const { relatedTarget } = event;
     if (isForeground && relatedTarget !== taskbarEntry) setForegroundId("");
+
+    callbackEvents?.onBlur?.(event);
   };
 
   const moveToFront = useCallback(
-    (event?: React.FocusEvent<HTMLElement> | React.MouseEvent<HTMLElement>) => {
+    (event?: React.FocusEvent<HTMLElement>) => {
       const { relatedTarget } = event || {};
       if (ref?.current?.contains(document.activeElement)) {
         prependToStack(id);
         setForegroundId(id);
       } else if (!relatedTarget || document.activeElement === taskbarEntry) {
         ref?.current?.focus();
+        callbackEvents?.onFocus?.(event);
       }
     },
-    [id, prependToStack, ref, setForegroundId, taskbarEntry]
+    [callbackEvents, id, prependToStack, ref, setForegroundId, taskbarEntry]
   );
 
   useEffect(() => {

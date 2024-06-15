@@ -1,6 +1,8 @@
 import { parseBuffer } from "music-metadata-browser";
 import { useState } from "react";
 
+import { useProcesses } from "@/context/Process";
+import type { Process } from "@/context/Process/types";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
@@ -21,6 +23,13 @@ const useWebamp = (id: string) => {
     stackOrder,
     windowStates: { [id]: { position = undefined } = {} } = {},
   } = useSession();
+
+  const {
+    linkElement,
+    processes: { [id]: windowProcess = {} },
+  } = useProcesses();
+
+  const { componentWindow } = windowProcess as Process;
 
   const {
     currentTheme: {
@@ -65,6 +74,17 @@ const useWebamp = (id: string) => {
 
       const webamp: WebampCI = new window.Webamp(options);
 
+      const setupElements = () => {
+        const webampElement = getWebampElement();
+        const [main] = webampElement.getElementsByClassName("window");
+
+        if (!componentWindow && main && Object.keys(windowProcess).length) {
+          linkElement(id, "componentWindow", main as HTMLElement);
+        }
+
+        element.appendChild(webampElement);
+      };
+
       webamp.onWillClose(() => {
         const [main] = getWebampElement().getElementsByClassName("window");
         const { x, y } = main.getBoundingClientRect();
@@ -91,7 +111,7 @@ const useWebamp = (id: string) => {
 
         updateWebampPostion(webamp, taskbarHeight, position);
 
-        element?.appendChild(getWebampElement());
+        setupElements();
       });
 
       setWebampCI(webamp);

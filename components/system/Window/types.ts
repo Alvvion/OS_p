@@ -7,13 +7,6 @@ export type WindowComponentProps = ComponentProps & {
   children: React.ReactNode;
 };
 
-export type Focusable = {
-  zIndex: number;
-  tabIndex: number;
-  onBlur: (event: React.FocusEvent<HTMLElement>) => void;
-  onFocus: (event: React.FocusEvent<HTMLElement>) => void;
-};
-
 export type Variant = {
   opacity: number;
   scale: number;
