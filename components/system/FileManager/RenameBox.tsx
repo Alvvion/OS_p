@@ -12,7 +12,7 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
   useEffect(() => {
     inputRef?.current?.focus();
     inputRef?.current?.setSelectionRange(0, name.length - extname(name).length);
-  }, []);
+  }, [name]);
 
   return (
     <input

@@ -1,3 +1,6 @@
+import { extname } from "path";
+
+import { extensions } from "@/context/FileSystem/functions";
 import type { MenuItem } from "@/context/Menu/types";
 import { processDir } from "@/context/Process/directory";
 
@@ -9,8 +12,10 @@ const useContextMenu = (
   deleteFile: () => void,
   renameFile: () => void
 ) => {
-  const openFile = useFile(url, pid);
+  const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
+
+  const { process: [, ...openWith] = [] } = extensions[extname(url)] || {};
 
   const menuItems: MenuItem[] = [
     { label: "Delete", action: deleteFile },
@@ -18,15 +23,26 @@ const useContextMenu = (
   ];
 
   if (pid) {
-    menuItems.unshift(
-      {
-        icon: pidIcon,
-        label: "Open",
-        primary: true,
-        action: openFile,
-      },
-      { separator: 1 }
-    );
+    menuItems.unshift({ separator: 1 });
+
+    if (openWith.length) {
+      menuItems.unshift({
+        label: "Open with",
+        menu: openWith.map((id): MenuItem => {
+          const { icon, title: label } = processDir[id] || {};
+          const action = () => openFile(id);
+
+          return { icon, label, action };
+        }),
+      });
+    }
+
+    menuItems.unshift({
+      icon: pidIcon,
+      label: "Open",
+      primary: true,
+      action: () => openFile(pid),
+    });
   }
 
   return menuItems;

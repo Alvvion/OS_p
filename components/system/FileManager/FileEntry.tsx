@@ -29,7 +29,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
 }) => {
   const { icon, pid, url } = useFileInfo(path);
   const [renaming, setRenaming] = useState(false);
-  const openFile = useFile(url, pid);
+  const openFile = useFile(url);
   const menu = useContextMenu(
     url,
     pid,
@@ -68,7 +68,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
       <Button
         type="button"
         extraStyles="relative"
-        onClick={useDoubleClick(openFile, singleClick)}
+        onClick={useDoubleClick(() => openFile(pid), singleClick)}
         onContextMenu={contextMenu(menu)}
       >
         <figure className="flex flex-col items-center -mb-1">

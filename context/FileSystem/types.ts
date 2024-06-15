@@ -7,3 +7,10 @@ export type Shortcut = {
   IconFile: string;
   URL: string;
 };
+
+export type Extentions = {
+  [extention: string]: {
+    icon: string;
+    process: string[];
+  };
+};

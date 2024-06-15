@@ -1,6 +1,6 @@
 import { IoPower } from "react-icons/io5";
 
-import { Avatar } from "@/components/system/Window/Titlebar/Icons";
+import { Avatar } from "@/components/common/Icons";
 
 const Footer = () => (
   <footer className="w-full bg-[#1C1C1C] h-14">

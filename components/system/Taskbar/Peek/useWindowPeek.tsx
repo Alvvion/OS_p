@@ -2,7 +2,7 @@ import { toPng } from "html-to-image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button, Icon } from "@/components/common";
-import { CloseIcon } from "@/components/system/Window/Titlebar/Icons";
+import { CloseIcon } from "@/components/common/Icons";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
