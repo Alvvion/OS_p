@@ -20,7 +20,6 @@ const useWebamp = (id: string) => {
 
   const {
     setWindowStates,
-    stackOrder,
     windowStates: { [id]: { position = undefined } = {} } = {},
   } = useSession();
 
@@ -60,7 +59,6 @@ const useWebamp = (id: string) => {
           },
           butterchurnOpen: true,
         },
-        zIndex: stackOrder.length + 1,
       };
 
       if (file && fileName) {

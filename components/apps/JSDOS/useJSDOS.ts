@@ -1,4 +1,3 @@
-import { extname } from "path";
 import { useEffect, useState } from "react";
 
 import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
@@ -27,10 +26,7 @@ const useJSDOS = (
     if (!dos && fs && url) {
       fs.readFile(url, (_err, contents = Buffer.from("")) =>
         loadFiles(libs).then(async () => {
-          const isZip = extname(url).toLowerCase() === ".zip";
-          const objectURL = bufferToUrl(
-            isZip ? await addJSDOSConfig(contents, fs) : contents
-          );
+          const objectURL = bufferToUrl(await addJSDOSConfig(contents, fs));
 
           if (ref?.current && window.emulators) {
             window.emulators.pathPrefix = pathPrefix;
