@@ -1,39 +1,72 @@
 import { toPng } from "html-to-image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button } from "@/components/common";
+import { Button, Icon } from "@/components/common";
+import { CloseIcon } from "@/components/system/Window/Titlebar/Icons";
 import { useProcesses } from "@/context/Process";
+import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
 
-import { CloseIcon } from "../../Window/Titlebar/Icons";
+import type { WindowPeek } from "./types";
 
-type WindowPeak = {
-  PeakComponent?: React.ComponentType;
-  peakEvents: {
-    onMouseEnter?: () => void;
-    onMouseLeave?: () => void;
-  };
-};
+const _tailwind = [
+  "active:bg-titlebar-closeActive",
+  "hover:bg-titlebar-closeHover",
+];
 
-const useWindowPeak = (id: string): WindowPeak => {
+const useWindowPeek = (id: string): WindowPeek => {
   const {
     processes: {
-      [id]: { componentWindow = undefined, minimized = false, title = "" } = {},
+      [id]: {
+        componentWindow = undefined,
+        minimized = false,
+        title = "",
+        icon = "",
+      } = {},
     },
   } = useProcesses();
+
+  const {
+    currentTheme: {
+      colors: {
+        titlebar: { closeActive, closeHover, text },
+      },
+      sizes: {
+        titlebar: { buttonIconWidth, iconMargin, fontSize },
+      },
+    },
+  } = useTheme();
+
   const mouseTimer = useRef<NodeJS.Timeout | null>(null);
   const previewTimer = useRef<NodeJS.Timeout | null>(null);
-  const [showPeak, setShowPeak] = useState(false);
+  const [showPeek, setShowPeek] = useState(false);
   const [previewSrc, setPreviewSrc] = useState("");
   const { onClose } = useWindowActions(id);
-  const PeakWindow = (): JSX.Element => (
+  const PeekWindow = (): JSX.Element => (
     <div
-      className="absolute z-50 w-40 bottom-14 -left-1/2 bg-[#292929] rounded-lg"
+      className="absolute z-50 w-40 bottom-11 -left-1/2 bg-[#292929] rounded-lg"
       //   style={{ bottom: height }}
     >
       <div className="flex justify-between items-center mx-2">
-        <h1 className="text-white">{title}</h1>
-        <Button extraStyles="h-8" onClick={onClose} title="Close">
+        <figure className="flex items-center h-full">
+          <Icon
+            src={icon}
+            alt={title}
+            style={{
+              width: buttonIconWidth,
+              height: buttonIconWidth,
+              margin: iconMargin,
+            }}
+          />
+          <figcaption style={{ fontSize, color: text }} className="font-normal">
+            {title}
+          </figcaption>
+        </figure>
+        <Button
+          extraStyles={`hover:${closeHover} active:${closeActive} my-1 p-2 rounded-md`}
+          onClick={onClose}
+          title="Close"
+        >
           <CloseIcon extraStyles="fill-white w-3" />
         </Button>
       </div>
@@ -52,7 +85,7 @@ const useWindowPeak = (id: string): WindowPeak => {
 
       mouseTimer.current = setTimeout(() => {
         renderFrame();
-        setShowPeak(true);
+        setShowPeek(true);
         previewTimer.current = setInterval(renderFrame, 1000);
       }, 250);
     }
@@ -61,13 +94,13 @@ const useWindowPeak = (id: string): WindowPeak => {
     if (mouseTimer?.current) clearTimeout(mouseTimer.current);
     if (previewTimer?.current) clearInterval(previewTimer.current);
 
-    setShowPeak(false);
+    setShowPeek(false);
     setPreviewSrc("");
   }, []);
 
   useEffect(() => {
     if (minimized) {
-      setShowPeak(false);
+      setShowPeek(false);
       setPreviewSrc("");
     }
   }, [minimized]);
@@ -75,9 +108,9 @@ const useWindowPeak = (id: string): WindowPeak => {
   useEffect(() => onMouseLeave, [onMouseLeave]);
 
   return {
-    PeakComponent: showPeak && previewSrc ? PeakWindow : undefined,
-    // PeakComponent: PeakWindow,
-    peakEvents: minimized
+    PeekComponent: showPeek && previewSrc ? PeekWindow : undefined,
+    // PeekComponent: PeekWindow,
+    peekEvents: minimized
       ? {}
       : {
           onMouseEnter,
@@ -86,4 +119,4 @@ const useWindowPeak = (id: string): WindowPeak => {
   };
 };
 
-export default useWindowPeak;
+export default useWindowPeek;

@@ -4,10 +4,10 @@ import { IoMdRefresh } from "react-icons/io";
 
 import { Button } from "@/components/common";
 import type { ComponentProps } from "@/components/common/types";
+import FileManager from "@/components/system/FileManager";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
 
-import FileManager from "../../system/FileManager";
 import type { ButtonOnNavType } from "./types";
 
 const _tailwind = ["hover:bg-titlebar-backgroundHover"];
