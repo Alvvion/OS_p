@@ -31,21 +31,15 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
 
   useEffect(() => {
     fs?.readFile(url, (_error, contents = Buffer.from("")) => {
-      loadFiles(["/libs/webamp/webamp.bundle.min.js"]).then(() => {
+      loadFiles([
+        "/libs/webamp/webamp.bundle.min.js",
+        "/libs/webamp/butterchurn.min.js",
+        "/libs/webamp/butterchurnPresets.min.js",
+      ]).then(() => {
         loadWebamp(containerRef?.current, url, contents);
       });
     });
   }, [fs, loadWebamp, url]);
-
-  const focusEvents = useMemo(
-    () => ({
-      onBlur: () => webampCI && unFocusWindow(webampCI),
-      onFocus: () => webampCI && focusWindow(webampCI, "main"),
-    }),
-    [webampCI]
-  );
-
-  const { zIndex, ...focusProps } = useFocusable(id, containerRef, focusEvents);
 
   useEffect(() => {
     if (url && url !== currentUrl && webampCI) {
@@ -59,11 +53,21 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
           const bufferUrl = bufferToUrl(content);
 
           cleanBufferOnSkinLoad(webampCI, bufferUrl);
-          webampCI?.setSkinFromUrl(bufferUrl);
+          webampCI.setSkinFromUrl(bufferUrl);
         }
       });
     }
   }, [currentUrl, fs, url, webampCI]);
+
+  const focusEvents = useMemo(
+    () => ({
+      onBlur: () => webampCI && unFocusWindow(webampCI),
+      onFocus: () => webampCI && focusWindow(webampCI, "main"),
+    }),
+    [webampCI]
+  );
+
+  const { zIndex, ...focusProps } = useFocusable(id, containerRef, focusEvents);
 
   return (
     <motion.div

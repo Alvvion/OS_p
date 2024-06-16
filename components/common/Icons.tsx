@@ -1,4 +1,4 @@
-import type { IconProps } from "../system/Window/Titlebar/types";
+import type { IconProps } from "./types";
 
 export const MinimizeIcon: React.FC<IconProps> = ({ extraStyles }) => (
   <svg className={`w-[10px] mr-px mb-[1px] ${extraStyles}`} viewBox="0 0 10 1">

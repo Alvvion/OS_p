@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 
 import { useProcesses } from "@/context/Process";
+import type { Process } from "@/context/Process/types";
 import { useSession } from "@/context/Session";
 
 import { reRouteFoucs } from "./functions";
@@ -10,11 +11,10 @@ import useRnd from "./useRnd";
 
 const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
   const {
-    processes: { [id]: process },
+    processes: { [id]: windowProcess = {} },
     linkElement,
   } = useProcesses();
-
-  const { Component, componentWindow, maximized } = process || {};
+  const { maximized, componentWindow } = windowProcess as Process;
 
   const rndProps = useRnd(id, maximized);
 
@@ -31,10 +31,15 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
 
     resizeHandles.forEach(reRouteFoucs(windowContainer as HTMLElement));
 
-    if (Component && !componentWindow && windowContainer) {
+    if (
+      !componentWindow &&
+      windowContainer &&
+      Object.keys(windowProcess).length
+    ) {
       linkElement(id, "componentWindow", windowContainer as HTMLElement);
     }
 
+    // console.log(componentWindow);
     return () =>
       setWindowStates((currentState) => ({
         ...currentState,
@@ -43,7 +48,14 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
           size: current?.props?.size,
         },
       }));
-  }, [setWindowStates, id, maximized, Component, componentWindow, linkElement]);
+  }, [
+    setWindowStates,
+    id,
+    maximized,
+    componentWindow,
+    windowProcess,
+    linkElement,
+  ]);
 
   return (
     <Rnd style={style} ref={rndRef} {...rndProps}>

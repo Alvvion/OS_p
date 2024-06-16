@@ -6,7 +6,7 @@ export interface ImageProps extends React.ComponentPropsWithoutRef<"img"> {
   src?: string;
 }
 export interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
-  extraStyles: string;
+  extraStyles?: string;
 }
 
 export type ChildrenProp = {
@@ -22,4 +22,8 @@ export type Size = NonNullable<Props["size"]>;
 export type Position = {
   x: number;
   y: number;
+};
+
+export type IconProps = {
+  extraStyles?: string;
 };

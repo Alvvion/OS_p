@@ -1,11 +1,14 @@
 import type colors from "./default/colors";
-import type formats from "./default/formats";
 import type sizes from "./default/sizes";
 
 export interface DefaultTheme {
   colors: typeof colors;
   sizes: typeof sizes;
-  formats: typeof formats;
+  formats: {
+    date: Intl.DateTimeFormatOptions;
+    time: Intl.DateTimeFormatOptions;
+    tooltip: Intl.DateTimeFormatOptions;
+  };
   wallpaper?: (el: HTMLElement | null) => void;
 }
 

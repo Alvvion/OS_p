@@ -7,7 +7,6 @@ export type WindowComponentProps = ComponentProps & {
   children: React.ReactNode;
 };
 
-
 export type Variant = {
   opacity: number;
   scale: number;

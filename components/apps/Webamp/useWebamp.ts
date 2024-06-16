@@ -23,16 +23,16 @@ const useWebamp = (id: string) => {
   const { onClose, onMinimize } = useWindowActions(id);
 
   const {
-    processes: { [id]: process = {} },
-    linkElement,
-  } = useProcesses();
-
-  const { componentWindow } = process as Process;
-
-  const {
     setWindowStates,
     windowStates: { [id]: { position = undefined } = {} } = {},
   } = useSession();
+
+  const {
+    linkElement,
+    processes: { [id]: windowProcess = {} },
+  } = useProcesses();
+
+  const { componentWindow } = windowProcess as Process;
 
   const {
     currentTheme: {
@@ -50,23 +50,23 @@ const useWebamp = (id: string) => {
     file?: Buffer
   ): void => {
     if (element && window.Webamp && !webampCI) {
-      // const options: WebampOptions = {
-      //   __butterchurnOptions: {
-      //     importButterchurn: () => Promise.resolve(window.butterchurn),
-      //     getPresets: () => {
-      //       const presets = window.butterchurnPresets.getPresets();
+      const butterChurn = {
+        __butterchurnOptions: {
+          importButterchurn: () => Promise.resolve(window.butterchurn),
+          getPresets: () => {
+            const presets = window.butterchurnPresets.getPresets();
 
-      //       return Object.keys(presets).map((name) => ({
-      //         name,
-      //         butterchurnPresetObject: presets[name],
-      //       }));
-      //     },
-      //     butterchurnOpen: true,
-      //   },
-      // };
-
+            return Object.keys(presets).map((name) => ({
+              name,
+              butterchurnPresetObject: presets[name],
+            }));
+          },
+          butterchurnOpen: true,
+        },
+      };
       const runWebamp = (options?: WebampOptions) => {
         const webamp: WebampCI = new window.Webamp({
+          ...butterChurn,
           ...BASE_WEBAMP_SKINS,
           ...options,
         });

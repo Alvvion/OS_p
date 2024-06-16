@@ -29,14 +29,6 @@ export const closeEqualizer = (webamp: WebampCI): void =>
     windowId: "equalizer",
   });
 
-export const cleanBufferOnSkinLoad = (
-  webamp: WebampCI,
-  url = ""
-): Promise<void> =>
-  webamp.skinIsLoaded().then(() => {
-    if (url) cleanUpBufferUrl(url);
-  });
-
 export const getWebampElement = (): HTMLDivElement =>
   document.getElementById("webamp") as HTMLDivElement;
 
@@ -81,4 +73,12 @@ export const parseTrack = (file: Buffer, fileName: string): Promise<Track> =>
           metaData: { artist, title },
         })
     );
+  });
+
+export const cleanBufferOnSkinLoad = (
+  webamp: WebampCI,
+  url = ""
+): Promise<void> =>
+  webamp.skinIsLoaded().then(() => {
+    if (url) cleanUpBufferUrl(url);
   });

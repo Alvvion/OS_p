@@ -17,7 +17,10 @@ const useContextMenu = (
 ) => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
-  const { process: [, ...openWith] = [] } = extensions[extname(url)] || {};
+
+  const { process: [, ...openWith] = [] } =
+    extensions[extname(url || "")] || {};
+
   const filterdOpenWith = openWith.filter((id) => id !== pid);
   const { openProcess } = useProcesses();
 
@@ -33,7 +36,7 @@ const useContextMenu = (
     if (filterdOpenWith.length) {
       menuItems.unshift({
         label: "Open with",
-        menu: openWith.map((id): MenuItem => {
+        menu: filterdOpenWith.map((id): MenuItem => {
           const { icon, title: label } = processDir[id] || {};
           const action = () => openFile(id);
 
