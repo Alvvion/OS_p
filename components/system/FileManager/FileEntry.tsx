@@ -30,6 +30,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const { icon, pid, url } = useFileInfo(path);
   const [renaming, setRenaming] = useState(false);
   const openFile = useFile(url);
+  const { contextMenu } = useMenu();
+  console.log(url);
   const menu = useContextMenu(
     url,
     pid,
@@ -37,7 +39,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
     () => deleteFile(path),
     () => setRenaming(true)
   );
-  const { contextMenu } = useMenu();
   const {
     currentTheme: {
       sizes: {

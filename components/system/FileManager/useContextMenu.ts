@@ -18,7 +18,8 @@ const useContextMenu = (
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
 
-  const { process: [, ...openWith] = [] } = extensions[extname(url)] || {};
+  const { process: [, ...openWith] = [] } =
+    extensions[extname(url || "")] || {};
 
   const filterdOpenWith = openWith.filter((id) => id !== pid);
   const { openProcess } = useProcesses();
