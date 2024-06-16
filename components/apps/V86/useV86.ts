@@ -19,7 +19,7 @@ const useV86 = (
   url: string,
   ref: React.MutableRefObject<HTMLDivElement | null>
 ): V86 => {
-  const [emulator, setEmulator] = useState<V86Starter | null>(null);
+  const [emulator, setEmulator] = useState<V86Starter>();
 
   const { fs } = useFileSystem();
 

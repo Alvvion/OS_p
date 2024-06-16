@@ -42,7 +42,7 @@ const useWebamp = (id: string) => {
     },
   } = useTheme();
 
-  const [webampCI, setWebampCI] = useState<WebampCI | null>(null);
+  const [webampCI, setWebampCI] = useState<WebampCI>();
 
   const loadWebamp = (
     element: HTMLDivElement | null,

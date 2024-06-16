@@ -37,7 +37,7 @@ const WindowActionButton = ({ id }: { id: string }) => {
   const { foregroundId } = useSession();
 
   const isForeground = id === foregroundId;
-  const isMaximizable = autoSizing && !lockAspectRatio;
+  const diasbleMaximize = autoSizing && !lockAspectRatio;
 
   const {
     currentTheme: {
@@ -83,7 +83,7 @@ const WindowActionButton = ({ id }: { id: string }) => {
           transition: "background-color 0.25 ease",
         }}
         onClick={onMaximize}
-        disabled={isMaximizable}
+        disabled={diasbleMaximize}
       >
         {maximized ? (
           <MaximizedIcon
@@ -92,7 +92,7 @@ const WindowActionButton = ({ id }: { id: string }) => {
         ) : (
           <MaximizeIcon
             extraStyles={`${
-              isMaximizable
+              diasbleMaximize
                 ? isForeground
                   ? disabled
                   : disabledInactive

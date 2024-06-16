@@ -1,7 +1,8 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import ini from "ini";
 
-import type { Extentions, Shortcut } from "./types";
+import extensions from "./extensions";
+import type { Shortcut } from "./types";
 
 export const getShortcut = (path: string, fs: FSModule): Promise<Shortcut> =>
   new Promise((resolve, reject) => {
@@ -18,33 +19,6 @@ export const getShortcut = (path: string, fs: FSModule): Promise<Shortcut> =>
       }
     });
   });
-
-export const extensions: Extentions = {
-  ".img": {
-    icon: "/assets/imageres_5205.ico",
-    process: ["V86"],
-  },
-  ".iso": {
-    icon: "/assets/imageres_5205.ico",
-    process: ["V86"],
-  },
-  ".jsdos": {
-    icon: "/assets/compressed.png",
-    process: ["JSDOS"],
-  },
-  ".zip": {
-    icon: "/assets/compressed.png",
-    process: ["JSDOS"],
-  },
-  ".mp3": {
-    icon: "/assets/music_48.png",
-    process: ["Webamp"],
-  },
-  ".wsz": {
-    icon: "/assets/music_48.png",
-    process: ["Webamp"],
-  },
-};
 
 export const getIconByFileExtension = (extention: string): string =>
   extensions[extention]?.icon || "/assets/ICON2_1.ico";

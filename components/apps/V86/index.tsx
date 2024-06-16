@@ -13,7 +13,7 @@ const V86: React.FC<ComponentProps> = ({ id }) => {
   const screenRef = useRef<HTMLDivElement | null>(null);
   const { emulator, lockMouse } = useV86(id, url, screenRef);
 
-  const textStyle = useV86ScreenSize(emulator, id);
+  const textStyle = useV86ScreenSize(id, emulator);
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions

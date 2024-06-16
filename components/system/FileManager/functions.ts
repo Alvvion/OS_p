@@ -12,7 +12,7 @@ export const writeUniqueName = (
   path: string,
   fileBuffer: Buffer,
   updateFiles: (appendFiles?: string) => void,
-  fs: FSModule | null,
+  fs?: FSModule,
   iteration = 0
 ): void => {
   const writePath = !iteration ? path : iterateFileNames(path, iteration);

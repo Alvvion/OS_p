@@ -1,6 +1,6 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 
-export type FileSystemStateType = { fs: FSModule | null };
+export type FileSystemStateType = { fs?: FSModule };
 
 export type Shortcut = {
   BaseURL: string;
@@ -8,7 +8,7 @@ export type Shortcut = {
   URL: string;
 };
 
-export type Extentions = {
+export type Extensions = {
   [extention: string]: {
     icon: string;
     process: string[];

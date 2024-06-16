@@ -1,6 +1,6 @@
 import { dirname, extname } from "path";
 
-import { extensions } from "@/context/FileSystem/functions";
+import extensions from "@/context/FileSystem/extensions";
 import type { MenuItem } from "@/context/Menu/types";
 import { useProcesses } from "@/context/Process";
 import { processDir } from "@/context/Process/directory";

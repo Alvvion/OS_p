@@ -39,7 +39,7 @@ export interface V86Constructor {
 }
 
 export type V86 = {
-  emulator: V86Starter | null;
+  emulator?: V86Starter;
   lockMouse?: () => void;
 };
 

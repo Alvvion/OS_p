@@ -6,7 +6,7 @@ import FileSystemConfig from "./config";
 import type { FileSystemStateType } from "./types";
 
 const useFileSystemState = (): FileSystemStateType => {
-  const [fs, setFs] = useState<FSModule | null>(null);
+  const [fs, setFs] = useState<FSModule>();
 
   useEffect(() => {
     if (!fs) {

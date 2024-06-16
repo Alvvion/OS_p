@@ -11,8 +11,8 @@ const SET_SCREEN_GFX = "screen-set-size-graphical";
 const SET_SCREEN_TXT = "screen-set-size-text";
 
 const useV86ScreenSize = (
-  emulator: V86Starter | null,
-  id: string
+  id: string,
+  emulator?: V86Starter
 ): React.CSSProperties => {
   const {
     currentTheme: {
