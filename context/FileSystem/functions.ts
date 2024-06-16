@@ -26,7 +26,7 @@ export const extensions: Extentions = {
   },
   ".iso": {
     icon: "/assets/imageres_5205.ico",
-    process: ["V86", "V86"],
+    process: ["V86"],
   },
   ".jsdos": {
     icon: "/assets/compressed.png",
