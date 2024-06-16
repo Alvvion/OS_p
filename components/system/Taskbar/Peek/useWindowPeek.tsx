@@ -87,7 +87,7 @@ const useWindowPeek = (id: string): WindowPeek => {
         renderFrame();
         setShowPeek(true);
         previewTimer.current = setInterval(renderFrame, 1000);
-      }, 250);
+      }, 500);
     }
   };
   const onMouseLeave = useCallback(() => {
