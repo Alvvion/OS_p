@@ -2,14 +2,11 @@ import { createContext, useContext } from "react";
 
 import type { ChildrenProp } from "@/components/common/types";
 
-import type { ContextFactory } from "./types";
-
-const contextFactory: ContextFactory = (
-  initialContextState,
-  useContextState,
-  ContextComponent
+const contextFactory = <T,>(
+  useContextState: () => T,
+  ContextComponent?: React.ComponentType
 ) => {
-  const Context = createContext(initialContextState);
+  const Context = createContext<T>({} as T);
 
   const Provider: React.FC<ChildrenProp> = ({ children }) => (
     <Context.Provider value={useContextState()}>

@@ -49,7 +49,7 @@ const useFileInfo = (path: string): FileInfo => {
             setInfo({ icon, pid, url })
           )
           .catch(() => defaultFileInfo(extension));
-      } else if (IMAGE_FILE_EXTENSION.includes(extension)) {
+      } else if (IMAGE_FILE_EXTENSION.has(extension)) {
         fs.readFile(path, (err, contents = Buffer.from("")) =>
           defaultFileInfo(
             extension,
