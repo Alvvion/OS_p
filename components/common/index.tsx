@@ -45,7 +45,7 @@ export const Button: React.FC<ButtonProps> = ({
   <button
     type="button"
     className={`${extraStyles} cursor-context-menu`}
-    onKeyUp={(event) => event?.preventDefault()}
+    onKeyDown={(event) => event?.preventDefault()}
     {...restProps}
   >
     {children}

@@ -1,3 +1,4 @@
+import { parseBuffer } from "music-metadata-browser";
 import { extname } from "path";
 import { useEffect, useState } from "react";
 
@@ -53,6 +54,19 @@ const useFileInfo = (path: string): FileInfo => {
           defaultFileInfo(
             extension,
             err ? "/assets/ICON132_1.ico" : bufferToUrl(contents)
+          )
+        );
+      } else if (extension === ".mp3") {
+        fs.readFile(path, (error, contents = Buffer.from("")) =>
+          parseBuffer(contents).then(
+            ({ common: { picture: [picture] = [] } = {} }) => {
+              defaultFileInfo(
+                extension,
+                !error && picture
+                  ? bufferToUrl(picture.data)
+                  : "/assets/music_48.png"
+              );
+            }
           )
         );
       } else {

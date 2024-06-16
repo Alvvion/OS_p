@@ -31,7 +31,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const [renaming, setRenaming] = useState(false);
   const openFile = useFile(url);
   const { contextMenu } = useMenu();
-  console.log(url);
   const menu = useContextMenu(
     url,
     pid,

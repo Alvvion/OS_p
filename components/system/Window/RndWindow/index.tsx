@@ -14,7 +14,7 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
     processes: { [id]: windowProcess = {} },
     linkElement,
   } = useProcesses();
-  const { maximized, componentWindow } = windowProcess as Process;
+  const { maximized, componentWindow, minimized } = windowProcess as Process;
 
   const rndProps = useRnd(id, maximized);
 
@@ -58,7 +58,11 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
   ]);
 
   return (
-    <Rnd style={style} ref={rndRef} {...rndProps}>
+    <Rnd
+      style={{ ...style, pointerEvents: minimized ? "none" : "all" }}
+      ref={rndRef}
+      {...rndProps}
+    >
       {children}
     </Rnd>
   );
