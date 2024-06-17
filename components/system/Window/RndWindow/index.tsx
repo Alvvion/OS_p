@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 
 import { useProcesses } from "@/context/Process";
-import type { Process } from "@/context/Process/types";
 import { useSession } from "@/context/Session";
 
 import { reRouteFoucs } from "./functions";
@@ -11,10 +10,10 @@ import useRnd from "./useRnd";
 
 const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
   const {
-    processes: { [id]: windowProcess = {} },
+    processes: { [id]: process },
     linkElement,
   } = useProcesses();
-  const { maximized, componentWindow, minimized } = windowProcess as Process;
+  const { maximized, componentWindow, minimized } = process || {};
 
   const rndProps = useRnd(id, maximized);
 
@@ -24,19 +23,17 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
   useEffect(() => {
     const { current } = rndRef || {};
 
-    const [windowContainer, resizeHandleContainer] =
+    const rndWindowElements =
       current?.resizableElement?.current?.children || [];
-    // eslint-disable-next-line no-unsafe-optional-chaining
-    const resizeHandles = [...resizeHandleContainer?.children];
 
-    resizeHandles.forEach(reRouteFoucs(windowContainer as HTMLElement));
+    const [windowContainer, resizeHandleContainer] =
+      rndWindowElements as HTMLElement[];
+    const resizeHandles = [...resizeHandleContainer.children];
 
-    if (
-      !componentWindow &&
-      windowContainer &&
-      Object.keys(windowProcess).length
-    ) {
-      linkElement(id, "componentWindow", windowContainer as HTMLElement);
+    resizeHandles.forEach(reRouteFoucs(windowContainer));
+
+    if (!componentWindow && windowContainer && process) {
+      linkElement(id, "componentWindow", windowContainer);
     }
 
     // console.log(componentWindow);
@@ -48,14 +45,7 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
           size: current?.props?.size,
         },
       }));
-  }, [
-    setWindowStates,
-    id,
-    maximized,
-    componentWindow,
-    windowProcess,
-    linkElement,
-  ]);
+  }, [setWindowStates, id, maximized, componentWindow, linkElement, process]);
 
   return (
     <Rnd
