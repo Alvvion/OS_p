@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { useRef } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
@@ -32,10 +31,9 @@ const Window: React.FC<WindowComponentProps> = ({
     },
   } = useTheme();
 
-  const windowRef = useRef<HTMLElement | null>(null);
-  const { zIndex, ...focusableProps } = useFocusable(id, windowRef);
+  const { zIndex, ...focusableProps } = useFocusable(id);
 
-  const windowTransition = useWindowTransitions(id, windowRef);
+  const windowTransition = useWindowTransitions(id);
 
   return (
     <RndWindow id={id} style={{ zIndex }}>
@@ -46,7 +44,6 @@ const Window: React.FC<WindowComponentProps> = ({
           boxShadow: isForeground ? boxShadow : boxShadowInactive,
           outline: isForeground ? outline : outlineInactive,
         }}
-        ref={windowRef}
         className="absolute w-full h-full overflow-hidden rounded-[5px]"
         {...focusableProps}
       >

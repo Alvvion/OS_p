@@ -82,3 +82,5 @@ export const cleanBufferOnSkinLoad = (
   webamp.skinIsLoaded().then(() => {
     if (url) cleanUpBufferUrl(url);
   });
+
+export const MAIN_WINDOW = "#main-window";

@@ -24,7 +24,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
 
   const { fs } = useFileSystem();
 
-  const windowTranistion = useWindowTransitions(id, containerRef);
+  const windowTranistion = useWindowTransitions(id);
 
   const { loadWebamp, webampCI } = useWebamp(id);
   const [currentUrl, setCurrentUrl] = useState(url);
@@ -67,7 +67,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
     [webampCI]
   );
 
-  const { zIndex, ...focusProps } = useFocusable(id, containerRef, focusEvents);
+  const { zIndex, ...focusProps } = useFocusable(id, focusEvents);
 
   return (
     <motion.div

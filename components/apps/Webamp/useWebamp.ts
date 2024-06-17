@@ -2,7 +2,6 @@ import { basename, extname } from "path";
 import { useState } from "react";
 
 import { useProcesses } from "@/context/Process";
-import type { Process } from "@/context/Process/types";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
@@ -14,6 +13,7 @@ import {
   cleanBufferOnSkinLoad,
   closeEqualizer,
   getWebampElement,
+  MAIN_WINDOW,
   parseTrack,
   updateWebampPostion,
 } from "./functions";
@@ -29,10 +29,10 @@ const useWebamp = (id: string) => {
 
   const {
     linkElement,
-    processes: { [id]: windowProcess = {} },
+    processes: { [id]: process },
   } = useProcesses();
 
-  const { componentWindow } = windowProcess as Process;
+  const { componentWindow } = process || {};
 
   const {
     currentTheme: {
@@ -73,20 +73,22 @@ const useWebamp = (id: string) => {
 
         const setupElement = () => {
           const webampElement = getWebampElement();
-          const [main] = webampElement.getElementsByClassName("window");
+          const mainWindow =
+            webampElement.querySelector<HTMLDivElement>(MAIN_WINDOW);
 
-          if (!componentWindow && main && Object.keys(process).length) {
-            linkElement(id, "componentWindow", main as HTMLElement);
+          if (process && !componentWindow && mainWindow) {
+            linkElement(id, "componentWindow", element);
+            linkElement(id, "peekElement", mainWindow);
           }
-
           element.appendChild(webampElement);
         };
 
         const subscriptions = [
           webamp.onWillClose((cancel) => {
             cancel();
-            const [main] = getWebampElement().getElementsByClassName("window");
-            const { x, y } = main.getBoundingClientRect();
+            const mainWindow =
+              getWebampElement().querySelector<HTMLDivElement>(MAIN_WINDOW);
+            const { x = 0, y = 0 } = mainWindow?.getBoundingClientRect() || {};
 
             onClose();
             setWindowStates((currentWindowStates) => ({

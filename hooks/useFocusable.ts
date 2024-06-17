@@ -7,7 +7,6 @@ import type { Events, Focusable } from "./types";
 
 const useFocusable = (
   id: string,
-  ref: React.MutableRefObject<HTMLElement | null>,
   callbackEvents?: Partial<Events>
 ): Focusable => {
   const { foregroundId, setForegroundId, stackOrder, prependToStack } =
@@ -16,7 +15,8 @@ const useFocusable = (
   const {
     processes: { [id]: process },
   } = useProcesses();
-  const { taskbarEntry, minimized, url, closing } = process || {};
+  const { closing, componentWindow, minimized, taskbarEntry, url } =
+    process || {};
 
   const zIndex =
     stackOrder.length + (minimized ? 1 : -stackOrder.indexOf(id)) + 1;
@@ -33,15 +33,22 @@ const useFocusable = (
   const moveToFront = useCallback(
     (event?: React.FocusEvent<HTMLElement>) => {
       const { relatedTarget } = event || {};
-      if (ref?.current?.contains(document.activeElement)) {
+      if (componentWindow?.contains(document.activeElement)) {
         prependToStack(id);
         setForegroundId(id);
       } else if (!relatedTarget || document.activeElement === taskbarEntry) {
-        ref?.current?.focus();
+        componentWindow?.focus();
         callbackEvents?.onFocus?.(event);
       }
     },
-    [callbackEvents, id, prependToStack, ref, setForegroundId, taskbarEntry]
+    [
+      callbackEvents,
+      componentWindow,
+      id,
+      prependToStack,
+      setForegroundId,
+      taskbarEntry,
+    ]
   );
 
   useEffect(() => {

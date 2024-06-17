@@ -16,15 +16,11 @@ const _tailwind = [
 
 const useWindowPeek = (id: string): WindowPeek => {
   const {
-    processes: {
-      [id]: {
-        componentWindow = undefined,
-        minimized = false,
-        title = "",
-        icon = "",
-      } = {},
-    },
+    processes: { [id]: process },
   } = useProcesses();
+
+  const { componentWindow, icon, minimized, peekElement, title } =
+    process || {};
 
   const {
     currentTheme: {
@@ -36,6 +32,8 @@ const useWindowPeek = (id: string): WindowPeek => {
       },
     },
   } = useTheme();
+
+  const previewElement = peekElement || componentWindow;
 
   const mouseTimer = useRef<NodeJS.Timeout | null>(null);
   const previewTimer = useRef<NodeJS.Timeout | null>(null);
@@ -74,9 +72,9 @@ const useWindowPeek = (id: string): WindowPeek => {
     </div>
   );
   const onMouseEnter = () => {
-    if (componentWindow) {
+    if (previewElement) {
       const renderFrame = () =>
-        toPng(componentWindow).then((dataUrl) => {
+        toPng(previewElement).then((dataUrl) => {
           const previewImage = new Image();
 
           previewImage.src = dataUrl;
