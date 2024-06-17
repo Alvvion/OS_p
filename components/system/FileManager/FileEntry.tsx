@@ -60,11 +60,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const singleClick = view === "start";
 
-  const extraStyles = `hover:relative hover:before:absolute hover:before:-top-px hover:before:-bottom-px hover:before:-left-px hover:before:-right-px hover:${background} hover:before:${border} focus-within:${backgroundFocused} focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover}focus-within:hover:before:${borderFocusedHover}`;
-
   return (
     <li
-      className={`flex justify-center p-[2px] overflow-hidden h-min border-2 border-transparent [&_figcaption]:focus-within:[-webkit-line-clamp:initial] focus-within:z-[1] ${extraStyles} [nav_&]:pb-5 [nav_&]:pt-2`}
+      className={
+        view === "default"
+          ? `flex justify-center h-min p-0.5 focus-within:border-2 focus-within:border-transparent focus-within:p-0 focus-within:relative focus-within:before:-bottom-px focus-within:before:-left-px focus-within:before:absolute focus-within:before:-right-px focus-within:before:-top-px hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px hover:${background} hover:before:${border} hover:before:border focus-within:${backgroundFocused} z-[1] focus-within:before:border focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover} focus-within:hover:before:border focus-within:hover:before:${borderFocusedHover}`
+          : "hover:bg-[#313131] flex justify-center rounded-md"
+      }
     >
       <Button
         type="button"
@@ -72,8 +74,12 @@ const FileEntry: React.FC<FileEntryProps> = ({
         onClick={useDoubleClick(() => openFile(pid), singleClick)}
         onContextMenu={contextMenu(menu)}
       >
-        <figure className="flex flex-col items-center -mb-1">
-          <Icon src={icon} alt={name} size={iconSize} />
+        <figure className="flex flex-col place-items-center mb-[-3px]">
+          <Icon
+            src={icon}
+            alt={name}
+            size={view === "default" ? iconSize : "36px"}
+          />
           {renaming ? (
             <RenameBox
               name={name}
@@ -85,8 +91,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
             />
           ) : (
             <figcaption
-              style={{ fontSize, color: text, letterSpacing, textShadow }}
-              className="p-[3px] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden break-words tracking-[-0.1px] leading-4 [nav_&]:![text-shadow:none]"
+              style={{
+                fontSize,
+                color: text,
+                letterSpacing,
+                textShadow: view === "default" ? textShadow : "none",
+              }}
+              className="[-webkit-box-orient:vertical] [display:-webkit-box] [-webkit-line-clamp:2] leading-[15px] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] focus-within:[-webkit-line-clamp:initial]"
             >
               {name}
             </figcaption>
