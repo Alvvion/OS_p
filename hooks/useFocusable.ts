@@ -14,10 +14,9 @@ const useFocusable = (
     useSession();
 
   const {
-    processes: {
-      [id]: { taskbarEntry = undefined, minimized = false, url = "" } = {},
-    },
+    processes: { [id]: process },
   } = useProcesses();
+  const { taskbarEntry, minimized, url, closing } = process || {};
 
   const zIndex =
     stackOrder.length + (minimized ? 1 : -stackOrder.indexOf(id)) + 1;
@@ -49,7 +48,9 @@ const useFocusable = (
     if (isForeground) moveToFront();
   }, [isForeground, moveToFront]);
 
-  useEffect(() => setForegroundId(id), [id, setForegroundId, url]);
+  useEffect(() => {
+    if (process && !closing) setForegroundId(id);
+  }, [closing, id, process, setForegroundId, url]);
 
   return { zIndex, tabIndex: -1, onFocus: moveToFront, onBlur };
 };

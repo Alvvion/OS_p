@@ -2,11 +2,8 @@ import type { DraggableEventHandler } from "react-draggable";
 import type { RndResizeCallback } from "react-rnd";
 
 import { useProcesses } from "@/context/Process";
-import { useSession } from "@/context/Session";
-import { useTheme } from "@/context/Theme";
 import { rndDefaults } from "@/utils/constants";
 
-import { centerPosition } from "./functions";
 import useStatePosition from "./useStatePosition";
 import useStateSize from "./useStateSize";
 
@@ -15,21 +12,8 @@ const useRnd = (id: string, maximized = false) => {
     processes: { [id]: { autoSizing = false, lockAspectRatio = false } = {} },
   } = useProcesses();
 
-  const { windowStates: { [id]: windowState } = {} } = useSession();
-
-  const { position: statePosition, size: stateSize } = windowState || {};
-  const {
-    currentTheme: {
-      sizes: {
-        taskbar: { height: taskbarHeight },
-      },
-    },
-  } = useTheme();
-
-  const [size, setSize] = useStateSize(autoSizing, stateSize);
-  const [position, setPosition] = useStatePosition(
-    statePosition || centerPosition(size, taskbarHeight)
-  );
+  const [size, setSize] = useStateSize(id, autoSizing);
+  const [position, setPosition] = useStatePosition(id, size);
 
   const onDragStop: DraggableEventHandler = (
     _event,

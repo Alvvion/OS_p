@@ -1,4 +1,4 @@
-import type { Position, Size } from "@/components/common/types";
+import type { Size } from "@/components/common/types";
 
 export const IMAGE_FILE_EXTENSION = new Set([
   ".apng",
@@ -88,10 +88,6 @@ export const rndDefaults = {
 export const LOCALE = "en";
 export const MILLISEC_IN_SEC = 1000;
 export const PROCESS_DELIMITER = "_";
-export const DEFAULT_WINDOW_POSITION: Position = {
-  x: 0,
-  y: 0,
-};
 
 export const DEFAULT_WINDOW_SIZE: Size = {
   height: "200px",
