@@ -5,3 +5,8 @@ export type WindowPeek = {
     onMouseLeave?: () => void;
   };
 };
+
+export type PeekWindowProps = {
+  id: string;
+  image: string;
+};
