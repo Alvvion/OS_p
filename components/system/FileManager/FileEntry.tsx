@@ -23,21 +23,14 @@ const _tailwind = [
 const FileEntry: React.FC<FileEntryProps> = ({
   name,
   path,
-  deleteFile,
-  renameFile,
+  fileActions,
   view,
 }) => {
   const { icon, pid, url } = useFileInfo(path);
   const [renaming, setRenaming] = useState(false);
   const openFile = useFile(url);
   const { contextMenu } = useMenu();
-  const menu = useContextMenu(
-    url,
-    pid,
-    path,
-    () => deleteFile(path),
-    () => setRenaming(true)
-  );
+  const menu = useContextMenu(url, pid, path, setRenaming, fileActions);
   const {
     currentTheme: {
       sizes: {
@@ -85,7 +78,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
               name={name}
               path={path}
               renameFile={(orgPath, newPath) => {
-                renameFile(orgPath, newPath);
+                fileActions.renameFile(orgPath, newPath);
                 setRenaming(false);
               }}
             />

@@ -12,7 +12,7 @@ const FileManager: React.FC<FileManagerProps> = ({
   directory,
   view = "default",
 }) => {
-  const { files, updateFiles, deleteFile, renameFile } = useFiles(directory);
+  const { files, updateFiles, fileActions } = useFiles(directory);
   const {
     currentTheme: {
       sizes: {
@@ -33,8 +33,7 @@ const FileManager: React.FC<FileManagerProps> = ({
           key={file}
           name={basename(file, SHORTCUT)}
           path={resolve(directory, file)}
-          deleteFile={deleteFile}
-          renameFile={renameFile}
+          fileActions={fileActions}
           view={view}
         />
       ))}

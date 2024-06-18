@@ -3,10 +3,12 @@ import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import { SHORTCUT } from "@/utils/constants";
+import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
 const useFiles = (directory: string) => {
   const { fs } = useFileSystem();
   const [files, setFiles] = useState<string[]>([]);
+  const [downloadLink, setDownloadLink] = useState("");
 
   const updateFiles = useCallback(
     (appendFiles?: string) =>
@@ -44,9 +46,37 @@ const useFiles = (directory: string) => {
     }
   };
 
+  const downloadFile = (path: string) => {
+    fs?.readFile(path, (_e, contents = Buffer.from("")) => {
+      const link = document.createElement("a");
+
+      link.href = bufferToUrl(contents);
+      link.download = basename(path);
+
+      link.click();
+
+      setDownloadLink(link.href);
+    });
+  };
+
   useEffect(updateFiles, [updateFiles]);
 
-  return { files, updateFiles, deleteFile, renameFile };
+  useEffect(
+    () => () => {
+      if (downloadLink) cleanUpBufferUrl(downloadLink);
+    },
+    [downloadLink]
+  );
+
+  return {
+    files,
+    updateFiles,
+    fileActions: {
+      deleteFile,
+      renameFile,
+      downloadFile,
+    },
+  };
 };
 
 export default useFiles;

@@ -6,14 +6,15 @@ import { useProcesses } from "@/context/Process";
 import { processDir } from "@/context/Process/directory";
 import { SHORTCUT } from "@/utils/constants";
 
+import type { FileActions } from "./types";
 import useFile from "./useFile";
 
 const useContextMenu = (
   url: string,
   pid: string,
   path: string,
-  deleteFile: () => void,
-  renameFile: () => void
+  setState: React.Dispatch<React.SetStateAction<boolean>>,
+  { deleteFile, downloadFile }: FileActions
 ) => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
@@ -25,13 +26,21 @@ const useContextMenu = (
   const { openProcess } = useProcesses();
 
   const menuItems: MenuItem[] = [
-    { label: "Delete", action: deleteFile },
-    { label: "Rename", action: renameFile },
+    { label: "Delete", action: () => deleteFile(path) },
+    { label: "Rename", action: () => setState(true) },
   ];
 
-  if (pid) {
-    const isShortcut = extname(path) === SHORTCUT && url && url !== "/";
+  const extension = extname(path);
+  const isShortcut = extension === SHORTCUT;
+
+  if (!isShortcut && url && (extension || pid !== "FileExplorer")) {
     menuItems.unshift({ separator: 1 });
+
+    menuItems.unshift({ label: "Download", action: () => downloadFile(path) });
+  }
+
+  if (pid) {
+    menuItems.unshift({ separator: 2 });
 
     if (filterdOpenWith.length) {
       menuItems.unshift({
@@ -53,7 +62,7 @@ const useContextMenu = (
     }
 
     menuItems.unshift({
-      icon: pidIcon,
+      icon: isShortcut || extname(url) ? pidIcon : undefined,
       label: "Open",
       primary: true,
       action: () => openFile(pid),

@@ -3,11 +3,16 @@ export type FileManagerProps = {
   view?: "default" | "start";
 };
 
+export type FileActions = {
+  deleteFile: (path: string) => void;
+  renameFile: (path: string, name?: string) => void;
+  downloadFile: (path: string) => void;
+};
+
 export type FileEntryProps = {
   name: string;
   path: string;
-  deleteFile: (path: string) => void;
-  renameFile: (path: string, name?: string) => void;
+  fileActions: FileActions;
   view: "default" | "start";
 };
 
