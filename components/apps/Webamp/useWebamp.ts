@@ -8,12 +8,11 @@ import useWindowActions from "@/hooks/useWindowActions";
 import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
+import { BASE_WEBAMP_SKINS, MAIN_WINDOW } from "./constants";
 import {
-  BASE_WEBAMP_SKINS,
   cleanBufferOnSkinLoad,
   closeEqualizer,
   getWebampElement,
-  MAIN_WINDOW,
   parseTrack,
   updateWebampPostion,
 } from "./functions";

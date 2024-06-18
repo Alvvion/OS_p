@@ -1,8 +1,9 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import ini from "ini";
-import { parseBuffer } from "music-metadata-browser";
+import { parseBuffer, selectCover } from "music-metadata-browser";
 import { basename, dirname, extname } from "path";
 
+import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
 import {
   getIconByFileExtension,
   getProcessByFileExtension,
@@ -89,15 +90,22 @@ export const getInfoWithExtension = (
     );
   } else if (extension === ".mp3") {
     fs.readFile(path, (error, contents = Buffer.from("")) =>
-      parseBuffer(contents).then(
-        ({ common: { picture: [picture] = [] } = {} }) => {
-          getInfoByFileExtension(
-            !error && picture
-              ? bufferToUrl(picture.data)
-              : "/assets/music_48.png"
-          );
-        }
-      )
+      parseBuffer(
+        contents,
+        {
+          mimeType: MP3_MIME_TYPE,
+          size: contents.length,
+        },
+        { skipPostHeaders: true }
+      ).then(({ common: { picture } = {} }) => {
+        const { data: coverPicture } = selectCover(picture) || {};
+
+        getInfoByFileExtension(
+          !error && coverPicture
+            ? bufferToUrl(coverPicture)
+            : "/assets/music_48.png"
+        );
+      })
     );
   } else getInfoByFileExtension();
 };
