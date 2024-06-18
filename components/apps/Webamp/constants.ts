@@ -17,3 +17,5 @@ export const BASE_WEBAMP_SKINS = {
 };
 
 export const MP3_MIME_TYPE = "audio/mpeg";
+
+export const CONTAINER_WINDOW = "#webamp";

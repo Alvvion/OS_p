@@ -73,21 +73,23 @@ const useWebamp = (id: string) => {
 
         const setupElement = () => {
           const webampElement = getWebampElement();
-          const mainWindow =
-            webampElement.querySelector<HTMLDivElement>(MAIN_WINDOW);
+          if (webampElement) {
+            const mainWindow =
+              webampElement.querySelector<HTMLDivElement>(MAIN_WINDOW);
 
-          if (process && !componentWindow && mainWindow) {
-            linkElement(id, "componentWindow", element);
-            linkElement(id, "peekElement", mainWindow);
+            if (process && !componentWindow && mainWindow) {
+              linkElement(id, "componentWindow", element);
+              linkElement(id, "peekElement", mainWindow);
+            }
+            element.appendChild(webampElement);
           }
-          element.appendChild(webampElement);
         };
 
         const subscriptions = [
           webamp.onWillClose((cancel) => {
             cancel();
             const mainWindow =
-              getWebampElement().querySelector<HTMLDivElement>(MAIN_WINDOW);
+              getWebampElement()?.querySelector<HTMLDivElement>(MAIN_WINDOW);
             const { x = 0, y = 0 } = mainWindow?.getBoundingClientRect() || {};
 
             onClose();

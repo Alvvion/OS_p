@@ -6,7 +6,7 @@ import type { Track } from "webamp";
 import { centerPosition } from "@/components/system/Window/RndWindow/functions";
 import { bufferToBlob, cleanUpBufferUrl } from "@/utils/functions";
 
-import { BASE_WINDOW_SIZE, MP3_MIME_TYPE } from "./constants";
+import { BASE_WINDOW_SIZE, CONTAINER_WINDOW, MP3_MIME_TYPE } from "./constants";
 import type { WebampCI } from "./types";
 
 export const closeEqualizer = (webamp: WebampCI): void =>
@@ -15,8 +15,8 @@ export const closeEqualizer = (webamp: WebampCI): void =>
     windowId: "equalizer",
   });
 
-export const getWebampElement = (): HTMLDivElement =>
-  document.getElementById("webamp") as HTMLDivElement;
+export const getWebampElement = (): HTMLDivElement | null =>
+  document.querySelector<HTMLDivElement>(CONTAINER_WINDOW);
 
 export const updateWebampPostion = (
   webamp: WebampCI,
