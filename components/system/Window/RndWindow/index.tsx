@@ -13,7 +13,7 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
     processes: { [id]: process },
     linkElement,
   } = useProcesses();
-  const { maximized, componentWindow, minimized } = process || {};
+  const { closing, maximized, componentWindow, minimized } = process || {};
 
   const rndProps = useRnd(id, maximized);
 
@@ -36,16 +36,26 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
       linkElement(id, "componentWindow", windowContainer);
     }
 
-    // console.log(componentWindow);
-    return () =>
-      setWindowStates((currentState) => ({
-        ...currentState,
-        [id]: {
-          position: current?.props?.position,
-          size: current?.props?.size,
-        },
-      }));
-  }, [setWindowStates, id, maximized, componentWindow, linkElement, process]);
+    return () => {
+      if (closing) {
+        setWindowStates((currentState) => ({
+          ...currentState,
+          [id]: {
+            position: current?.props?.position,
+            size: current?.props?.size,
+          },
+        }));
+      }
+    };
+  }, [
+    setWindowStates,
+    id,
+    maximized,
+    componentWindow,
+    linkElement,
+    process,
+    closing,
+  ]);
 
   return (
     <Rnd

@@ -97,7 +97,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
                 letterSpacing,
                 textShadow: view === "default" ? textShadow : "none",
               }}
-              className="[-webkit-box-orient:vertical] [display:-webkit-box] [-webkit-line-clamp:2] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] focus-within:[-webkit-line-clamp:initial]"
+              className="[-webkit-box-orient:vertical] [display:-webkit-box] [-webkit-line-clamp:2] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] focus-within:[-webkit-line-clamp:initial] mt-[6px]"
             >
               {name}
             </figcaption>

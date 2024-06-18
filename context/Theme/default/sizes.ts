@@ -46,6 +46,7 @@ const sizes = {
     lineHeight: "14px",
     boxShadow: "0 0 20px 0 rgba(0, 0, 0, 50%)",
     boxShadowInactive: "0 0 12px 0 rgba(0, 0, 0, 50%)",
+    cascadeOffset: 26,
   },
 };
 

@@ -1,8 +1,11 @@
 import { stripUnit } from "polished";
 
 import type { Position, Size } from "@/components/common/types";
-import type { ProcessContextType } from "@/context/Process/types";
-import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
+import type { ProcessContextType, Processes } from "@/context/Process/types";
+import {
+  DEFAULT_WINDOW_TRANSITION_DURATION,
+  PROCESS_DELIMITER,
+} from "@/utils/constants";
 
 export const reRouteFoucs =
   (focusElement: HTMLElement) =>
@@ -33,4 +36,22 @@ export const closeWithTransition = (
 ) => {
   close(id, true);
   setTimeout(() => close(id), DEFAULT_WINDOW_TRANSITION_DURATION);
+};
+
+export const cascadePosition = (
+  id: string,
+  processes: Processes,
+  stackOrder: string[],
+  offset = 0
+): Position | undefined => {
+  const [pid] = id.split(PROCESS_DELIMITER);
+  const processPid = `${pid}${PROCESS_DELIMITER}`;
+  const parentPositionProcess =
+    stackOrder.find((stackPid) => stackPid.startsWith(processPid)) || "";
+
+  const { componentWindow } = processes?.[parentPositionProcess] || {};
+
+  const { x = 0, y = 0 } = componentWindow?.getBoundingClientRect() || {};
+
+  return x || y ? { x: x + offset, y: y + offset } : undefined;
 };
