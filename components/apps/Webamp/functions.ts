@@ -1,12 +1,13 @@
 import type { IAudioMetadata } from "music-metadata-browser";
 import { parseBuffer } from "music-metadata-browser";
 import type { Position } from "react-rnd";
+import type { Track } from "webamp";
 
 import { centerPosition } from "@/components/system/Window/RndWindow/functions";
 import { bufferToBlob, cleanUpBufferUrl } from "@/utils/functions";
 
 import { BASE_WINDOW_SIZE, MP3_MIME_TYPE } from "./constants";
-import type { Track, WebampCI } from "./types";
+import type { WebampCI } from "./types";
 
 export const closeEqualizer = (webamp: WebampCI): void =>
   webamp.store.dispatch({

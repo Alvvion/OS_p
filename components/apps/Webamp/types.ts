@@ -1,54 +1,32 @@
 import type { Position } from "react-rnd";
+import type Webamp from "webamp";
 
-type WebampDispatchProps = {
-  absolute?: boolean;
-  positions?: {
+export type CloseWindow = {
+  type: "CLOSE_WINDOW";
+  windowId: string;
+};
+
+export type SetFocusedWindow = {
+  type: "SET_FOCUSED_WINDOW";
+  window: string;
+};
+
+export type UpdateWindowPositions = {
+  type: "UPDATE_WINDOW_POSITIONS";
+  positions: {
     main: Position;
     playlist: Position;
-    milkdrop: Position;
-  };
-  windowId?: string;
-  window?: string;
-  zIndex?: number;
-};
-
-export type Track = {
-  blob: Blob;
-  duration: number;
-  metaData: {
-    artist?: string;
-    title: string;
+    milkdrop?: Position;
   };
 };
 
-type WebampDispatch = WebampDispatchProps & {
-  type: string;
-};
-
-export type WebampCI = {
-  appendTracks: (tracks: Track[]) => void;
-  close: () => void;
-  dispose: () => void;
-  onWillClose: (cb: (cancel: () => void) => void) => () => void;
-  onMinimize: (cb: () => void) => () => void;
-  renderWhenReady: (domNode: HTMLElement) => Promise<void>;
-  setSkinFromUrl: (url: string) => void;
-  skinIsLoaded: () => Promise<void>;
+export type WebampCI = Webamp & {
   store: {
-    dispatch: (command: WebampDispatch) => void;
+    dispatch: (
+      command: CloseWindow | SetFocusedWindow | UpdateWindowPositions
+    ) => void;
   };
 };
-
-export type WebampOptions = {
-  initialSkin?: {
-    url: string;
-  };
-  initialTracks?: Track[];
-};
-
-interface WebampConstructor {
-  new (options?: WebampOptions): WebampCI;
-}
 
 declare global {
   interface Window {
@@ -56,11 +34,6 @@ declare global {
     butterchurnPresets: {
       getPresets: () => { [preset: string]: unknown };
     };
-    Webamp: WebampConstructor;
+    Webamp: typeof Webamp;
   }
 }
-
-export type Options = {
-  zIndex?: number;
-  initialTracks?: Track[];
-};

@@ -1,5 +1,6 @@
 import { basename, extname } from "path";
 import { useState } from "react";
+import type { Options } from "webamp";
 
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
@@ -16,7 +17,7 @@ import {
   parseTrack,
   updateWebampPostion,
 } from "./functions";
-import type { WebampCI, WebampOptions } from "./types";
+import type { WebampCI } from "./types";
 
 const useWebamp = (id: string) => {
   const { onClose, onMinimize } = useWindowActions(id);
@@ -63,12 +64,12 @@ const useWebamp = (id: string) => {
           butterchurnOpen: true,
         },
       };
-      const runWebamp = (options?: WebampOptions) => {
-        const webamp: WebampCI = new window.Webamp({
+      const runWebamp = (options?: Options) => {
+        const webamp = new window.Webamp({
           ...butterChurn,
           ...BASE_WEBAMP_SKINS,
           ...options,
-        });
+        }) as WebampCI;
 
         const setupElement = () => {
           const webampElement = getWebampElement();
