@@ -1,16 +1,5 @@
 ### Dated 20th May 2024
-
-Problems
-
 - No zip and iso support (stream 20).
 
-### Dated 30th May 2024
-- Minimize doesn't work when window is maximized (solved).
-
-
-### Dated 4th June 2024
-- After Minimize titlebar disappears (only for FileExploerer).
-- After Minimize/ Maximize from taskbar white border appers (solved).
-
-### Dated 9th June 2024
-- After Minimize titlebar disappears ~(only for FileExploerer)~ (scaling issue when minimizing scale 0.1 now) (solved).
+### Dated 18th June 2024
+- v86 size fixing in FF (stream 28).
