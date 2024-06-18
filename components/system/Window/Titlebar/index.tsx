@@ -4,10 +4,12 @@ import type { TitlebarProps } from "./types";
 
 const Titlebar: React.FC<TitlebarProps> = ({ id, bar = "Default" }) => {
   switch (bar) {
-    case "File Explorer":
+    case "File Explorer": {
       return <FileExplorerBar id={id} />;
-    default:
+    }
+    default: {
       return <DefaultBar id={id} />;
+    }
   }
 };
 

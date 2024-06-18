@@ -11,7 +11,7 @@ const contextFactory = <T,>(
   const Provider: React.FC<ChildrenProp> = ({ children }) => (
     <Context.Provider value={useContextState()}>
       {children}
-      {ContextComponent ? <ContextComponent /> : null}
+      {ContextComponent ? <ContextComponent /> : undefined}
     </Context.Provider>
   );
 

@@ -1,5 +1,7 @@
 import { extname } from "path";
 
+import { ONE_TIME_PASSIVE_EVENT } from "./constants";
+
 export const cleanUpBufferUrl = (url: string): void => URL.revokeObjectURL(url);
 
 export const loadScripts = (src: string): Promise<Event> =>
@@ -13,8 +15,16 @@ export const loadScripts = (src: string): Promise<Event> =>
 
       script.async = false;
       script.src = src;
-      script.onerror = (event) => reject(event);
-      script.onload = (event) => resolve(event);
+      script.addEventListener(
+        "error",
+        (event) => reject(event),
+        ONE_TIME_PASSIVE_EVENT
+      );
+      script.addEventListener(
+        "load",
+        (event) => resolve(event),
+        ONE_TIME_PASSIVE_EVENT
+      );
 
       document.head.appendChild(script);
     }
@@ -22,7 +32,7 @@ export const loadScripts = (src: string): Promise<Event> =>
 
 export const loadStyles = (href: string): Promise<Event> =>
   new Promise<Event>((resolve, reject) => {
-    const loadedLinks = [...document.getElementsByTagName("link")];
+    const loadedLinks = [...document.querySelectorAll("link")];
 
     if (loadedLinks.some((link) => link.href.endsWith(href))) {
       resolve(new Event("Already loaded."));
@@ -31,8 +41,16 @@ export const loadStyles = (href: string): Promise<Event> =>
 
       link.rel = "stylesheet";
       link.href = href;
-      link.onerror = (event) => reject(event);
-      link.onload = (event) => resolve(event);
+      link.addEventListener(
+        "error",
+        (event) => reject(event),
+        ONE_TIME_PASSIVE_EVENT
+      );
+      link.addEventListener(
+        "load",
+        (event) => resolve(event),
+        ONE_TIME_PASSIVE_EVENT
+      );
 
       document.head.appendChild(link);
     }
@@ -57,4 +75,4 @@ export const bufferToUrl = (buffer: Buffer): string =>
   URL.createObjectURL(bufferToBlob(buffer));
 
 export const pxToNumber = (px: string): number =>
-  parseInt(px.slice(0, px.length - 2), 10);
+  Number.parseInt(px.slice(0, -2), 10);

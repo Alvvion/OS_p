@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
+import { ONE_TIME_PASSIVE_EVENT } from "@/utils/constants";
 
 import { writeUniqueName } from "./functions";
 import type { FileDrop } from "./types";
@@ -24,14 +25,18 @@ const useFileDrop = (
 
         files.forEach((file) => {
           const reader = new FileReader();
-          reader.onload = ({ target }) => {
-            writeUniqueName(
-              `${directory}/${file.name}`,
-              Buffer.from(new Uint8Array(target?.result as ArrayBuffer)),
-              updateFiles,
-              fs
-            );
-          };
+          reader.addEventListener(
+            "load",
+            ({ target }) => {
+              writeUniqueName(
+                `${directory}/${file.name}`,
+                Buffer.from(new Uint8Array(target?.result as ArrayBuffer)),
+                updateFiles,
+                fs
+              );
+            },
+            ONE_TIME_PASSIVE_EVENT
+          );
 
           reader.readAsArrayBuffer(file);
         });

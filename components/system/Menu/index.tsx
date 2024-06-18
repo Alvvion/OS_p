@@ -50,7 +50,7 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
         ))}
       </ol>
     </nav>
-  ) : null;
+  ) : undefined;
 };
 
 export default Menu;

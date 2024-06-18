@@ -12,6 +12,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:unicorn/recommended",
     "prettier",
     "next/core-web-vitals"
   ],
@@ -20,7 +21,13 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "jest", "react", "simple-import-sort"],
+  "plugins": [
+    "@typescript-eslint",
+    "jest",
+    "react",
+    "simple-import-sort",
+    "unicorn"
+  ],
   "globals": {
     "React": "readonly"
   },
@@ -68,6 +75,16 @@
     "simple-import-sort/exports": "error",
     "simple-import-sort/imports": "error",
     "import/no-cycle": "off",
-    "jsx-a11y/control-has-associated-label": "off"
+    "jsx-a11y/control-has-associated-label": "off",
+    "unicorn/filename-case": "off",
+    "unicorn/import-style": "off",
+    "unicorn/no-array-for-each": "off",
+    "unicorn/no-array-reduce": "off",
+    "unicorn/numeric-separators-style": "off",
+    "unicorn/prefer-dom-node-append": "off",
+    "unicorn/prefer-module": "off",
+    "unicorn/prefer-node-protocol": "off",
+    "unicorn/prevent-abbreviations": "off",
+    "unicorn/prefer-blob-reading-methods": "off"
   }
 }

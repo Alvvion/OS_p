@@ -18,9 +18,11 @@ const useFileInfo = (path: string): FileInfo => {
     if (fs) {
       const extension = extname(path).toLowerCase();
 
-      if (!extension) {
+      if (extension) {
+        getInfoWithExtension(fs, path, extension, setInfo);
+      } else {
         getInfoWithoutExtension(fs, path, setInfo);
-      } else getInfoWithExtension(fs, path, extension, setInfo);
+      }
     }
   }, [path, fs]);
   return info;

@@ -36,7 +36,7 @@ const MenuItemEntry: React.FC<MenuItemProps> = ({
   useEffect(() => {
     if (menu && entryRef?.current) {
       const { height, width } =
-        entryRef?.current?.getBoundingClientRect() || null;
+        entryRef?.current?.getBoundingClientRect() || undefined;
 
       setSubMenuOffset({
         x: width - sizes.contextMenu.subMenuOffset,

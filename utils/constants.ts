@@ -99,3 +99,8 @@ export const DEFAULT_WINDOW_TRANSITION_DURATION = 250;
 export const MAIN_HEIGHT = 116;
 
 export const SHORTCUT = ".url";
+
+export const ONE_TIME_PASSIVE_EVENT = {
+  once: true,
+  passive: true,
+} as AddEventListenerOptions;

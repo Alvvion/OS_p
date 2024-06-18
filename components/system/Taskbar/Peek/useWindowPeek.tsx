@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useProcesses } from "@/context/Process";
+import { ONE_TIME_PASSIVE_EVENT } from "@/utils/constants";
 
 import PeekWindow from "./PeekWindow";
 import type { WindowPeek } from "./types";
@@ -17,22 +18,26 @@ const useWindowPeek = (id: string): WindowPeek => {
   const [showPeek, setShowPeek] = useState(false);
   const [previewSrc, setPreviewSrc] = useState("");
 
+  const renderFrame = (): void => {
+    const previewElement = peekElement || componentWindow;
+
+    if (previewElement) {
+      import("html-to-image").then(({ toPng }) =>
+        toPng(previewElement).then((dataUrl) => {
+          const previewImage = new Image();
+
+          previewImage.src = dataUrl;
+          previewImage.addEventListener(
+            "load",
+            () => setPreviewSrc(dataUrl),
+            ONE_TIME_PASSIVE_EVENT
+          );
+        })
+      );
+    }
+  };
+
   const onMouseEnter = () => {
-    const renderFrame = () => {
-      const previewElement = peekElement || componentWindow;
-
-      if (previewElement) {
-        import("html-to-image").then(({ toPng }) =>
-          toPng(previewElement).then((dataUrl) => {
-            const previewImage = new Image();
-
-            previewImage.src = dataUrl;
-            previewImage.onload = () => setPreviewSrc(dataUrl);
-          })
-        );
-      }
-    };
-
     mouseTimer.current = setTimeout(() => {
       renderFrame();
       setShowPeek(true);

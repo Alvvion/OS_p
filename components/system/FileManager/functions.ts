@@ -26,7 +26,7 @@ export const writeUniqueName = (
   fs?: FSModule,
   iteration = 0
 ): void => {
-  const writePath = !iteration ? path : iterateFileNames(path, iteration);
+  const writePath = iteration ? iterateFileNames(path, iteration) : path;
 
   fs?.writeFile(writePath, fileBuffer, { flag: "wx" }, (error) => {
     if (error?.code === "EEXIST") {

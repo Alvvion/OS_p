@@ -22,10 +22,10 @@ import type { WebampCI } from "./types";
 const useWebamp = (id: string) => {
   const { onClose, onMinimize } = useWindowActions(id);
 
-  const {
-    setWindowStates,
-    windowStates: { [id]: { position = undefined } = {} } = {},
-  } = useSession();
+  const { setWindowStates, windowStates: { [id]: windowState } = {} } =
+    useSession();
+
+  const { position } = windowState || {};
 
   const {
     linkElement,

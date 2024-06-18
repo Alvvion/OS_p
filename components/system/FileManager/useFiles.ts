@@ -14,7 +14,7 @@ const useFiles = (directory: string) => {
     (appendFiles?: string) =>
       fs?.readdir(directory, (_err, contents = []) =>
         setFiles((currentFiles) =>
-          appendFiles && contents.length !== 0
+          appendFiles && contents.length > 0
             ? [...currentFiles, basename(appendFiles)]
             : contents
         )

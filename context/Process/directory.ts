@@ -35,13 +35,7 @@ export const processDir: Processes = {
 };
 
 export const getProcess = (processes: string[]): Processes =>
-  processes.reduce(
-    (acc, id) => ({
-      ...acc,
-      [id]: processDir[id],
-    }),
-    {}
-  );
+  Object.fromEntries(processes.map((id) => [id, processDir[id]]));
 
 export const STARTUP_PROCESSES: string[] = [];
 export const PINNED_PROCESSES: string[] = ["HelloWorld", ...STARTUP_PROCESSES];
