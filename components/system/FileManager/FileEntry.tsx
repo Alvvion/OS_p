@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Icon } from "@/components/common";
 import { useMenu } from "@/context/Menu";
 import { useTheme } from "@/context/Theme";
-import useDoubleClick from "@/hooks/useDoubleClick";
+import { doubleClick } from "@/utils/functions";
 
 import RenameBox from "./RenameBox";
 import type { FileEntryProps } from "./types";
@@ -64,7 +64,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
       <Button
         type="button"
         extraStyles="relative"
-        onClick={useDoubleClick(() => openFile(pid), singleClick)}
+        onClick={doubleClick(() => openFile(pid), singleClick)}
         onContextMenu={contextMenu(menu)}
       >
         <figure className="flex flex-col place-items-center mb-[-3px]">

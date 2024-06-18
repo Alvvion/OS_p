@@ -104,3 +104,5 @@ export const ONE_TIME_PASSIVE_EVENT = {
   once: true,
   passive: true,
 } as AddEventListenerOptions;
+
+export const DOUBLE_CLICK_TIMEOUT_IN_MILLISECONDS = 500;
