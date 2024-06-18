@@ -1,9 +1,9 @@
+import dynamic from "next/dynamic";
 import { AiOutlineWifi } from "react-icons/ai";
 import { GiSpeaker } from "react-icons/gi";
 import { TbBattery4 } from "react-icons/tb";
 
 import { Button } from "@/components/common";
-import StartMenu from "@/components/system/StartMenu";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
@@ -13,6 +13,8 @@ import TaskbarButtons from "./TaskbarButtons";
 import TaskbarEntry from "./TaskbarEntry";
 
 const _tailwind = ["hover:bg-taskbar-button-hover"];
+
+const StartMenu = dynamic(() => import("@/components/system/StartMenu"));
 
 const Taskbar = () => {
   const { processes } = useProcesses();
