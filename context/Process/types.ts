@@ -1,4 +1,4 @@
-import type { ComponentProps } from "@/components/common/types";
+import type { ComponentProps, Size } from "@/components/common/types";
 
 export type ProcessElement = {
   taskbarEntry?: HTMLElement;
@@ -11,6 +11,7 @@ export type Process = ProcessElement & {
   backgroundColor?: string;
   closing?: boolean;
   Component: React.ComponentType<ComponentProps>;
+  defaultSize?: Size;
   hasWindow?: boolean;
   icon: string;
   lockAspectRatio?: boolean;

@@ -5,10 +5,6 @@ export type RndWindowProps = ChildrenProp & {
   style: React.CSSProperties;
 };
 
-export type Title = {
-  appendFileToTitle: (url: string) => void;
-};
-
 export type StatePosition = [
   Position,
   React.Dispatch<React.SetStateAction<Position>>

@@ -24,3 +24,7 @@ export type Focusable = Events & {
   zIndex: number;
   tabIndex: number;
 };
+
+export type Title = {
+  appendFileToTitle: (url: string) => void;
+};

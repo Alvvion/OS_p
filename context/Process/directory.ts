@@ -18,6 +18,16 @@ export const processDir: Processes = {
     title: "JSDOS",
     lockAspectRatio: true,
   },
+  Ruffle: {
+    backgroundColor: "#000",
+    Component: dynamic(() => import("@/components/apps/Ruffle")),
+    defaultSize: {
+      height: 400,
+      width: 550,
+    },
+    icon: "/assets/ruffle.png",
+    title: "Ruffle",
+  },
   V86: {
     Component: dynamic(() => import("@/components/apps/V86")),
     icon: "/assets/V86.ico",

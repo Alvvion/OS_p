@@ -1,10 +1,10 @@
 import type { MotionProps, Variant } from "framer-motion";
-import { stripUnit } from "polished";
 import { useEffect, useState } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
 import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
+import { pxToNumber } from "@/utils/functions";
 
 import {
   staticBaseVariants,
@@ -29,9 +29,7 @@ const useWindowTransitions = (id: string): MotionProps => {
 
     setMaximize({
       ...staticMaximizeVariant,
-      height: `${
-        window.innerHeight - Number(stripUnit(taskbar?.height || 0))
-      }px`,
+      height: `${window.innerHeight - pxToNumber(taskbar?.height)}px`,
       x: -windowX,
       y: -windowY,
     });

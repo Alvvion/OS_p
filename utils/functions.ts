@@ -1,4 +1,5 @@
 import { extname } from "path";
+import { stripUnit } from "polished";
 
 import {
   DOUBLE_CLICK_TIMEOUT_IN_MILLISECONDS,
@@ -77,8 +78,8 @@ export const bufferToBlob = (buffer: Buffer): Blob =>
 export const bufferToUrl = (buffer: Buffer): string =>
   URL.createObjectURL(bufferToBlob(buffer));
 
-export const pxToNumber = (px: string): number =>
-  Number.parseInt(px.slice(0, -2), 10);
+export const pxToNumber = (value: string | number = 0): number =>
+  Number(stripUnit(value));
 
 export const doubleClick = (
   handler: React.MouseEventHandler,

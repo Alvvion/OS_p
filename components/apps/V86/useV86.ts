@@ -1,8 +1,8 @@
 import { extname } from "path";
 import { useEffect, useState } from "react";
 
-import useTitle from "@/components/system/Window/RndWindow/useTitle";
 import { useFileSystem } from "@/context/FileSystem";
+import useTitle from "@/hooks/useTitle";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 
 import {

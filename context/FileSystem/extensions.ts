@@ -13,17 +13,21 @@ const extensions: Extensions = {
     icon: "/assets/compressed.png",
     process: ["JSDOS"],
   },
-  ".zip": {
-    icon: "/assets/compressed.png",
-    process: ["JSDOS"],
-  },
   ".mp3": {
     icon: "/assets/music_48.png",
     process: ["Webamp"],
   },
+  ".swf": {
+    icon: "/assets/ruffle.png",
+    process: ["Ruffle"],
+  },
   ".wsz": {
     icon: "/assets/music_48.png",
     process: ["Webamp"],
+  },
+  ".zip": {
+    icon: "/assets/compressed.png",
+    process: ["JSDOS"],
   },
 };
 

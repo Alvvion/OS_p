@@ -1,11 +1,10 @@
-import { stripUnit } from "polished";
-
 import type { Position, Size } from "@/components/common/types";
 import type { ProcessContextType, Processes } from "@/context/Process/types";
 import {
   DEFAULT_WINDOW_TRANSITION_DURATION,
   PROCESS_DELIMITER,
 } from "@/utils/constants";
+import { pxToNumber } from "@/utils/functions";
 
 export const reRouteFoucs =
   (focusElement: HTMLElement) =>
@@ -21,11 +20,9 @@ export const centerPosition = (
   size: Size,
   taskbarHeight: string
 ): Position => ({
-  x: Math.floor((window.innerWidth - Number(stripUnit(size.width))) / 2),
+  x: Math.floor((window.innerWidth - pxToNumber(size.width)) / 2),
   y: Math.floor(
-    (window.innerHeight -
-      Number(stripUnit(taskbarHeight)) -
-      Number(stripUnit(size.width))) /
+    (window.innerHeight - pxToNumber(taskbarHeight) - pxToNumber(size.height)) /
       2
   ),
 });

@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 
 import type { Size } from "@/components/common/types";
 import { useSession } from "@/context/Session";
-import { DEFAULT_WINDOW_SIZE } from "@/utils/constants";
+import useDefaultSize from "@/hooks/useDefaultSize";
 
 import type { StateSize } from "./types";
 
 const useStateSize = (id: string, autoSizing = false): StateSize => {
-  const { windowStates: { [id]: { size = DEFAULT_WINDOW_SIZE } = {} } = {} } =
+  const defaultSize = useDefaultSize(id);
+  const { windowStates: { [id]: { size = defaultSize } = {} } = {} } =
     useSession();
   const [{ height, width }, setSize] = useState<Size>(size);
 

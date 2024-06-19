@@ -6,55 +6,63 @@ import { ONE_TIME_PASSIVE_EVENT } from "@/utils/constants";
 import PeekWindow from "./PeekWindow";
 import type { WindowPeek } from "./types";
 
+const renderFrame = (
+  previewElement: HTMLElement,
+  callback: (url: string) => void
+): void => {
+  import("html-to-image").then(({ toPng }) =>
+    toPng(previewElement).then((dataUrl) => {
+      const previewImage = new Image();
+
+      previewImage.src = dataUrl;
+      previewImage.addEventListener(
+        "load",
+        () => callback(dataUrl),
+        ONE_TIME_PASSIVE_EVENT
+      );
+    })
+  );
+};
+
 const useWindowPeek = (id: string): WindowPeek => {
   const {
     processes: { [id]: process },
   } = useProcesses();
-
-  const { componentWindow, maximized, minimized, peekElement } = process || {};
-
-  const mouseTimer = useRef<NodeJS.Timeout | null>(null);
-  const previewTimer = useRef<NodeJS.Timeout | null>(null);
+  const { peekElement, componentWindow, minimized } = process || {};
+  const mouseTimer = useRef<NodeJS.Timeout>();
+  const previewTimer = useRef<NodeJS.Timeout>();
   const [showPeek, setShowPeek] = useState(false);
   const [previewSrc, setPreviewSrc] = useState("");
-
-  const renderFrame = (): void => {
+  const onMouseEnter = () => {
     const previewElement = peekElement || componentWindow;
 
     if (!mouseTimer.current && !previewTimer.current && previewElement) {
-      import("html-to-image").then(({ toPng }) =>
-        toPng(previewElement).then((dataUrl) => {
-          const previewImage = new Image();
+      const render = () => renderFrame(previewElement, setPreviewSrc);
 
-          previewImage.src = dataUrl;
-          previewImage.addEventListener(
-            "load",
-            () => setPreviewSrc(dataUrl),
-            ONE_TIME_PASSIVE_EVENT
-          );
-        })
-      );
+      mouseTimer.current = setTimeout(() => {
+        render();
+        setShowPeek(true);
+        previewTimer.current = setInterval(render, 1000);
+      }, 500);
     }
-  };
-
-  const onMouseEnter = () => {
-    mouseTimer.current = setTimeout(() => {
-      renderFrame();
-      setShowPeek(true);
-      previewTimer.current = setInterval(renderFrame, 1000);
-    }, 500);
   };
   const onMouseLeave = useCallback(() => {
     if (mouseTimer?.current) clearTimeout(mouseTimer.current);
     if (previewTimer?.current) clearInterval(previewTimer.current);
+
+    mouseTimer.current = undefined;
+    previewTimer.current = undefined;
 
     setShowPeek(false);
     setPreviewSrc("");
   }, []);
 
   useEffect(() => {
-    if (minimized || maximized) onMouseLeave();
-  }, [maximized, minimized, onMouseLeave]);
+    if (minimized) {
+      setShowPeek(false);
+      setPreviewSrc("");
+    }
+  }, [minimized]);
 
   useEffect(() => onMouseLeave, [onMouseLeave]);
 
@@ -63,14 +71,12 @@ const useWindowPeek = (id: string): WindowPeek => {
       showPeek && previewSrc
         ? () => <PeekWindow id={id} image={previewSrc} />
         : undefined,
-    // PeekComponent: PeekWindow,
-    peekEvents:
-      minimized || maximized
-        ? {}
-        : {
-            onMouseEnter,
-            onMouseLeave,
-          },
+    peekEvents: minimized
+      ? {}
+      : {
+          onMouseEnter,
+          onMouseLeave,
+        },
   };
 };
 

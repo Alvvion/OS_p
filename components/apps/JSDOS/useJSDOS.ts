@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
-import useTitle from "@/components/system/Window/RndWindow/useTitle";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
+import useTitle from "@/hooks/useTitle";
 import useWindowSize from "@/hooks/useWindowSize";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 

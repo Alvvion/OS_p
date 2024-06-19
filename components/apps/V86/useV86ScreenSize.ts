@@ -1,8 +1,8 @@
-import { stripUnit } from "polished";
 import { useEffect, useState } from "react";
 
 import { useTheme } from "@/context/Theme";
 import useWindowSize from "@/hooks/useWindowSize";
+import { pxToNumber } from "@/utils/functions";
 
 import type { ModeCallback, SizeCallback, V86Starter } from "./types";
 
@@ -32,8 +32,8 @@ const useV86ScreenSize = (
 
     const setScreenText: SizeCallback = ([cols, rows]) => {
       updateWindowSize(
-        rows * Number(stripUnit(lineHeight)) + 3,
-        (cols / 2 + 4) * Number(stripUnit(lineHeight))
+        rows * pxToNumber(lineHeight) + 3,
+        (cols / 2 + 4) * pxToNumber(lineHeight)
       );
     };
 
