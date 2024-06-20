@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { FaArrowLeft, FaArrowRight, FaArrowUp } from "react-icons/fa6";
 import { IoMdRefresh } from "react-icons/io";
 
-import { Button } from "@/components/common";
+import Button from "@/components/common/Button";
 import type { ComponentProps } from "@/components/common/types";
 import FileManager from "@/components/system/FileManager";
 import { useProcesses } from "@/context/Process";

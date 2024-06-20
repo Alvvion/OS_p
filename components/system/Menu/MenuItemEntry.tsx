@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Position } from "react-rnd";
 
-import { Icon } from "@/components/common";
+import Icon from "@/components/common/Icon";
 import { ChevronRight } from "@/components/common/Icons";
 import { useTheme } from "@/context/Theme";
 

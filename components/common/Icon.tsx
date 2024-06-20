@@ -2,7 +2,7 @@ import { memo, useEffect } from "react";
 
 import { cleanUpBufferUrl } from "@/utils/functions";
 
-import type { ButtonProps, ImageProps } from "./types";
+import type { ImageProps } from "./types";
 
 const onLoad: React.ReactEventHandler<HTMLImageElement> = ({ target }) =>
   (target as HTMLImageElement).style.setProperty("visibility", "visible");
@@ -35,21 +35,6 @@ const IconComponent: React.FC<ImageProps> = ({
   );
 };
 
-export const Icon = memo(IconComponent);
+const Icon = memo(IconComponent);
 
-export const Button: React.FC<ButtonProps> = ({
-  extraStyles,
-  children,
-  ...restProps
-}) => (
-  <button
-    type="button"
-    className={`${extraStyles} cursor-context-menu`}
-    onKeyDown={(event) => {
-      if (!(event.target instanceof HTMLInputElement)) event?.preventDefault();
-    }}
-    {...restProps}
-  >
-    {children}
-  </button>
-);
+export default Icon;

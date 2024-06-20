@@ -1,4 +1,4 @@
-import { Icon } from "@/components/common";
+import Icon from "@/components/common/Icon";
 import type { ComponentProps } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";

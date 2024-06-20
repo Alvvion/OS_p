@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { Button, Icon } from "@/components/common";
+import Button from "@/components/common/Button";
+import Icon from "@/components/common/Icon";
 import { useMenu } from "@/context/Menu";
 import { useTheme } from "@/context/Theme";
 import { doubleClick } from "@/utils/functions";

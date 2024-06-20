@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useCallback } from "react";
 
-import { Icon } from "@/components/common";
+import Icon from "@/components/common/Icon";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";

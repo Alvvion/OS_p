@@ -1,6 +1,7 @@
 import { IoAddOutline, IoCloseOutline } from "react-icons/io5";
 
-import { Button, Icon } from "@/components/common";
+import Button from "@/components/common/Button";
+import Icon from "@/components/common/Icon";
 import type { ComponentProps } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";

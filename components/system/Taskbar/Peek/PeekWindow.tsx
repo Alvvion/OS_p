@@ -1,4 +1,5 @@
-import { Button, Icon } from "@/components/common";
+import Button from "@/components/common/Button";
+import Icon from "@/components/common/Icon";
 import { CloseIcon } from "@/components/common/Icons";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
