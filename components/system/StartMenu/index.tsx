@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 
 import { useSession } from "@/context/Session";
+import { animateStartMenu } from "@/utils/animate";
 
 import AppBox from "./AppBox";
-import config from "./config";
 import Footer from "./Footer";
 import SearchBar from "./SearchBar";
 
@@ -37,7 +37,7 @@ const StartMenu: React.FC = () => {
       ref={menuRef}
       tabIndex={-1}
       onBlur={maybeCloseMenu}
-      {...config}
+      {...animateStartMenu}
     >
       <div className="flex flex-col items-center">
         <SearchBar />

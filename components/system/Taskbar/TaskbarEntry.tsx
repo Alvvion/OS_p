@@ -6,11 +6,10 @@ import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useNextFocusable from "@/hooks/useNextFocusable";
+import { animateTaskbar, buttonVariant, notchVariant } from "@/utils/animate";
 
-import { buttonVariant, config, notchVariant } from "./config";
 import useWindowPeek from "./Peek/useWindowPeek";
 import type { TaskbarEntryProps } from "./types";
-// import useTaskbarTransitions from "./useTassbarTransitions";
 
 const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   src,
@@ -73,7 +72,7 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
         }}
         onClick={onClick}
         variants={buttonVariant}
-        {...config}
+        {...animateTaskbar}
       >
         <Icon
           src={src}
@@ -87,8 +86,8 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
           className={`h-1 absolute ${
             isBottomNotch ? "w-1.5" : "w-4"
           } bottom-0 left-0 right-0 rounded-[10px] my-[-3px] mx-auto bg-[#9CC6D9] transition-width duration-100 ease-in-out`}
-          variants={notchVariant}
-          {...config}
+          variants={notchVariant(isBottomNotch)}
+          {...animateTaskbar}
         />
       </motion.button>
     </div>

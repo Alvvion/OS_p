@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
-import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
-import { pxToNumber } from "@/utils/functions";
-
 import {
   staticBaseVariants,
   staticMaximizeVariant,
   staticMinimizeVariant,
-} from "./config";
+} from "@/utils/animate";
+import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
+import { pxToNumber } from "@/utils/functions";
 
 const useWindowTransitions = (id: string): MotionProps => {
   const {
