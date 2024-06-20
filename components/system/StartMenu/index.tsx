@@ -11,18 +11,19 @@ const StartMenu: React.FC = () => {
   const menuRef = useRef<HTMLElement | null>(null);
 
   const maybeCloseMenu = ({ relatedTarget }: React.FocusEvent) => {
-    if (!menuRef?.current?.contains(relatedTarget)) {
-      if (
-        [
-          relatedTarget,
-          relatedTarget?.parentElement,
-          relatedTarget?.parentElement?.parentElement,
-        ].includes(menuRef.current?.nextSibling as EventTarget & Element)
-      ) {
-        menuRef?.current?.focus();
-      } else {
-        toggleStartMenu(false);
-      }
+    const focusedElement = relatedTarget as HTMLElement;
+    const focusedInsideMenu = menuRef.current?.contains(focusedElement);
+
+    if (!focusedInsideMenu) {
+      const focusedTaskbar = focusedElement === menuRef.current?.nextSibling;
+
+      const focusedStartButton =
+        focusedElement?.parentElement?.parentElement ===
+        menuRef.current?.nextSibling;
+
+      if (focusedTaskbar || focusedStartButton) {
+        menuRef.current?.focus();
+      } else toggleStartMenu(false);
     }
   };
 

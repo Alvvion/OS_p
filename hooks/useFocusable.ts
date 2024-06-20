@@ -24,11 +24,18 @@ const useFocusable = (
   const isForeground = id === foregroundId;
 
   const onBlur: React.FocusEventHandler<HTMLElement> = (event) => {
-    const { relatedTarget } = event;
-    const focusedOnTaskbarEntry = relatedTarget === taskbarEntry;
+    const { relatedTarget: focusedElement } = event;
+    const focusedOnTaskbarEntry = focusedElement === taskbarEntry;
     const focusedInsideWindow =
-      relatedTarget && componentWindow?.contains(relatedTarget as Node);
-    if (isForeground && !focusedOnTaskbarEntry && !focusedInsideWindow) {
+      focusedElement && componentWindow?.contains(focusedElement as Node);
+    const focusedOnTaskbarPeek =
+      taskbarEntry?.previousSibling?.contains(focusedElement);
+    if (
+      isForeground &&
+      !focusedOnTaskbarEntry &&
+      !focusedOnTaskbarPeek &&
+      !focusedInsideWindow
+    ) {
       setForegroundId("");
       callbackEvents?.onBlur?.(event);
     }
