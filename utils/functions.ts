@@ -1,4 +1,3 @@
-import { extname } from "path";
 import { stripUnit } from "polished";
 
 import {
@@ -8,7 +7,7 @@ import {
 
 export const cleanUpBufferUrl = (url: string): void => URL.revokeObjectURL(url);
 
-export const loadScripts = (src: string): Promise<Event> =>
+export const loadScript = (src: string): Promise<Event> =>
   new Promise<Event>((resolve, reject) => {
     const loadedScripts = [...document.scripts];
 
@@ -34,43 +33,8 @@ export const loadScripts = (src: string): Promise<Event> =>
     }
   });
 
-export const loadStyles = (href: string): Promise<Event> =>
-  new Promise<Event>((resolve, reject) => {
-    const loadedLinks = [...document.querySelectorAll("link")];
-
-    if (loadedLinks.some((link) => link.href.endsWith(href))) {
-      resolve(new Event("Already loaded."));
-    } else {
-      const link = document.createElement("link");
-
-      link.rel = "stylesheet";
-      link.href = href;
-      link.addEventListener(
-        "error",
-        (event) => reject(event),
-        ONE_TIME_PASSIVE_EVENT
-      );
-      link.addEventListener(
-        "load",
-        (event) => resolve(event),
-        ONE_TIME_PASSIVE_EVENT
-      );
-
-      document.head.appendChild(link);
-    }
-  });
-
 export const loadFiles = (files: string[]): Promise<Event[]> =>
-  Promise.all(
-    files.reduce((filesToLoad: Promise<Event>[], file) => {
-      const ext = extname(file).toLowerCase();
-
-      if (ext === ".css") filesToLoad.push(loadStyles(file));
-      else if (ext === ".js") filesToLoad.push(loadScripts(file));
-
-      return filesToLoad;
-    }, [])
-  );
+  Promise.all(files.map((file) => loadScript(file)));
 
 export const bufferToBlob = (buffer: Buffer): Blob =>
   new Blob([new Uint8Array(buffer)]);
