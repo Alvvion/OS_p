@@ -1,12 +1,16 @@
+import { motion } from "framer-motion";
 import { useCallback } from "react";
 
+import { Icon } from "@/components/common";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
+import { useTheme } from "@/context/Theme";
 import useNextFocusable from "@/hooks/useNextFocusable";
 
+import { buttonVariant, config, notchVariant } from "./config";
 import useWindowPeek from "./Peek/useWindowPeek";
-import TaskbarButtons from "./TaskbarButtons";
 import type { TaskbarEntryProps } from "./types";
+// import useTaskbarTransitions from "./useTassbarTransitions";
 
 const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   src,
@@ -24,12 +28,7 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   const nextFocusableId = useNextFocusable(pid);
   const isForeground = foregroundId === pid;
 
-  const isBottomNotch = () => {
-    if (minimized || !isForeground) {
-      return true;
-    }
-    return false;
-  };
+  const isBottomNotch = !!(minimized || !isForeground);
 
   const onClick = () => {
     if (minimized || isForeground) minimize(pid);
@@ -44,21 +43,54 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
     [pid, linkElement]
   );
 
+  const {
+    currentTheme: {
+      sizes: {
+        taskbar: {
+          startButton: { width: buttonWidth },
+        },
+      },
+      colors: {
+        taskbar: { buttonHover },
+      },
+    },
+  } = useTheme();
+
   const { PeekComponent, peekEvents } = useWindowPeek(pid);
 
   return (
     <div {...peekEvents}>
       {PeekComponent && <PeekComponent />}
-      <TaskbarButtons
-        src={src}
-        width={width}
-        height={height}
-        name={name}
-        reqBottomNotch
-        bottomnotch={isBottomNotch()}
+      <motion.button
+        type="button"
+        ref={linkTaskbarEntry}
+        className={`m-[5px] p-[5px] rounded-[0.25rem] relative cursor-context-menu hover:${buttonHover} border border-transparent hover:border-[#373737] ${
+          isBottomNotch ? "" : buttonHover
+        }`}
+        style={{
+          maxWidth: buttonWidth,
+          transition: "background-color 0.5s",
+        }}
         onClick={onClick}
-        reference={linkTaskbarEntry}
-      />
+        variants={buttonVariant}
+        {...config}
+      >
+        <Icon
+          src={src}
+          width={width}
+          height={height}
+          alt={name}
+          visibility
+          className="active:transform active:scale-[0.85]"
+        />
+        <motion.div
+          className={`h-1 absolute ${
+            isBottomNotch ? "w-1.5" : "w-4"
+          } bottom-0 left-0 right-0 rounded-[10px] my-[-3px] mx-auto bg-[#9CC6D9] transition-width duration-100 ease-in-out`}
+          variants={notchVariant}
+          {...config}
+        />
+      </motion.button>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import { AiOutlineWifi } from "react-icons/ai";
 import { GiSpeaker } from "react-icons/gi";
@@ -9,7 +10,7 @@ import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 
 import Clock from "./Clock";
-import TaskbarButtons from "./TaskbarButtons";
+import StartButton from "./StartButton";
 import TaskbarEntry from "./TaskbarEntry";
 
 const _tailwind = ["hover:bg-taskbar-button-hover"];
@@ -39,27 +40,28 @@ const Taskbar = () => {
         tabIndex={-1}
       >
         <div className="h-full flex place-content-center place-items-center">
-          <TaskbarButtons
+          <StartButton
             src="/assets/windows11.png"
             width={32}
             height={32}
-            name="Start Button"
-            visibility
+            alt="Start Button"
             onClick={() => toggleStartMenu()}
           />
           <div className="flex flex-row justify-center items-center h-full relative">
-            {Object.entries(processes)
-              .filter(([_id, { closing }]) => !closing)
-              .map(([id, process]) => (
-                <TaskbarEntry
-                  key={id}
-                  src={process.icon}
-                  width={32}
-                  height={32}
-                  name={id}
-                  pid={id}
-                />
-              ))}
+            <AnimatePresence>
+              {Object.entries(processes)
+                .filter(([_id, { closing }]) => !closing)
+                .map(([id, process]) => (
+                  <TaskbarEntry
+                    key={id}
+                    src={process.icon}
+                    width={32}
+                    height={32}
+                    name={id}
+                    pid={id}
+                  />
+                ))}
+            </AnimatePresence>
           </div>
         </div>
         <div className="flex flex-row justify-center items-center h-[88%] py-[5px] px-[10px] rounded-md">

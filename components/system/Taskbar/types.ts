@@ -13,3 +13,11 @@ export interface TaskbarButtonProps
 export type TaskbarEntryProps = TaskbarButtonProps & {
   pid: string;
 };
+
+export type StartButtonProps = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+};
