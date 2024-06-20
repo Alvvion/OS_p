@@ -1,4 +1,3 @@
-import type { IAudioMetadata } from "music-metadata-browser";
 import { parseBuffer } from "music-metadata-browser";
 import type { Position } from "react-rnd";
 import type { Track } from "webamp";
@@ -46,27 +45,28 @@ export const unFocusWindow = (webamp: WebampCI): void =>
     window: "",
   });
 
-export const parseTrack = (file: Buffer, fileName: string): Promise<Track> =>
-  new Promise<Track>((resolve) => {
-    parseBuffer(
-      file,
-      {
-        mimeType: MP3_MIME_TYPE,
-        size: file.length,
-      },
-      { duration: true, skipCovers: true, skipPostHeaders: true }
-    ).then(
-      ({
-        common: { artist = "", title = fileName },
-        format: { duration = 0 },
-      }: IAudioMetadata) =>
-        resolve({
-          blob: bufferToBlob(file),
-          duration: Math.floor(duration),
-          metaData: { artist, title },
-        })
-    );
-  });
+export const parseTrack = async (
+  file: Buffer,
+  fileName: string
+): Promise<Track> => {
+  const {
+    common: { artist = "", title = fileName },
+    format: { duration = 0 },
+  } = await parseBuffer(
+    file,
+    {
+      mimeType: MP3_MIME_TYPE,
+      size: file.length,
+    },
+    { duration: true, skipCovers: true, skipPostHeaders: true }
+  );
+
+  return {
+    blob: bufferToBlob(file),
+    duration: Math.floor(duration),
+    metaData: { artist, title },
+  };
+};
 
 export const cleanBufferOnSkinLoad = (
   webamp: WebampCI,
