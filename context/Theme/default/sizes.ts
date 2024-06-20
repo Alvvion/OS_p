@@ -40,6 +40,10 @@ const sizes = {
   fileExplorer: {
     height: "51px",
   },
+  startMenu: {
+    height: "390px",
+    width: "320px",
+  },
   window: {
     outline: "hsl(0deg 0% 25% / 75%)",
     outlineInactive: "hsl(0deg 0% 30% / 75%)",
