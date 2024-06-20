@@ -27,14 +27,14 @@ const PeekWindow: React.FC<PeekWindowProps> = ({ id, image }) => {
     processes: { [id]: process },
   } = useProcesses();
 
-  const { icon, title } = process || {};
+  const { closing, icon, title } = process || {};
 
   const { onClose } = useWindowActions(id);
 
   return (
     <div
       className="absolute z-50 w-40 bottom-11 -left-1/2 bg-[#292929] rounded-lg"
-      //   style={{ bottom: height }}
+      style={{ display: closing ? "none" : "block" }}
     >
       <div className="flex justify-between items-center mx-2">
         <figure className="flex items-center h-full">
