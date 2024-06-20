@@ -14,7 +14,7 @@ import type { DosCI } from "./types";
 const useJSDOS = (
   id: string,
   url: string,
-  ref: React.MutableRefObject<HTMLDivElement | null>
+  containerRef: React.MutableRefObject<HTMLDivElement | null>
 ): void => {
   const { appendFileToTitle } = useTitle(id);
   const { updateWindowSize } = useWindowSize(id);
@@ -28,15 +28,14 @@ const useJSDOS = (
         loadFiles(libs).then(async () => {
           const objectURL = bufferToUrl(await addJSDOSConfig(contents, fs));
 
-          if (ref?.current && window.emulators) {
+          if (containerRef?.current && window.emulators) {
             window.emulators.pathPrefix = pathPrefix;
 
             window
-              .Dos(ref.current)
+              .Dos(containerRef.current)
               .run(objectURL)
               .then((ci) => {
-                const canvas =
-                  ref.current?.querySelector<HTMLCanvasElement>("canvas");
+                const canvas = containerRef.current?.querySelector("canvas");
                 if (canvas) linkElement(id, "peekElement", canvas);
                 setDos(ci);
                 appendFileToTitle(url);
@@ -54,7 +53,7 @@ const useJSDOS = (
         window.SimpleKeyboardInstances?.emulatorKeyboard?.destroy?.();
       }
     };
-  }, [appendFileToTitle, dos, fs, id, linkElement, ref, url]);
+  }, [appendFileToTitle, dos, fs, id, linkElement, containerRef, url]);
 
   useEffect(() => {
     if (dos) {

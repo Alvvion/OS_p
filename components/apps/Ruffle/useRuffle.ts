@@ -2,7 +2,6 @@ import { basename, extname } from "path";
 import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
-import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
 import { loadFiles } from "@/utils/functions";
 
@@ -12,12 +11,10 @@ const libs = ["/libs/ruffle/ruffle.js"];
 
 const useRuffle = (
   id: string,
+  url: string,
   containerRef: React.MutableRefObject<HTMLDivElement | null>
 ): void => {
   const { appendFileToTitle } = useTitle(id);
-  const {
-    processes: { [id]: { url = "" } = {} },
-  } = useProcesses();
   const { fs } = useFileSystem();
   const [player, setPlayer] = useState<RufflePlayer>();
 
