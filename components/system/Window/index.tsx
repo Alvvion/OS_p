@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
@@ -16,8 +17,10 @@ const Window: React.FC<WindowComponentProps> = ({
   children,
 }) => {
   const {
-    processes: { [id]: { backgroundColor = "" } = {} },
+    linkElement,
+    processes: { [id]: process },
   } = useProcesses();
+  const { backgroundColor, peekElement } = process || {};
 
   const { foregroundId } = useSession();
 
@@ -30,6 +33,13 @@ const Window: React.FC<WindowComponentProps> = ({
       },
     },
   } = useTheme();
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (process && viewportRef.current && !peekElement) {
+      linkElement(id, "peekElement", viewportRef.current);
+    }
+  }, [id, linkElement, peekElement, process]);
 
   const { zIndex, ...focusableProps } = useFocusable(id);
 
@@ -48,7 +58,9 @@ const Window: React.FC<WindowComponentProps> = ({
         {...focusableProps}
       >
         <Titlebar id={id} bar={titlebarStyle} />
-        {children}
+        <div ref={viewportRef} className="bg-inherit h-full w-full">
+          {children}
+        </div>
       </motion.section>
     </RndWindow>
   );

@@ -10,16 +10,25 @@ const renderFrame = (
   previewElement: HTMLElement,
   callback: (url: string) => void
 ): void => {
-  import("html-to-image").then(({ toPng }) =>
-    toPng(previewElement).then((dataUrl) => {
-      const previewImage = new Image();
+  import("html-to-image").then(({ toCanvas }) =>
+    toCanvas(previewElement).then((canvas) => {
+      const { height, width } = canvas;
+      const { data: pixelData } =
+        canvas.getContext("2d")?.getImageData(0, 0, width, height) || {};
 
-      previewImage.src = dataUrl;
-      previewImage.addEventListener(
-        "load",
-        () => callback(dataUrl),
-        ONE_TIME_PASSIVE_EVENT
-      );
+      if (pixelData?.some(Boolean)) {
+        const dataUrl = canvas.toDataURL();
+        const previewImage = new Image();
+
+        previewImage.src = dataUrl;
+        previewImage.addEventListener(
+          "load",
+          () => callback(dataUrl),
+          ONE_TIME_PASSIVE_EVENT
+        );
+      } else {
+        renderFrame(previewElement, callback);
+      }
     })
   );
 };
@@ -28,7 +37,7 @@ const useWindowPeek = (id: string): WindowPeek => {
   const {
     processes: { [id]: process },
   } = useProcesses();
-  const { componentWindow, minimized, peekElement } = process || {};
+  const { componentWindow, peekElement } = process || {};
   const mouseTimer = useRef<NodeJS.Timeout>();
   const previewTimer = useRef<NodeJS.Timeout>();
   const [showPeek, setShowPeek] = useState(false);
@@ -57,13 +66,6 @@ const useWindowPeek = (id: string): WindowPeek => {
     setPreviewSrc("");
   }, []);
 
-  useEffect(() => {
-    if (minimized) {
-      setShowPeek(false);
-      setPreviewSrc("");
-    }
-  }, [minimized]);
-
   useEffect(() => onMouseLeave, [onMouseLeave]);
 
   return {
@@ -71,12 +73,10 @@ const useWindowPeek = (id: string): WindowPeek => {
       showPeek && previewSrc
         ? () => <PeekWindow id={id} image={previewSrc} />
         : undefined,
-    peekEvents: minimized
-      ? {}
-      : {
-          onMouseEnter,
-          onMouseLeave,
-        },
+    peekEvents: {
+      onMouseEnter,
+      onMouseLeave,
+    },
   };
 };
 
