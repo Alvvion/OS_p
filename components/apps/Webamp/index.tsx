@@ -61,8 +61,8 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
 
   const focusEvents = useMemo(
     () => ({
-      onBlur: () => webampCI && unFocusWindow(webampCI),
-      onFocus: () => webampCI && focusWindow(webampCI, "main"),
+      onBlurCapture: () => webampCI && unFocusWindow(webampCI),
+      onFocusCapture: () => webampCI && focusWindow(webampCI, "main"),
     }),
     [webampCI]
   );

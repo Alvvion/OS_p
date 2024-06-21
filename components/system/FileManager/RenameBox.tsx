@@ -18,7 +18,7 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
     <input
       ref={inputRef}
       defaultValue={name}
-      onBlur={saveRename}
+      onBlurCapture={saveRename}
       type="text"
       size={1}
       onKeyDown={({ key }) => key === "Enter" && saveRename()}

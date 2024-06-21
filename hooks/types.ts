@@ -16,8 +16,8 @@ export type LocaleDateTime = {
 };
 
 export type Events = {
-  onBlur: (event: React.FocusEvent<HTMLElement>) => void;
-  onFocus: (event?: React.FocusEvent<HTMLElement>) => void;
+  onBlurCapture: (event: React.FocusEvent<HTMLElement>) => void;
+  onFocusCapture: (event?: React.FocusEvent<HTMLElement>) => void;
 };
 
 export type Focusable = Events & {

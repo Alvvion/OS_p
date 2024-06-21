@@ -86,8 +86,8 @@ export const MILLISEC_IN_SEC = 1000;
 export const PROCESS_DELIMITER = "_";
 
 export const DEFAULT_WINDOW_SIZE: Size = {
-  height: "200px",
-  width: "410px",
+  height: 200,
+  width: 410,
 };
 
 export const DEFAULT_WINDOW_TRANSITION_DURATION = 250;

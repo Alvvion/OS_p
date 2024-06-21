@@ -28,7 +28,7 @@ const useWindowTransitions = (id: string): MotionProps => {
 
     setMaximize({
       ...staticMaximizeVariant,
-      height: `${window.innerHeight - pxToNumber(taskbar?.height)}px`,
+      height: window.innerHeight - pxToNumber(taskbar?.height),
       x: -windowX,
       y: -windowY,
     });

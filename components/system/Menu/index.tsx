@@ -35,7 +35,7 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
       className={`bg-context-background border-context-border border text-white h-fit py-1 px-0.5 w-fit absolute text-xs ${
         subMenu ? "z-[11]" : "z-10"
       }`}
-      onBlur={resetMenu}
+      onBlurCapture={resetMenu}
       ref={menuRef}
       tabIndex={-1}
       style={{ transform: `translate(${x}px, ${y}px)`, boxShadow }}
