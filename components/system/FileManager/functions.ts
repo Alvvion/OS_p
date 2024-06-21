@@ -7,7 +7,11 @@ import {
   getIconByFileExtension,
   getProcessByFileExtension,
 } from "@/context/FileSystem/functions";
-import { IMAGE_FILE_EXTENSION, SHORTCUT } from "@/utils/constants";
+import {
+  IMAGE_FILE_EXTENSION,
+  SHORTCUT,
+  SYSTEM_FILES,
+} from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
 import type { FileInfo } from "./types";
@@ -107,3 +111,8 @@ export const getInfoWithExtension = (
     });
   } else getInfoByFileExtension();
 };
+
+export const filterSystemFiles =
+  (directory: string) =>
+  (file: string): boolean =>
+    !SYSTEM_FILES.has(`${directory}${file}`);

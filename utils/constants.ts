@@ -102,3 +102,5 @@ export const ONE_TIME_PASSIVE_EVENT = {
 } as AddEventListenerOptions;
 
 export const DOUBLE_CLICK_TIMEOUT_IN_MILLISECONDS = 500;
+
+export const SYSTEM_FILES = new Set(["/.deletedFiles.log"]);

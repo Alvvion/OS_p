@@ -5,6 +5,8 @@ import { useFileSystem } from "@/context/FileSystem";
 import { SHORTCUT } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
+import { filterSystemFiles } from "./functions";
+
 const useFiles = (directory: string) => {
   const { fs } = useFileSystem();
   const [files, setFiles] = useState<string[]>([]);
@@ -16,7 +18,7 @@ const useFiles = (directory: string) => {
         setFiles((currentFiles) =>
           appendFiles && contents.length > 0
             ? [...currentFiles, basename(appendFiles)]
-            : contents
+            : contents.filter(filterSystemFiles(directory))
         )
       ),
     [directory, fs]
@@ -32,14 +34,14 @@ const useFiles = (directory: string) => {
 
   const renameFile = (path: string, name?: string) => {
     if (name) {
-      const newPath = `${directory}/${name}${
+      const newPath = `${directory}${directory === "/" ? "" : "/"}${name}${
         path.endsWith(SHORTCUT) ? SHORTCUT : ""
       }`;
 
       fs?.rename(path, newPath, () => {
         setFiles((currentFiles) =>
           currentFiles.map((file) =>
-            file.replace(basename(path), basename(newPath))
+            file === basename(path) ? basename(newPath) : file
           )
         );
       });
