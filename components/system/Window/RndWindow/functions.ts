@@ -1,5 +1,6 @@
 import type { Position, Size } from "@/components/common/types";
 import type { ProcessContextType, Processes } from "@/context/Process/types";
+import type { WindowState } from "@/context/Session/types";
 import {
   DEFAULT_WINDOW_TRANSITION_DURATION,
   PROCESS_DELIMITER,
@@ -51,4 +52,20 @@ export const cascadePosition = (
   const { x = 0, y = 0 } = componentWindow?.getBoundingClientRect() || {};
 
   return x || y ? { x: x + offset, y: y + offset } : undefined;
+};
+
+export const isRectOutsideWindow = (
+  windowState: WindowState,
+  bounds: Position
+): boolean => {
+  const { position, size } = windowState || {};
+  const { x = 0, y = 0 } = position || {};
+  const { height = 0, width = 0 } = size || {};
+
+  return (
+    x < 0 ||
+    y < 0 ||
+    x + pxToNumber(width) > bounds.x ||
+    y + pxToNumber(height) > bounds.y
+  );
 };

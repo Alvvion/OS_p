@@ -1,7 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { Position } from "react-rnd";
 
 import { useMenu } from "@/context/Menu";
 import { useTheme } from "@/context/Theme";
+import { pxToNumber } from "@/utils/functions";
 
 import MenuItemEntry from "./MenuItemEntry";
 import type { MenuProps } from "./types";
@@ -9,12 +11,14 @@ import type { MenuProps } from "./types";
 const Menu: React.FC<MenuProps> = ({ subMenu }) => {
   const { menu: baseMenu = {}, setMenu } = useMenu();
   const { items, x = 0, y = 0 } = subMenu || baseMenu;
+  const [offset, setOffset] = useState<Position>({ x: 0, y: 0 });
   const menuRef = useRef<HTMLElement | null>(null);
   const {
     currentTheme: {
       colors: {
         contextMenu: { boxShadow },
       },
+      sizes: { taskbar },
     },
   } = useTheme();
 
@@ -30,6 +34,19 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
     if (items && !subMenu) menuRef?.current?.focus();
   }, [items, subMenu]);
 
+  useEffect(() => {
+    const { height = 0, width = 0 } =
+      menuRef.current?.getBoundingClientRect() || {};
+    const { innerHeight, innerWidth } = window;
+
+    setOffset({
+      x: Math.round(Math.max(0, x + width - innerWidth)),
+      y: Math.round(
+        Math.max(0, y + height - (innerHeight - pxToNumber(taskbar.height)))
+      ),
+    });
+  }, [taskbar.height, x, y]);
+
   return items ? (
     <nav
       className={`bg-context-background border-context-border border text-white h-fit py-1 px-0.5 w-fit absolute text-xs ${
@@ -38,7 +55,10 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
       onBlurCapture={resetMenu}
       ref={menuRef}
       tabIndex={-1}
-      style={{ transform: `translate(${x}px, ${y}px)`, boxShadow }}
+      style={{
+        transform: `translate(${x - offset.x}px, ${y - offset.y}px)`,
+        boxShadow,
+      }}
     >
       <ol>
         {items.map((item) => (
