@@ -48,3 +48,17 @@ export const animateStartMenu = {
     initial: { height: 0, y: 50 },
   },
 };
+
+export const animateWindowPeek = {
+  animate: "active",
+  initial: "initial",
+  exit: "initial",
+  transition: {
+    duration: DEFAULT_WINDOW_TRANSITION_DURATION / 1000,
+    ease: "easeInOut",
+  },
+  variants: {
+    active: { opacity: 1 },
+    initial: { opacity: 0 },
+  },
+};

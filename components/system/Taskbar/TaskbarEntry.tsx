@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useCallback } from "react";
 
 import Icon from "@/components/common/Icon";
@@ -59,7 +59,7 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
 
   return (
     <div {...peekEvents}>
-      {PeekComponent && <PeekComponent />}
+      <AnimatePresence>{PeekComponent && <PeekComponent />}</AnimatePresence>
       <motion.button
         type="button"
         ref={linkTaskbarEntry}
