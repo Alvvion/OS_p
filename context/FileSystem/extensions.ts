@@ -7,7 +7,7 @@ const extensions: Extensions = {
   },
   ".iso": {
     icon: "/assets/imageres_5205.ico",
-    process: ["V86"],
+    process: ["FileExplorer", "V86"],
   },
   ".jsdos": {
     icon: "/assets/compressed.png",
@@ -27,7 +27,7 @@ const extensions: Extensions = {
   },
   ".zip": {
     icon: "/assets/compressed.png",
-    process: ["JSDOS"],
+    process: ["FileExplorer"],
   },
 };
 

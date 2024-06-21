@@ -1,23 +1,22 @@
 import type { FileSystemConfiguration } from "browserfs";
 
-import publicFileSystemIndex from "@/public/.index/fs.bfs.json";
+import index from "@/public/.index/fs.bfs.json";
 
 const FileSystemConfig: FileSystemConfiguration = {
-  fs: "OverlayFS",
+  fs: "MountableFileSystem",
   options: {
-    readable: {
-      fs: "HTTPRequest",
+    "/": {
+      fs: "OverlayFS",
       options: {
-        index: publicFileSystemIndex,
-      },
-    },
-    writable: {
-      fs: "IndexedDB",
-      options: {
-        storeName: "browser-fs-cache",
+        readable: {
+          fs: "HTTPRequest",
+          options: { index },
+        },
+        writable: {
+          fs: "IndexedDB",
+        },
       },
     },
   },
 };
-
 export default FileSystemConfig;

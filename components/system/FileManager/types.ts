@@ -1,5 +1,5 @@
 export type FileManagerProps = {
-  directory: string;
+  url: string;
   view?: "default" | "start";
 };
 

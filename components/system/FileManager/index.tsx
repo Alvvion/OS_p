@@ -1,18 +1,17 @@
-import { basename, resolve } from "path";
+import { basename, extname, resolve } from "path";
+import { useEffect } from "react";
 
+import { useFileSystem } from "@/context/FileSystem";
 import { useTheme } from "@/context/Theme";
-import { SHORTCUT } from "@/utils/constants";
+import { MOUNTABLE_EXTENSIONS, SHORTCUT } from "@/utils/constants";
 
 import FileEntry from "./FileEntry";
 import type { FileManagerProps } from "./types";
 import useFileDrop from "./useFileDrop";
 import useFiles from "./useFiles";
 
-const FileManager: React.FC<FileManagerProps> = ({
-  directory,
-  view = "default",
-}) => {
-  const { files, updateFiles, fileActions } = useFiles(directory);
+const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
+  const { files, updateFiles, fileActions } = useFiles(url);
   const {
     currentTheme: {
       sizes: {
@@ -20,19 +19,31 @@ const FileManager: React.FC<FileManagerProps> = ({
       },
     },
   } = useTheme();
+  const { mountFs, unMountFs } = useFileSystem();
+
+  useEffect(() => {
+    const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
+
+    if (isMountable && files.length === 0) mountFs(url, updateFiles);
+
+    return () => {
+      if (isMountable && files.length > 0) unMountFs(url);
+    };
+  }, [url, files.length, mountFs, unMountFs, updateFiles]);
+
   return (
     <ol
       className="grid grid-flow-col gap-x-px gap-y-[10px] py-[5px] [main>&]:pb-5 [section_&]:grid-flow-row grid-cols-filemanager grid-rows-filemanager [nav_&]:grid-cols-startmenu"
       style={{
         height: `calc(100% - ${height})`,
       }}
-      {...useFileDrop(directory, updateFiles)}
+      {...useFileDrop(url, updateFiles)}
     >
       {files.map((file) => (
         <FileEntry
           key={file}
           name={basename(file, SHORTCUT)}
-          path={resolve(directory, file)}
+          path={resolve(url, file)}
           fileActions={fileActions}
           view={view}
         />

@@ -70,7 +70,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
           </Button>
         ))}
       </header>
-      <FileManager directory={url} />
+      <FileManager url={url} />
     </div>
   ) : (
     // eslint-disable-next-line react/jsx-no-useless-fragment

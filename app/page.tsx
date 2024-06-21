@@ -18,7 +18,7 @@ export default function Home() {
           <MenuProvider>
             <Desktop>
               <ProcessProvider>
-                <FileManager directory="/desktop" />
+                <FileManager url="/desktop" />
                 <Taskbar />
                 <ProcessLoader />
               </ProcessProvider>

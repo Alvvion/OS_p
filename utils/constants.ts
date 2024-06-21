@@ -104,3 +104,5 @@ export const ONE_TIME_PASSIVE_EVENT = {
 export const DOUBLE_CLICK_TIMEOUT_IN_MILLISECONDS = 500;
 
 export const SYSTEM_FILES = new Set(["/.deletedFiles.log"]);
+
+export const MOUNTABLE_EXTENSIONS = new Set([".iso", ".zip"]);
