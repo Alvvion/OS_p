@@ -12,13 +12,14 @@ import {
   libs,
 } from "./config";
 import { getImageType } from "./funtions";
-import type { V86, V86Starter } from "./types";
+import type { V86Starter } from "./types";
+import useV86ScreenSize from "./useV86ScreenSize";
 
 const useV86 = (
   id: string,
   url: string,
   containerRef: React.MutableRefObject<HTMLDivElement | null>
-): V86 => {
+): void => {
   const [emulator, setEmulator] = useState<V86Starter>();
 
   const { fs } = useFileSystem();
@@ -30,11 +31,7 @@ const useV86 = (
       fs.readFile(url, (_err, contents = Buffer.from("")) => {
         loadFiles(libs).then(() => {
           if (containerRef?.current) {
-            const extention = extname(url).toLowerCase();
-            const isISO = extention === ".iso";
-            const { deviceMemory = 8 } = navigator;
-
-            const memoryRatio = deviceMemory / 8;
+            const isISO = extname(url).toLowerCase() === ".iso";
             const bufferUrl = bufferToUrl(contents);
 
             const v86ImageType = {
@@ -47,8 +44,6 @@ const useV86 = (
             };
 
             const v86 = new window.V86Starter({
-              memory_size: memoryRatio * 1024 * 1024 * 1024,
-              vga_memory_size: memoryRatio * 32 * 1024 * 1024,
               boot_order: isISO ? BOOT_CD_FD_HD : BOOT_FD_CD_HD,
               screen_container: containerRef.current,
               ...v86ImageType,
@@ -59,6 +54,7 @@ const useV86 = (
               appendFileToTitle(url);
               cleanUpBufferUrl(bufferUrl);
             });
+            containerRef.current.addEventListener("click", v86.lock_mouse);
 
             setEmulator(v86);
           }
@@ -69,7 +65,7 @@ const useV86 = (
     return () => emulator?.destroy?.();
   }, [emulator, containerRef, url, fs, appendFileToTitle]);
 
-  return { emulator, lockMouse: emulator?.lock_mouse };
+  useV86ScreenSize(id, containerRef, emulator);
 };
 
 export default useV86;

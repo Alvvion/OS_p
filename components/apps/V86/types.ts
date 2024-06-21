@@ -1,11 +1,10 @@
 import type { config as v86Config } from "./config";
 
-export type ModeCallback = (isGfxMode: boolean) => void;
 export type SizeCallback = (dimensions: number[]) => void;
 
 type EventListener = (
   event: string,
-  callback: SizeCallback | ModeCallback
+  callback: SizeCallback
 ) => void;
 
 export type V86ImageType = "cdrom" | "hda" | "fda";

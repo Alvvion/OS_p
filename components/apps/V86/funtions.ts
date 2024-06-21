@@ -1,5 +1,4 @@
-import { SUPPORTED_FLOPPY_TYPES } from "@/utils/constants";
-
+import { SUPPORTED_FLOPPY_TYPES } from "./config";
 import type { V86ImageType } from "./types";
 
 const isFloppyImage = (size: number): boolean =>

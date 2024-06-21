@@ -22,10 +22,6 @@ export const IMAGE_FILE_EXTENSION = new Set([
   ".xbm",
 ]);
 
-export const SUPPORTED_FLOPPY_TYPES = new Set([
-  160, 180, 200, 320, 360, 400, 720, 1200, 1440, 1722, 2880,
-]);
-
 export const rndDefaults = {
   bounds: "main",
   cancel: ".cancel",

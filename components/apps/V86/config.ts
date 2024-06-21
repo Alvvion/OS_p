@@ -13,6 +13,12 @@ export const config = {
   wasm_path: "/libs/v86/v86.wasm",
   bios: { url: "/libs/v86/bios/seabios.bin" },
   vga_bios: { url: "/libs/v86/bios/vgabios.bin" },
+  memory_size: 1024 * 1024 * 1024,
+  vga_memory_size: 32 * 1024 * 1024,
 };
 
 export const libs = ["/libs/v86/libv86.js"];
+
+export const SUPPORTED_FLOPPY_TYPES = new Set([
+  160, 180, 200, 320, 360, 400, 720, 1200, 1440, 1722, 2880,
+]);
