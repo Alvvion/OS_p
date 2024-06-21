@@ -1,15 +1,16 @@
 import { dirname, extname } from "path";
 
 import extensions from "@/context/FileSystem/extensions";
+import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
 import { useProcesses } from "@/context/Process";
 import { processDir } from "@/context/Process/directory";
 import { SHORTCUT } from "@/utils/constants";
 
-import type { FileActions } from "./types";
-import useFile from "./useFile";
+import type { FileActions } from "../types";
+import useFile from "../useFile";
 
-const useContextMenu = (
+const useFileContextMenu = (
   url: string,
   pid: string,
   path: string,
@@ -24,6 +25,7 @@ const useContextMenu = (
 
   const filterdOpenWith = openWith.filter((id) => id !== pid);
   const { openProcess } = useProcesses();
+  const { contextMenu } = useMenu();
 
   const menuItems: MenuItem[] = [
     { label: "Delete", action: () => deleteFile(path) },
@@ -69,7 +71,9 @@ const useContextMenu = (
     });
   }
 
-  return menuItems;
+  return {
+    onContextMenuCapture: contextMenu(menuItems),
+  };
 };
 
-export default useContextMenu;
+export default useFileContextMenu;

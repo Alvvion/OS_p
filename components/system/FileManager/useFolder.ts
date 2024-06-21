@@ -1,4 +1,4 @@
-import { basename } from "path";
+import { basename, resolve } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
@@ -6,29 +6,35 @@ import { SHORTCUT } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
 import { filterSystemFiles } from "./functions";
+import type { Folder } from "./types";
 
-const useFiles = (directory: string) => {
+const useFolder = (directory: string): Folder => {
   const { fs } = useFileSystem();
   const [files, setFiles] = useState<string[]>([]);
   const [downloadLink, setDownloadLink] = useState("");
 
   const updateFiles = useCallback(
-    (appendFiles?: string) =>
-      fs?.readdir(directory, (_err, contents = []) =>
-        setFiles((currentFiles) =>
-          appendFiles && contents.length > 0
-            ? [...currentFiles, basename(appendFiles)]
-            : contents.filter(filterSystemFiles(directory))
-        )
-      ),
+    (appendFile = "") => {
+      if (appendFile) {
+        setFiles((currentFiles) => [...currentFiles, basename(appendFile)]);
+      } else {
+        fs?.readdir(directory, (_error, contents = []) =>
+          setFiles(contents.filter(filterSystemFiles(directory)))
+        );
+      }
+    },
     [directory, fs]
   );
 
   const deleteFile = (path: string) => {
-    fs?.unlink(path, () => {
+    const removeFile = () =>
       setFiles((currentFiles) =>
         currentFiles.filter((file) => file !== basename(path))
       );
+
+    fs?.stat(path, (_e, stats) => {
+      if (stats?.isDirectory()) fs?.rmdir(path, removeFile);
+      else fs?.unlink(path, removeFile);
     });
   };
 
@@ -61,6 +67,14 @@ const useFiles = (directory: string) => {
     });
   };
 
+  const newFile = (path: string) =>
+    fs?.writeFile(resolve(directory, path), Buffer.from(""), () =>
+      updateFiles(path)
+    );
+
+  const newFolder = (path: string) =>
+    fs?.mkdir(resolve(directory, path), () => updateFiles(path));
+
   useEffect(updateFiles, [updateFiles]);
 
   useEffect(
@@ -78,7 +92,11 @@ const useFiles = (directory: string) => {
       renameFile,
       downloadFile,
     },
+    folderActions: {
+      newFile,
+      newFolder,
+    },
   };
 };
 
-export default useFiles;
+export default useFolder;

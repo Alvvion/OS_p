@@ -2,13 +2,12 @@ import { useState } from "react";
 
 import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
-import { useMenu } from "@/context/Menu";
 import { useTheme } from "@/context/Theme";
 import { doubleClick } from "@/utils/functions";
 
+import useFileContextMenu from "./ContextMenu/useFileContextMenu";
 import RenameBox from "./RenameBox";
 import type { FileEntryProps } from "./types";
-import useContextMenu from "./useContextMenu";
 import useFile from "./useFile";
 import useFileInfo from "./useFileInfo";
 
@@ -30,8 +29,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const { icon, pid, url } = useFileInfo(path);
   const [renaming, setRenaming] = useState(false);
   const openFile = useFile(url);
-  const { contextMenu } = useMenu();
-  const menu = useContextMenu(url, pid, path, setRenaming, fileActions);
   const {
     currentTheme: {
       sizes: {
@@ -66,7 +63,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         type="button"
         extraStyles="relative"
         onClick={doubleClick(() => openFile(pid), singleClick)}
-        onContextMenu={contextMenu(menu)}
+        {...useFileContextMenu(url, pid, path, setRenaming, fileActions)}
       >
         <figure className="flex flex-col place-items-center mb-[-3px]">
           <Icon

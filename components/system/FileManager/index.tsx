@@ -5,13 +5,14 @@ import { useFileSystem } from "@/context/FileSystem";
 import { useTheme } from "@/context/Theme";
 import { MOUNTABLE_EXTENSIONS, SHORTCUT } from "@/utils/constants";
 
+import useFolderContextMenu from "./ContextMenu/useFolderContextMenu";
 import FileEntry from "./FileEntry";
 import type { FileManagerProps } from "./types";
 import useFileDrop from "./useFileDrop";
-import useFiles from "./useFiles";
+import useFolder from "./useFolder";
 
 const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
-  const { files, updateFiles, fileActions } = useFiles(url);
+  const { files, updateFiles, fileActions, folderActions } = useFolder(url);
   const {
     currentTheme: {
       sizes: {
@@ -38,6 +39,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
         height: `calc(100% - ${height})`,
       }}
       {...useFileDrop(url, updateFiles)}
+      {...useFolderContextMenu(folderActions, updateFiles)}
     >
       {files.map((file) => (
         <FileEntry
