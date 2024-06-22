@@ -1,8 +1,10 @@
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import type { Position } from "react-rnd";
 
 import { useMenu } from "@/context/Menu";
 import { useTheme } from "@/context/Theme";
+import { animateContextMenu } from "@/utils/animate";
 import { pxToNumber } from "@/utils/functions";
 
 import MenuItemEntry from "./MenuItemEntry";
@@ -51,7 +53,7 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
   }, [taskbar.height, x, y]);
 
   return items ? (
-    <nav
+    <motion.nav
       className={`bg-context-background border-context-border border text-white h-fit py-1 px-0.5 w-fit absolute text-xs ${
         subMenu ? "z-[101]" : "z-[100]"
       }`}
@@ -62,6 +64,7 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
         transform: `translate(${x - offset.x}px, ${y - offset.y}px)`,
         boxShadow,
       }}
+      {...animateContextMenu}
     >
       <ol>
         {items.map((item) => (
@@ -72,7 +75,7 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
           />
         ))}
       </ol>
-    </nav>
+    </motion.nav>
   ) : undefined;
 };
 
