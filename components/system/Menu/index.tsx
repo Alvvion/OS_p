@@ -26,8 +26,8 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
     relatedTarget,
   }: Partial<FocusEvent | MouseEvent> = {}) => {
     if (
-      relatedTarget instanceof HTMLElement &&
-      !menuRef.current?.contains(relatedTarget)
+      !relatedTarget ||
+      !menuRef.current?.contains(relatedTarget as HTMLElement)
     ) {
       setMenu({});
     }
