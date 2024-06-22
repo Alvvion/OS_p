@@ -47,7 +47,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
         if (extname(url) === ".mp3") {
           parseTrack(content, basename(url)).then((track) => {
             setCurrentUrl(url);
-            webampCI?.appendTracks([track]);
+            webampCI?.setTracksToPlay([track]);
           });
         } else {
           const bufferUrl = bufferToUrl(content);
