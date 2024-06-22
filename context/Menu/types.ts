@@ -1,5 +1,6 @@
 export type MenuItem = {
   action?: () => void;
+  disabled?: boolean;
   icon?: string;
   label?: string;
   menu?: MenuItem[];

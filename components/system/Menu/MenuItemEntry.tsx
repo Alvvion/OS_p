@@ -13,6 +13,7 @@ import type { MenuItemProps } from "./types";
 const MenuItemEntry: React.FC<MenuItemProps> = ({
   resetMenu,
   action,
+  disabled,
   icon,
   label,
   menu,
@@ -46,7 +47,10 @@ const MenuItemEntry: React.FC<MenuItemProps> = ({
   }, [menu, sizes.contextMenu.subMenuOffset]);
 
   return (
-    <li ref={entryRef}>
+    <li
+      ref={entryRef}
+      className={`${disabled ? "text-[#6E6E6E] pointer-events-none" : ""}`}
+    >
       {separator ? (
         <hr className="bg-context-sperator h-px my-[3px] mx-2" />
       ) : (

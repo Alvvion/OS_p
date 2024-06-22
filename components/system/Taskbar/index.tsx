@@ -5,6 +5,7 @@ import { GiSpeaker } from "react-icons/gi";
 import { TbBattery4 } from "react-icons/tb";
 
 import Button from "@/components/common/Button";
+import useTaskbarContextMenu from "@/components/system/Menu/ContextMenu/useTaskbarContextMenu";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
@@ -36,8 +37,9 @@ const Taskbar = () => {
       {startMenuVisible && <StartMenu />}
       <nav
         style={{ backgroundColor: bgColor, height }}
-        className="absolute z-[1000] w-[100vw] flex flex-row justify-between items-center bottom-0 left-0 right-0"
+        className="absolute z-50 w-[100vw] flex flex-row justify-between items-center bottom-0 left-0 right-0"
         tabIndex={-1}
+        {...useTaskbarContextMenu()}
       >
         <div className="h-full flex place-content-center place-items-center">
           <StartButton

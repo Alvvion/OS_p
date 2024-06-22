@@ -1,11 +1,11 @@
 import { basename, extname, resolve } from "path";
 import { useEffect } from "react";
 
+import useFolderContextMenu from "@/components/system/Menu/ContextMenu/useFolderContextMenu";
 import { useFileSystem } from "@/context/FileSystem";
 import { useTheme } from "@/context/Theme";
 import { MOUNTABLE_EXTENSIONS, SHORTCUT } from "@/utils/constants";
 
-import useFolderContextMenu from "./ContextMenu/useFolderContextMenu";
 import FileEntry from "./FileEntry";
 import type { FileManagerProps } from "./types";
 import useFileDrop from "./useFileDrop";

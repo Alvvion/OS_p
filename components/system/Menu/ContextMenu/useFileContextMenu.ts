@@ -1,14 +1,13 @@
 import { dirname, extname } from "path";
 
+import type { FileActions } from "@/components/system/FileManager/types";
+import useFile from "@/components/system/FileManager/useFile";
 import extensions from "@/context/FileSystem/extensions";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
 import { useProcesses } from "@/context/Process";
 import { processDir } from "@/context/Process/directory";
 import { SHORTCUT } from "@/utils/constants";
-
-import type { FileActions } from "../types";
-import useFile from "../useFile";
 
 const useFileContextMenu = (
   url: string,

@@ -3,6 +3,7 @@ import type { ComponentProps } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
 
+import useTitlebarContextMenu from "../../Menu/ContextMenu/useTitlebarContextMenu";
 import WindowActionButton from "./WindowActionButton";
 
 const DefaultBar: React.FC<ComponentProps> = ({ id }) => {
@@ -25,6 +26,7 @@ const DefaultBar: React.FC<ComponentProps> = ({ id }) => {
     <header
       className="handle flex justify-between"
       style={{ backgroundColor: bgColor }}
+      {...useTitlebarContextMenu(id)}
     >
       <h1 style={{ color: text, fontSize, height }} className="font-normal">
         <figure className="flex items-center h-full">

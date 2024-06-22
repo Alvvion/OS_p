@@ -2,10 +2,10 @@ import { useState } from "react";
 
 import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
+import useFileContextMenu from "@/components/system/Menu/ContextMenu/useFileContextMenu";
 import { useTheme } from "@/context/Theme";
 import { doubleClick } from "@/utils/functions";
 
-import useFileContextMenu from "./ContextMenu/useFileContextMenu";
 import RenameBox from "./RenameBox";
 import type { FileEntryProps } from "./types";
 import useFile from "./useFile";

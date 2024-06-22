@@ -1,7 +1,6 @@
+import type { FolderActions } from "@/components/system/FileManager/types";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
-
-import type { FolderActions } from "../types";
 
 const useFolderContextMenu = (
   { newPath }: FolderActions,
