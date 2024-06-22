@@ -4,7 +4,7 @@ import type { MenuItem } from "@/context/Menu/types";
 import type { FolderActions } from "../types";
 
 const useFolderContextMenu = (
-  { newFile, newFolder }: FolderActions,
+  { newPath }: FolderActions,
   updateFiles: (appendFile?: string) => void
 ) => {
   const { contextMenu } = useMenu();
@@ -14,11 +14,11 @@ const useFolderContextMenu = (
     {
       label: "New",
       menu: [
-        { label: "New Folder", action: () => newFolder("New Folder") },
+        { label: "New Folder", action: () => newPath("New Folder") },
         { separator: 2 },
         {
           label: "Text Document",
-          action: () => newFile("New Text Document.txt"),
+          action: () => newPath("New Text Document.txt", Buffer.from("")),
         },
       ],
     },

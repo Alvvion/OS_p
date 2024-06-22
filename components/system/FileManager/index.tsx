@@ -38,7 +38,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
       style={{
         height: `calc(100% - ${height})`,
       }}
-      {...useFileDrop(url, updateFiles)}
+      {...useFileDrop(folderActions.newPath)}
       {...useFolderContextMenu(folderActions, updateFiles)}
     >
       {files.map((file) => (

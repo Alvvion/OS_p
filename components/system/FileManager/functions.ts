@@ -23,24 +23,6 @@ export const iterateFileNames = (path: string, iteration: number): string => {
   return `${dirname(path)}/${filename} (${iteration})${extention}`;
 };
 
-export const writeUniqueName = (
-  path: string,
-  fileBuffer: Buffer,
-  updateFiles: (appendFiles?: string) => void,
-  fs?: FSModule,
-  iteration = 0
-): void => {
-  const writePath = iteration ? iterateFileNames(path, iteration) : path;
-
-  fs?.writeFile(writePath, fileBuffer, { flag: "wx" }, (error) => {
-    if (error?.code === "EEXIST") {
-      writeUniqueName(writePath, fileBuffer, updateFiles, fs, iteration + 1);
-    } else if (!error) {
-      updateFiles(writePath);
-    }
-  });
-};
-
 export const getInfoWithoutExtension = (
   fs: FSModule,
   path: string,

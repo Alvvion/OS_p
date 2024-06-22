@@ -1,3 +1,4 @@
+import type { BFSOneArgCallback } from "browserfs/dist/node/core/file_system";
 import { basename, resolve } from "path";
 import { useCallback, useEffect, useState } from "react";
 
@@ -5,7 +6,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import { SHORTCUT } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
-import { filterSystemFiles, sortContents } from "./functions";
+import { filterSystemFiles, iterateFileNames, sortContents } from "./functions";
 import type { Folder } from "./types";
 
 const useFolder = (directory: string): Folder => {
@@ -67,13 +68,23 @@ const useFolder = (directory: string): Folder => {
     });
   };
 
-  const newFile = (path: string) =>
-    fs?.writeFile(resolve(directory, path), Buffer.from(""), () =>
-      updateFiles(path)
-    );
+  const newPath = (name: string, fileBuffer?: Buffer, iteration = 0): void => {
+    const uniqueName = iteration ? iterateFileNames(name, iteration) : name;
+    const resolvePath = resolve(directory, uniqueName);
+    const checkWrite: BFSOneArgCallback = (err) => {
+      if (err?.code === "EEXIST") {
+        newPath(name, fileBuffer, 1);
+      } else if (!err) {
+        updateFiles(uniqueName);
+      }
+    };
 
-  const newFolder = (path: string) =>
-    fs?.mkdir(resolve(directory, path), () => updateFiles(path));
+    if (fileBuffer) {
+      fs?.writeFile(resolvePath, fileBuffer, { flag: "wx" }, checkWrite);
+    } else {
+      fs?.mkdir(resolvePath, { flag: "wx" }, checkWrite);
+    }
+  };
 
   useEffect(updateFiles, [updateFiles]);
 
@@ -93,8 +104,7 @@ const useFolder = (directory: string): Folder => {
       downloadFile,
     },
     folderActions: {
-      newFile,
-      newFolder,
+      newPath,
     },
   };
 };

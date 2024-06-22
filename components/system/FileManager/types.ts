@@ -34,8 +34,7 @@ export type RenameBoxProps = {
 };
 
 export type FolderActions = {
-  newFile: (path: string) => void;
-  newFolder: (path: string) => void;
+  newPath: (path: string, fileBuffer?: Buffer) => void;
 };
 
 export type Folder = {
