@@ -18,10 +18,7 @@ const useTitlebarContextMenu = (
     {
       label: "Restore",
       disabled: !maximized,
-      action: () => {
-        if (maximized) return onMaximize();
-        return () => {};
-      },
+      action: () => onMaximize(),
     },
     {
       label: "Minimize",
@@ -30,10 +27,7 @@ const useTitlebarContextMenu = (
     {
       label: "Maximize",
       disabled: maximized,
-      action: () => {
-        if (!maximized) return onMaximize();
-        return () => {};
-      },
+      action: () => onMaximize(),
     },
     { separator: 1 },
     {

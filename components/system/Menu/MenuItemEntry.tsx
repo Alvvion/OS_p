@@ -50,19 +50,21 @@ const MenuItemEntry: React.FC<MenuItemProps> = ({
     <li
       ref={entryRef}
       className={`${disabled ? "text-[#6E6E6E] pointer-events-none" : ""}`}
+      {...subMenuEvents}
     >
       {separator ? (
         <hr className="bg-context-sperator h-px my-[3px] mx-2" />
       ) : (
         <figure
           onClick={() => {
-            action?.();
-            resetMenu();
+            if (!menu && !disabled) {
+              action?.();
+              resetMenu();
+            }
           }}
           className={`flex py-[3px] hover:bg-context-fig-hover ${
             showSubMenu ? "bg-context-fig-hover" : ""
           }`}
-          {...subMenuEvents}
         >
           {icon && (
             <Icon className="-mr-6 ml-2" src={icon} alt={label} size={16} />
