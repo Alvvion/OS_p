@@ -64,7 +64,7 @@
         ]
       }
     ],
-    "linebreak-style": "off",
+    "linebreak-style": ["error", "windows"],
     "no-underscore-dangle": "off",
     "quotes": ["error", "double"],
     "react/function-component-definition": "off",
