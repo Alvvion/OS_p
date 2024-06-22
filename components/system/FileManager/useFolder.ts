@@ -5,7 +5,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import { SHORTCUT } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
-import { filterSystemFiles } from "./functions";
+import { filterSystemFiles, sortContents } from "./functions";
 import type { Folder } from "./types";
 
 const useFolder = (directory: string): Folder => {
@@ -19,7 +19,7 @@ const useFolder = (directory: string): Folder => {
         setFiles((currentFiles) => [...currentFiles, basename(appendFile)]);
       } else {
         fs?.readdir(directory, (_error, contents = []) =>
-          setFiles(contents.filter(filterSystemFiles(directory)))
+          setFiles(sortContents(contents).filter(filterSystemFiles(directory)))
         );
       }
     },
