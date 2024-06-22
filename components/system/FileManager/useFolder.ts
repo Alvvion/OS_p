@@ -1,5 +1,5 @@
 import type { BFSOneArgCallback } from "browserfs/dist/node/core/file_system";
-import { basename, resolve } from "path";
+import { basename, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
@@ -70,7 +70,7 @@ const useFolder = (directory: string): Folder => {
 
   const newPath = (name: string, fileBuffer?: Buffer, iteration = 0): void => {
     const uniqueName = iteration ? iterateFileNames(name, iteration) : name;
-    const resolvePath = resolve(directory, uniqueName);
+    const resolvePath = join(directory, uniqueName);
     const checkWrite: BFSOneArgCallback = (err) => {
       if (err?.code === "EEXIST") {
         newPath(name, fileBuffer, 1);

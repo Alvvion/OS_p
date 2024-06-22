@@ -1,4 +1,4 @@
-import { basename, extname, resolve } from "path";
+import { basename, extname, join } from "path";
 import { useEffect } from "react";
 
 import useFolderContextMenu from "@/components/system/Menu/ContextMenu/useFolderContextMenu";
@@ -45,7 +45,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
         <FileEntry
           key={file}
           name={basename(file, SHORTCUT)}
-          path={resolve(url, file)}
+          path={join(url, file)}
           fileActions={fileActions}
           view={view}
         />

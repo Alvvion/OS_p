@@ -25,7 +25,10 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
   const resetMenu = ({
     relatedTarget,
   }: Partial<FocusEvent | MouseEvent> = {}) => {
-    if (!menuRef.current?.contains(relatedTarget as HTMLElement)) {
+    if (
+      relatedTarget instanceof HTMLElement &&
+      !menuRef.current?.contains(relatedTarget)
+    ) {
       setMenu({});
     }
   };
