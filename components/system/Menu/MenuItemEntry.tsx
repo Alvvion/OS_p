@@ -29,8 +29,8 @@ const MenuItemEntry: React.FC<MenuItemProps> = ({
   const onMouseEnter: React.MouseEventHandler = () => setShowSubMenu(true);
   const onMouseLeave: React.MouseEventHandler = ({ relatedTarget }) => {
     if (
-      !relatedTarget ||
-      !entryRef.current?.contains(relatedTarget as HTMLElement)
+      !(relatedTarget instanceof HTMLElement) ||
+      !entryRef.current?.contains(relatedTarget)
     ) {
       setShowSubMenu(false);
     }

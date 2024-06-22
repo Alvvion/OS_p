@@ -1,6 +1,6 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import ini from "ini";
-import { basename, dirname, extname } from "path";
+import { basename, dirname, extname, join } from "path";
 
 import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
 import {
@@ -17,10 +17,10 @@ import { bufferToUrl } from "@/utils/functions";
 import type { FileInfo } from "./types";
 
 export const iterateFileNames = (path: string, iteration: number): string => {
-  const extention = extname(path);
-  const filename = basename(path, extention);
+  const extension = extname(path);
+  const fileName = basename(path, extension);
 
-  return `${dirname(path)}/${filename} (${iteration})${extention}`;
+  return join(dirname(path), `${fileName} (${iteration})${extension}`);
 };
 
 export const getInfoWithoutExtension = (
@@ -97,7 +97,7 @@ export const getInfoWithExtension = (
 export const filterSystemFiles =
   (directory: string) =>
   (file: string): boolean =>
-    !SYSTEM_FILES.has(`${directory}${file}`);
+    !SYSTEM_FILES.has(join(directory, file));
 
 const sortCaseInsensitive = (a: string, b: string) =>
   a.localeCompare(b, "en", { sensitivity: "base" });

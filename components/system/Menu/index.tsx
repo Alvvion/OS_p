@@ -28,8 +28,8 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
     relatedTarget,
   }: Partial<FocusEvent | MouseEvent> = {}) => {
     if (
-      !relatedTarget ||
-      !menuRef.current?.contains(relatedTarget as HTMLElement)
+      !(relatedTarget instanceof HTMLElement) ||
+      !menuRef.current?.contains(relatedTarget)
     ) {
       setMenu({});
     }
@@ -67,9 +67,9 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
       {...animateContextMenu}
     >
       <ol>
-        {items.map((item) => (
+        {items.map((item, i) => (
           <MenuItemEntry
-            key={item.label || item.separator}
+            key={item.label || i}
             resetMenu={resetMenu}
             {...item}
           />

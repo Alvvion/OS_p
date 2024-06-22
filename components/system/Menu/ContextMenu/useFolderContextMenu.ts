@@ -9,12 +9,12 @@ const useFolderContextMenu = (
   const { contextMenu } = useMenu();
   const menuItems: MenuItem[] = [
     { label: "Refresh", action: () => updateFiles() },
-    { separator: 1 },
+    { separator: true },
     {
       label: "New",
       menu: [
         { label: "New Folder", action: () => newPath("New Folder") },
-        { separator: 2 },
+        { separator: true },
         {
           label: "Text Document",
           action: () => newPath("New Text Document.txt", Buffer.from("")),

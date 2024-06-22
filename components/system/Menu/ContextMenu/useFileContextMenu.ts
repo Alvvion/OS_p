@@ -35,13 +35,13 @@ const useFileContextMenu = (
   const isShortcut = extension === SHORTCUT;
 
   if (!isShortcut && url && (extension || pid !== "FileExplorer")) {
-    menuItems.unshift({ separator: 1 });
+    menuItems.unshift({ separator: true });
 
     menuItems.unshift({ label: "Download", action: () => downloadFile(path) });
   }
 
   if (pid) {
-    menuItems.unshift({ separator: 2 });
+    menuItems.unshift({ separator: true });
 
     if (filterdOpenWith.length > 0) {
       menuItems.unshift({

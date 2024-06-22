@@ -29,7 +29,7 @@ const useTitlebarContextMenu = (
       disabled: maximized,
       action: () => onMaximize(),
     },
-    { separator: 1 },
+    { separator: true },
     {
       label: "Close",
       action: () => onClose(),
