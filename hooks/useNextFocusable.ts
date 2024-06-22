@@ -6,7 +6,7 @@ const useNextFocusable = (id: string): string => {
   const { stackOrder } = useSession();
 
   const nextFocusableId = stackOrder.find(
-    (stackId) => stackId !== id && !processes?.[stackId]?.minimized
+    (stackId) => stackId !== id && !processes?.[stackId]?.minimized,
   );
 
   return nextFocusableId || "";

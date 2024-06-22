@@ -8,7 +8,8 @@
     "build:fs": "cd public && node ../node_modules/browserfs/dist/scripts/make_xhrfs_index.js > .index/fs.bfs.json && node ../utils/fs2json.js --exclude .index --out .index/fs.9p.json .",
     "start": "next start",
     "lint": "next lint",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "fflate": "^0.8.2",
@@ -47,6 +48,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "eslint-plugin-unicorn": "^54.0.0",
     "postcss": "^8",
+    "prettier": "^3.3.2",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "webamp": "^1.4.3-beta.4"

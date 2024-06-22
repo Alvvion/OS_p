@@ -19,7 +19,7 @@ const ProcessLoader: React.FC = () => {
               </Window>
             ) : (
               <Component key={id} id={id} />
-            )
+            ),
         )}
     </AnimatePresence>
   );

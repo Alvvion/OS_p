@@ -12,7 +12,7 @@ const libs = ["/libs/ruffle/ruffle.js"];
 const useRuffle = (
   id: string,
   url: string,
-  containerRef: React.MutableRefObject<HTMLDivElement | null>
+  containerRef: React.MutableRefObject<HTMLDivElement | null>,
 ): void => {
   const { appendFileToTitle } = useTitle(id);
   const { fs } = useFileSystem();

@@ -39,7 +39,7 @@ const useStatePosition = (id: string, size: Size): StatePosition => {
   const [{ x, y }, setPosition] = useState<Position>(
     (!isOffscreen && sessionPosition) ||
       cascadePosition(id, processes, stackOrder, cascadeOffset) ||
-      centerPosition(size, taskbarHeight)
+      centerPosition(size, taskbarHeight),
   );
 
   useEffect(() => {

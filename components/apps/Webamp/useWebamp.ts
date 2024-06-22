@@ -47,7 +47,7 @@ const useWebamp = (id: string) => {
   const loadWebamp = (
     element: HTMLDivElement | null,
     url: string,
-    file?: Buffer
+    file?: Buffer,
   ): void => {
     if (element && window.Webamp && !webampCI) {
       const butterChurn = {
@@ -127,7 +127,7 @@ const useWebamp = (id: string) => {
       if (file && url) {
         if (extname(url) === ".mp3") {
           parseTrack(file, basename(url)).then((track) =>
-            runWebamp({ initialTracks: [track] })
+            runWebamp({ initialTracks: [track] }),
           );
         } else runWebamp({ initialSkin: { url: bufferToUrl(file) } });
       } else runWebamp();

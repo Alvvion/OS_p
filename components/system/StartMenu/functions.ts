@@ -9,7 +9,7 @@ export const maybeCloseMenu: MaybeCloseMenu = (
   toggleMenu,
   focusElement,
   buttonTitle,
-  closeOnTaskbarEntries = false
+  closeOnTaskbarEntries = false,
 ) => {
   const focusedInsideMenu =
     focusedElement && menuElement?.contains(focusedElement);

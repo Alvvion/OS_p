@@ -3,7 +3,7 @@ import type { SessionContextType } from "./types";
 import useSessionContextState from "./useSessionState";
 
 const { Provider, useContext } = contextFactory<SessionContextType>(
-  useSessionContextState
+  useSessionContextState,
 );
 
 export { Provider as SessionProvider, useContext as useSession };

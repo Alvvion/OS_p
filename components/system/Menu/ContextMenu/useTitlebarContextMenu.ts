@@ -4,7 +4,7 @@ import { useProcesses } from "@/context/Process";
 import useWindowActions from "@/hooks/useWindowActions";
 
 const useTitlebarContextMenu = (
-  id: string
+  id: string,
 ): {
   onContextMenuCapture: React.MouseEventHandler<HTMLElement>;
 } => {

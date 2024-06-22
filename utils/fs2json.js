@@ -50,7 +50,7 @@ const fs2json = (dir) => {
           reject(dirError);
         } else {
           const includedFiles = files.filter(
-            (file) => !excludedPaths.includes(file)
+            (file) => !excludedPaths.includes(file),
           );
 
           const recur = () => {
@@ -114,7 +114,7 @@ const fs2json = (dir) => {
         version: VERSION,
         size: totalSize,
       }),
-      () => process.exit()
+      () => process.exit(),
     );
   });
 };

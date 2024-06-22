@@ -5,7 +5,7 @@ import type { ColorCycle } from "./types";
 const colorCycle = (
   initialColor: number,
   callback: (newColor: number) => void,
-  fps = 15
+  fps = 15,
 ): ColorCycle => {
   const timePerFrame = 1000 / fps;
   let lastFrameTime = Date.now();
@@ -22,8 +22,8 @@ const colorCycle = (
 
       callback(
         Number(
-          adjustHue(degree, `#${initialColor.toString(16)}`).replace("#", "0x")
-        )
+          adjustHue(degree, `#${initialColor.toString(16)}`).replace("#", "0x"),
+        ),
       );
     }
 

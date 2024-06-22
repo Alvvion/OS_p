@@ -2,10 +2,7 @@ import type { config as v86Config } from "./config";
 
 export type SizeCallback = (dimensions: number[]) => void;
 
-type EventListener = (
-  event: string,
-  callback: SizeCallback
-) => void;
+type EventListener = (event: string, callback: SizeCallback) => void;
 
 export type V86ImageType = "cdrom" | "hda" | "fda";
 

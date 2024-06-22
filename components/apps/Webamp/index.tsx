@@ -64,7 +64,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
       onBlurCapture: () => webampCI && unFocusWindow(webampCI),
       onFocusCapture: () => webampCI && focusWindow(webampCI, "main"),
     }),
-    [webampCI]
+    [webampCI],
   );
 
   const { zIndex, ...focusProps } = useFocusable(id, focusEvents);

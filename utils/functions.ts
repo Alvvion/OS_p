@@ -21,12 +21,12 @@ export const loadScript = (src: string): Promise<Event> =>
       script.addEventListener(
         "error",
         (event) => reject(event),
-        ONE_TIME_PASSIVE_EVENT
+        ONE_TIME_PASSIVE_EVENT,
       );
       script.addEventListener(
         "load",
         (event) => resolve(event),
-        ONE_TIME_PASSIVE_EVENT
+        ONE_TIME_PASSIVE_EVENT,
       );
 
       document.head.appendChild(script);
@@ -48,7 +48,7 @@ export const pxToNumber = (value: string | number = 0): number =>
 export const doubleClick = (
   handler: React.MouseEventHandler,
   singleClick = false,
-  timeout = DOUBLE_CLICK_TIMEOUT_IN_MILLISECONDS
+  timeout = DOUBLE_CLICK_TIMEOUT_IN_MILLISECONDS,
 ): React.MouseEventHandler => {
   let timer: NodeJS.Timeout | undefined;
 

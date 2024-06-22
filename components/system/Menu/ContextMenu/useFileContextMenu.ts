@@ -14,7 +14,7 @@ const useFileContextMenu = (
   pid: string,
   path: string,
   setState: React.Dispatch<React.SetStateAction<boolean>>,
-  { deleteFile, downloadFile }: FileActions
+  { deleteFile, downloadFile }: FileActions,
 ) => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};

@@ -15,7 +15,7 @@ const vantaWaves =
   (config: VantaWavesConfig) =>
   (el: HTMLElement | null): void => {
     loadFiles(libs).then(() => {
-      const {  VANTA } = window;
+      const { VANTA } = window;
 
       VANTA?.current?.destroy();
 
@@ -26,7 +26,7 @@ const vantaWaves =
 
       if (vantaEffect) {
         const { stop: stopColorCycle } = colorCycle(config.color, (color) =>
-          vantaEffect.setOptions({ color })
+          vantaEffect.setOptions({ color }),
         );
 
         vantaEffect.onDestroy = stopColorCycle;

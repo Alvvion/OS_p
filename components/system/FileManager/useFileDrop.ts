@@ -8,7 +8,7 @@ const haltDragEvent = (event: React.DragEvent<HTMLElement>): void => {
 };
 
 const useFileDrop = (
-  newPath: (path: string, fileBuffer?: Buffer) => void
+  newPath: (path: string, fileBuffer?: Buffer) => void,
 ): FileDrop => {
   const onDrop = (event: React.DragEvent<HTMLElement>) => {
     haltDragEvent(event);
@@ -23,10 +23,10 @@ const useFileDrop = (
           ({ target }) => {
             newPath(
               file.name,
-              Buffer.from(new Uint8Array(target?.result as ArrayBuffer))
+              Buffer.from(new Uint8Array(target?.result as ArrayBuffer)),
             );
           },
-          ONE_TIME_PASSIVE_EVENT
+          ONE_TIME_PASSIVE_EVENT,
         );
 
         reader.readAsArrayBuffer(file);

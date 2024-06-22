@@ -24,15 +24,15 @@ const useSessionContextState = (): SessionContextType => {
         id,
         ...currentStackOrder.filter((stackId) => stackId !== id),
       ]),
-    []
+    [],
   );
 
   const removeFromStack = useCallback(
     (id: string) =>
       setStackOrder((currentStackOrder) =>
-        currentStackOrder.filter((stackId) => stackId !== id)
+        currentStackOrder.filter((stackId) => stackId !== id),
       ),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const useSessionContextState = (): SessionContextType => {
           windowStates,
           foregroundId,
           stackOrder,
-        })
+        }),
       );
     }
   }, [foregroundId, fs, sessionLoaded, stackOrder, themeName, windowStates]);

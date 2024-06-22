@@ -10,7 +10,7 @@ const SET_SCREEN_TXT = "screen-set-size-text";
 const useV86ScreenSize = (
   id: string,
   screenContainer: React.MutableRefObject<HTMLDivElement | null>,
-  emulator?: V86Starter
+  emulator?: V86Starter,
 ): void => {
   const { updateWindowSize } = useWindowSize(id);
 

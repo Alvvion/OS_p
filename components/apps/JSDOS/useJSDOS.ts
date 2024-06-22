@@ -14,7 +14,7 @@ import type { DosCI } from "./types";
 const useJSDOS = (
   id: string,
   url: string,
-  containerRef: React.MutableRefObject<HTMLDivElement | null>
+  containerRef: React.MutableRefObject<HTMLDivElement | null>,
 ): void => {
   const { appendFileToTitle } = useTitle(id);
   const { updateWindowSize } = useWindowSize(id);
@@ -43,7 +43,7 @@ const useJSDOS = (
                 cleanUpLoader();
               });
           }
-        })
+        }),
       );
     }
 
@@ -73,7 +73,7 @@ const useJSDOS = (
       dos
         .events()
         .onFrameSize((width, height) =>
-          updateWindowSize(height * 2, width * 2)
+          updateWindowSize(height * 2, width * 2),
         );
     }
   }, [closeProcess, dos, id, updateWindowSize]);

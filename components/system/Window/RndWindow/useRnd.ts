@@ -17,7 +17,7 @@ const useRnd = (id: string, maximized = false) => {
 
   const onDragStop: DraggableEventHandler = (
     _event,
-    { x: positionX, y: positionY }
+    { x: positionX, y: positionY },
   ) => setPosition({ x: positionX, y: positionY });
 
   const onResizeStop: RndResizeCallback = (
@@ -25,7 +25,7 @@ const useRnd = (id: string, maximized = false) => {
     _direction,
     { style: { height: elementHeight, width: elementWidth } },
     _delta,
-    { x: positionX, y: positionY }
+    { x: positionX, y: positionY },
   ) => {
     setSize({ height: elementHeight, width: elementWidth });
     setPosition({ x: positionX, y: positionY });

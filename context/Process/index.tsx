@@ -3,7 +3,7 @@ import type { ProcessContextType } from "./types";
 import useProcessContextState from "./useProcessContextState";
 
 const { Provider, useContext } = contextFactory<ProcessContextType>(
-  useProcessContextState
+  useProcessContextState,
 );
 
 export { Provider as ProcessProvider, useContext as useProcesses };

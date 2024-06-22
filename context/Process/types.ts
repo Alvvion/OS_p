@@ -29,7 +29,7 @@ export type Processes = {
 
 export type ProcessMap = (
   callback: ([id, process]: [string, Process]) => React.FC,
-  processesObj: Processes
+  processesObj: Processes,
 ) => React.FC[];
 
 export type ProcessContextType = {
@@ -41,7 +41,7 @@ export type ProcessContextType = {
   linkElement: (
     id: string,
     name: keyof ProcessElement,
-    element: HTMLElement
+    element: HTMLElement,
   ) => void;
   title: (id: string, newTitle: string) => void;
 };

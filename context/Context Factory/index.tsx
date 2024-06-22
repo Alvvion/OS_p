@@ -4,7 +4,7 @@ import type { ChildrenProp } from "@/components/common/types";
 
 const contextFactory = <T,>(
   useContextState: () => T,
-  ContextComponent?: React.ComponentType
+  ContextComponent?: React.ComponentType,
 ) => {
   const Context = createContext<T>({} as T);
 

@@ -97,8 +97,8 @@ const WindowActionButton = ({ id }: { id: string }) => {
                   ? disabled
                   : disabledInactive
                 : isForeground
-                ? "fill-white"
-                : buttonInactive
+                  ? "fill-white"
+                  : buttonInactive
             }`}
           />
         )}

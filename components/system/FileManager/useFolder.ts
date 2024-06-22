@@ -20,17 +20,17 @@ const useFolder = (directory: string): Folder => {
         setFiles((currentFiles) => [...currentFiles, basename(appendFile)]);
       } else {
         fs?.readdir(directory, (_error, contents = []) =>
-          setFiles(sortContents(contents).filter(filterSystemFiles(directory)))
+          setFiles(sortContents(contents).filter(filterSystemFiles(directory))),
         );
       }
     },
-    [directory, fs]
+    [directory, fs],
   );
 
   const deleteFile = (path: string) => {
     const removeFile = () =>
       setFiles((currentFiles) =>
-        currentFiles.filter((file) => file !== basename(path))
+        currentFiles.filter((file) => file !== basename(path)),
       );
 
     fs?.stat(path, (_e, stats) => {
@@ -48,8 +48,8 @@ const useFolder = (directory: string): Folder => {
       fs?.rename(path, newPath, () => {
         setFiles((currentFiles) =>
           currentFiles.map((file) =>
-            file === basename(path) ? basename(newPath) : file
-          )
+            file === basename(path) ? basename(newPath) : file,
+          ),
         );
       });
     }
@@ -92,7 +92,7 @@ const useFolder = (directory: string): Folder => {
     () => () => {
       if (downloadLink) cleanUpBufferUrl(downloadLink);
     },
-    [downloadLink]
+    [downloadLink],
   );
 
   return {

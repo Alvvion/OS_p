@@ -20,7 +20,7 @@ export const getWebampElement = (): HTMLDivElement | null =>
 export const updateWebampPostion = (
   webamp: WebampCI,
   taskbarHeight: string,
-  position?: Position
+  position?: Position,
 ): void => {
   const { height, width } = BASE_WINDOW_SIZE;
   const { x, y } =
@@ -47,7 +47,7 @@ export const unFocusWindow = (webamp: WebampCI): void =>
 
 export const parseTrack = async (
   file: Buffer,
-  fileName: string
+  fileName: string,
 ): Promise<Track> => {
   const {
     common: { artist = "", title = fileName },
@@ -58,7 +58,7 @@ export const parseTrack = async (
       mimeType: MP3_MIME_TYPE,
       size: file.length,
     },
-    { duration: true, skipCovers: true, skipPostHeaders: true }
+    { duration: true, skipCovers: true, skipPostHeaders: true },
   );
 
   return {
@@ -70,7 +70,7 @@ export const parseTrack = async (
 
 export const cleanBufferOnSkinLoad = (
   webamp: WebampCI,
-  url = ""
+  url = "",
 ): Promise<void> =>
   webamp.skinIsLoaded().then(() => {
     if (url) cleanUpBufferUrl(url);

@@ -18,7 +18,7 @@ const IconComponent: React.FC<ImageProps> = ({
     () => () => {
       if (src?.startsWith("blob:")) cleanUpBufferUrl(src);
     },
-    [src]
+    [src],
   );
 
   return (

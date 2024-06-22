@@ -8,7 +8,7 @@ import type { WindowPeek } from "./types";
 
 const renderFrame = (
   previewElement: HTMLElement,
-  callback: (url: string) => void
+  callback: (url: string) => void,
 ): void => {
   import("html-to-image").then(({ toCanvas }) =>
     toCanvas(previewElement).then((canvas) => {
@@ -24,12 +24,12 @@ const renderFrame = (
         previewImage.addEventListener(
           "load",
           () => callback(dataUrl),
-          ONE_TIME_PASSIVE_EVENT
+          ONE_TIME_PASSIVE_EVENT,
         );
       } else {
         renderFrame(previewElement, callback);
       }
-    })
+    }),
   );
 };
 

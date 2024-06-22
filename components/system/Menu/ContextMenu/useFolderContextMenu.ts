@@ -4,7 +4,7 @@ import type { MenuItem } from "@/context/Menu/types";
 
 const useFolderContextMenu = (
   { newPath }: FolderActions,
-  updateFiles: (appendFile?: string) => void
+  updateFiles: (appendFile?: string) => void,
 ) => {
   const { contextMenu } = useMenu();
   const menuItems: MenuItem[] = [

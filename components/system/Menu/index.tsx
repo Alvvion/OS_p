@@ -45,7 +45,7 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
     setOffset({
       x: Math.round(Math.max(0, x + width - innerWidth)),
       y: Math.round(
-        Math.max(0, y + height - (innerHeight - pxToNumber(taskbar.height)))
+        Math.max(0, y + height - (innerHeight - pxToNumber(taskbar.height))),
       ),
     });
   }, [taskbar.height, x, y]);

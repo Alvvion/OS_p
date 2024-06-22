@@ -7,7 +7,7 @@ export type RndWindowProps = ChildrenProp & {
 
 export type StatePosition = [
   Position,
-  React.Dispatch<React.SetStateAction<Position>>
+  React.Dispatch<React.SetStateAction<Position>>,
 ];
 
 export type StateSize = [Size, React.Dispatch<React.SetStateAction<Size>>];

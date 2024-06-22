@@ -4,5 +4,5 @@ export type MaybeCloseMenu = (
   toggleMenu: (toggle?: boolean) => void,
   focusElement: HTMLElement | null,
   buttonTitle?: string,
-  closeOnTaskbarEntry?: boolean
+  closeOnTaskbarEntry?: boolean,
 ) => void;

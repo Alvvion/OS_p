@@ -7,7 +7,7 @@ import type { Events, Focusable } from "./types";
 
 const useFocusable = (
   id: string,
-  callbackEvents?: Partial<Events>
+  callbackEvents?: Partial<Events>,
 ): Focusable => {
   const { foregroundId, setForegroundId, stackOrder, prependToStack } =
     useSession();
@@ -61,7 +61,7 @@ const useFocusable = (
       prependToStack,
       setForegroundId,
       taskbarEntry,
-    ]
+    ],
   );
 
   useEffect(() => {

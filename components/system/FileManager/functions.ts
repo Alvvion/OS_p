@@ -26,7 +26,7 @@ export const iterateFileNames = (path: string, iteration: number): string => {
 export const getInfoWithoutExtension = (
   fs: FSModule,
   path: string,
-  callback: React.Dispatch<React.SetStateAction<FileInfo>>
+  callback: React.Dispatch<React.SetStateAction<FileInfo>>,
 ) => {
   fs.stat(path, (_err, stats) => {
     const isDirectory = stats ? stats.isDirectory() : false;
@@ -44,7 +44,7 @@ export const getInfoWithExtension = (
   fs: FSModule,
   path: string,
   extension: string,
-  callback: React.Dispatch<React.SetStateAction<FileInfo>>
+  callback: React.Dispatch<React.SetStateAction<FileInfo>>,
 ) => {
   const getInfoByFileExtension = (icon?: string) =>
     callback({
@@ -70,8 +70,8 @@ export const getInfoWithExtension = (
   } else if (IMAGE_FILE_EXTENSION.has(extension)) {
     fs.readFile(path, (error, contents = Buffer.from("")) =>
       getInfoByFileExtension(
-        error ? "/assets/ICON132_1.ico" : bufferToUrl(contents)
-      )
+        error ? "/assets/ICON132_1.ico" : bufferToUrl(contents),
+      ),
     );
   } else if (extension === ".mp3") {
     fs.readFile(path, (error, contents = Buffer.from("")) => {
@@ -79,16 +79,16 @@ export const getInfoWithExtension = (
         parseBuffer(
           contents,
           { mimeType: MP3_MIME_TYPE, size: contents.length },
-          { skipPostHeaders: true }
+          { skipPostHeaders: true },
         ).then(({ common: { picture } = {} }) => {
           const { data: coverPicture } = selectCover(picture) || {};
 
           getInfoByFileExtension(
             !error && coverPicture
               ? bufferToUrl(coverPicture)
-              : "/assets/music_48.png"
+              : "/assets/music_48.png",
           );
-        })
+        }),
       );
     });
   } else getInfoByFileExtension();

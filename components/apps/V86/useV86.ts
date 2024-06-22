@@ -18,7 +18,7 @@ import useV86ScreenSize from "./useV86ScreenSize";
 const useV86 = (
   id: string,
   url: string,
-  containerRef: React.MutableRefObject<HTMLDivElement | null>
+  containerRef: React.MutableRefObject<HTMLDivElement | null>,
 ): void => {
   const [emulator, setEmulator] = useState<V86Starter>();
 

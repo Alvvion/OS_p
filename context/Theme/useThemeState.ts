@@ -7,7 +7,7 @@ import type { DefaultTheme } from "./types";
 const useThemeState = () => {
   const { themeName } = useSession();
   const [currentTheme, setCurrentTheme] = useState<DefaultTheme>(
-    themes[themeName] || themes.default
+    themes[themeName] || themes.default,
   );
 
   return { currentTheme, setCurrentTheme };

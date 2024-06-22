@@ -1,7 +1,7 @@
 export type DoubleClickType = (
   handler: React.MouseEventHandler,
   singleClick?: boolean,
-  timeout?: number
+  timeout?: number,
 ) => React.MouseEventHandler;
 
 export type WindowSize = {

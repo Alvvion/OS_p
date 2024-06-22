@@ -4,7 +4,7 @@ type MessageCallback = (
   msgType: string,
   eventType: string,
   command: string,
-  message: string
+  message: string,
 ) => void;
 
 export type DosCI = {

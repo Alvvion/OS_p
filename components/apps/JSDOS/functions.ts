@@ -7,7 +7,7 @@ import { defaultConfig, globals, zipConfigPath } from "./config";
 const isFileInZip = (buffer: Buffer, zipFilePath: string): Promise<boolean> =>
   new Promise((resolve) => {
     unzip(buffer, (_unzipError, content) =>
-      resolve(Object.keys(content).includes(zipFilePath))
+      resolve(Object.keys(content).includes(zipFilePath)),
     );
   });
 
@@ -30,7 +30,7 @@ const addFileToZip = (
   buffer: Buffer,
   filePath: string,
   zipFilePath: string,
-  fs: FSModule
+  fs: FSModule,
 ): Promise<Buffer> =>
   new Promise((resolve) => {
     unzip(buffer, (_unzipError, zipData) => {
@@ -39,7 +39,7 @@ const addFileToZip = (
           { ...zipData, ...addFileToZippable(zipFilePath, contents) },
           (_zipError, newZipData) => {
             resolve(newZipData as Buffer);
-          }
+          },
         );
       });
     });
@@ -47,7 +47,7 @@ const addFileToZip = (
 
 export const addJSDOSConfig = async (
   buffer: Buffer,
-  fs: FSModule
+  fs: FSModule,
 ): Promise<Buffer> =>
   (await isFileInZip(buffer, zipConfigPath))
     ? buffer

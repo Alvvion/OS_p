@@ -26,7 +26,7 @@ const useWindowSize = (id: string): WindowSize => {
           },
         },
       })),
-    [id, setWindowStates, titlebar.height]
+    [id, setWindowStates, titlebar.height],
   );
 
   return { updateWindowSize };

@@ -39,7 +39,7 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
       if (taskbarEntry instanceof HTMLElement)
         linkElement(pid, "taskbarEntry", taskbarEntry);
     },
-    [pid, linkElement]
+    [pid, linkElement],
   );
 
   const {

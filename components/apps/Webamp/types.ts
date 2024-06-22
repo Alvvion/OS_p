@@ -23,7 +23,7 @@ export type UpdateWindowPositions = {
 export type WebampCI = Webamp & {
   store: {
     dispatch: (
-      command: CloseWindow | SetFocusedWindow | UpdateWindowPositions
+      command: CloseWindow | SetFocusedWindow | UpdateWindowPositions,
     ) => void;
   };
 };
