@@ -1,4 +1,4 @@
-import { dirname, extname } from "path";
+import { basename, dirname, extname } from "path";
 
 import type { FileActions } from "@/components/system/FileManager/types";
 import useFile from "@/components/system/FileManager/useFile";
@@ -13,7 +13,7 @@ const useFileContextMenu = (
   url: string,
   pid: string,
   path: string,
-  setState: React.Dispatch<React.SetStateAction<boolean>>,
+  setState: React.Dispatch<React.SetStateAction<string>>,
   { deleteFile, downloadFile }: FileActions,
 ) => {
   const openFile = useFile(url);
@@ -28,7 +28,7 @@ const useFileContextMenu = (
 
   const menuItems: MenuItem[] = [
     { label: "Delete", action: () => deleteFile(path) },
-    { label: "Rename", action: () => setState(true) },
+    { label: "Rename", action: () => setState(basename(path)) },
   ];
 
   const extension = extname(path);

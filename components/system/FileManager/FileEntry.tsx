@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
 import useFileContextMenu from "@/components/system/Menu/ContextMenu/useFileContextMenu";
@@ -23,11 +21,12 @@ const _tailwind = [
 const FileEntry: React.FC<FileEntryProps> = ({
   name,
   path,
+  renaming,
+  setRenaming,
   fileActions,
   view,
 }) => {
   const { icon, pid, url } = useFileInfo(path);
-  const [renaming, setRenaming] = useState(false);
   const openFile = useFile(url);
   const {
     currentTheme: {
@@ -77,7 +76,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
               path={path}
               renameFile={(orgPath, newPath) => {
                 fileActions.renameFile(orgPath, newPath);
-                setRenaming(false);
+                setRenaming("");
               }}
             />
           ) : (

@@ -12,7 +12,9 @@ export type FileActions = {
 export type FileEntryProps = {
   name: string;
   path: string;
+  renaming: boolean;
   fileActions: FileActions;
+  setRenaming: React.Dispatch<React.SetStateAction<string>>;
   view: "default" | "start";
 };
 

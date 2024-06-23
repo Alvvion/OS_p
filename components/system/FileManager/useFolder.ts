@@ -9,7 +9,7 @@ import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 import { filterSystemFiles, iterateFileNames, sortContents } from "./functions";
 import type { Folder } from "./types";
 
-const useFolder = (directory: string): Folder => {
+const useFolder: (directory: string) => Folder = (directory) => {
   const { fs } = useFileSystem();
   const [files, setFiles] = useState<string[]>([]);
   const [downloadLink, setDownloadLink] = useState("");
@@ -43,8 +43,7 @@ const useFolder = (directory: string): Folder => {
     if (name) {
       const newPath = join(
         directory,
-        name,
-        path.endsWith(SHORTCUT) ? SHORTCUT : "",
+        `${name}${path.endsWith(SHORTCUT) ? SHORTCUT : ""}`,
       );
 
       fs?.rename(path, newPath, () => {

@@ -1,5 +1,5 @@
 import { basename, extname, join } from "path";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import useFolderContextMenu from "@/components/system/Menu/ContextMenu/useFolderContextMenu";
 import { useFileSystem } from "@/context/FileSystem";
@@ -21,6 +21,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
     },
   } = useTheme();
   const { mountFs, unMountFs } = useFileSystem();
+  const [renaming, setRenaming] = useState("");
 
   useEffect(() => {
     const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
@@ -39,13 +40,15 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
         height: `calc(100% - ${height})`,
       }}
       {...useFileDrop(folderActions.newPath)}
-      {...useFolderContextMenu(folderActions, updateFiles)}
+      {...useFolderContextMenu(folderActions, updateFiles, setRenaming)}
     >
       {files.map((file) => (
         <FileEntry
           key={file}
           name={basename(file, SHORTCUT)}
           path={join(url, file)}
+          renaming={renaming === file}
+          setRenaming={setRenaming}
           fileActions={fileActions}
           view={view}
         />
