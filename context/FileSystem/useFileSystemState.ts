@@ -10,12 +10,14 @@ import { useEffect, useState } from "react";
 import * as BrowserFS from "@/public/libs/browserfs/browserfs.min.js";
 
 import FileSystemConfig from "./config";
+import { handleFileInputEvent } from "./functions";
 import type { FileSystemStateType } from "./types";
 
 const { BFSRequire, configure, FileSystem } = BrowserFS as typeof IBrowserFS;
 
 const useFileSystemState = (): FileSystemStateType => {
   const [fs, setFs] = useState<FSModule>();
+  const [fileInput, setFileInput] = useState<HTMLInputElement>();
   const rootFs = fs?.getRootFS() as MountableFileSystem;
 
   const mountFs = (url: string, callback: () => void): void =>
@@ -36,6 +38,16 @@ const useFileSystemState = (): FileSystemStateType => {
     });
 
   const unMountFs = (url: string): void => rootFs?.umount(url);
+  const addFile = (callback: (name: string, buffer: Buffer) => void): void => {
+    if (fileInput) {
+      const inputListener: EventListenerOrEventListenerObject = (event) => {
+        fileInput.removeEventListener("change", inputListener);
+        handleFileInputEvent(event, callback);
+      };
+      fileInput.addEventListener("change", inputListener);
+      fileInput.click();
+    }
+  };
 
   useEffect(() => {
     if (!fs) {
@@ -43,7 +55,7 @@ const useFileSystemState = (): FileSystemStateType => {
     }
   }, [fs]);
 
-  return { fs, mountFs, unMountFs };
+  return { fs, mountFs, unMountFs, setFileInput, addFile };
 };
 
 export default useFileSystemState;
