@@ -2,7 +2,7 @@ import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
 import useFileContextMenu from "@/components/system/Menu/ContextMenu/useFileContextMenu";
 import { useTheme } from "@/context/Theme";
-import { doubleClick } from "@/utils/functions";
+import useDoubleClick from "@/hooks/useDoubleClick";
 
 import RenameBox from "./RenameBox";
 import type { FileEntryProps } from "./types";
@@ -51,6 +51,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   } = useTheme();
 
   const singleClick = view === "start";
+  const { onClick } = useDoubleClick(() => openFile(pid), singleClick);
 
   const extraStyles = `focus-within:border-2 focus-within:border-transparent focus-within:p-0 focus-within:relative focus-within:before:-bottom-px focus-within:before:-left-px focus-within:before:absolute focus-within:before:-right-px focus-within:before:-top-px focus-within:${backgroundFocused} focus-within:before:border focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover} focus-within:hover:before:border focus-within:hover:before:${borderFocusedHover}`;
 
@@ -66,7 +67,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
       <Button
         type="button"
         extraStyles="relative"
-        onClick={doubleClick(() => openFile(pid), singleClick)}
+        onClick={onClick}
         {...useFileContextMenu(url, pid, path, setRenaming, fileActions)}
       >
         <figure className="flex flex-col place-items-center mb-[-3px]">

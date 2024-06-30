@@ -1,9 +1,6 @@
 import { stripUnit } from "polished";
 
-import {
-  DOUBLE_CLICK_TIMEOUT_IN_MILLISECONDS,
-  ONE_TIME_PASSIVE_EVENT,
-} from "./constants";
+import { ONE_TIME_PASSIVE_EVENT } from "./constants";
 
 export const cleanUpBufferUrl = (url: string): void => URL.revokeObjectURL(url);
 
@@ -44,31 +41,3 @@ export const bufferToUrl = (buffer: Buffer): string =>
 
 export const pxToNumber = (value: string | number = 0): number =>
   Number(stripUnit(value));
-
-export const doubleClick = (
-  handler: React.MouseEventHandler,
-  singleClick = false,
-  timeout = DOUBLE_CLICK_TIMEOUT_IN_MILLISECONDS,
-): React.MouseEventHandler => {
-  let timer: NodeJS.Timeout | undefined;
-
-  return (event) => {
-    const runHandler = () => {
-      event.stopPropagation();
-      handler(event);
-    };
-    const clearTimer = () => {
-      timer = undefined;
-    };
-
-    if (singleClick) {
-      runHandler();
-    } else if (timer === undefined) {
-      timer = setTimeout(clearTimer, timeout);
-    } else {
-      clearTimeout(timer);
-      runHandler();
-      clearTimer();
-    }
-  };
-};
