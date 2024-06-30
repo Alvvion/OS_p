@@ -10,15 +10,18 @@ export type WindowStates = {
 };
 
 export type SessionContextType = {
-  themeName: string;
-  windowStates: WindowStates;
+  blurEntry: (entry: string) => void;
+  focusEntry: (entry: string) => void;
+  focusedEntries: string[];
   foregroundId: string;
-  setForegroundId: React.Dispatch<React.SetStateAction<string>>;
-  stackOrder: string[];
-  setThemeName: React.Dispatch<React.SetStateAction<string>>;
-  setWindowStates: React.Dispatch<React.SetStateAction<WindowStates>>;
-  startMenuVisible: boolean;
-  toggleStartMenu: (showMenu?: boolean) => void;
   prependToStack: (id: string) => void;
   removeFromStack: (id: string) => void;
+  setForegroundId: React.Dispatch<React.SetStateAction<string>>;
+  setThemeName: React.Dispatch<React.SetStateAction<string>>;
+  setWindowStates: React.Dispatch<React.SetStateAction<WindowStates>>;
+  stackOrder: string[];
+  startMenuVisible: boolean;
+  themeName: string;
+  toggleStartMenu: (showMenu?: boolean) => void;
+  windowStates: WindowStates;
 };

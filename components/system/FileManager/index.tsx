@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import useFolderContextMenu from "@/components/system/Menu/ContextMenu/useFolderContextMenu";
 import { useFileSystem } from "@/context/FileSystem";
+import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import { MOUNTABLE_EXTENSIONS, SHORTCUT } from "@/utils/constants";
 
@@ -21,6 +22,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
     },
   } = useTheme();
   const { mountFs, unMountFs } = useFileSystem();
+  const { blurEntry, focusEntry, focusedEntries } = useSession();
   const [renaming, setRenaming] = useState("");
 
   useEffect(() => {
@@ -51,6 +53,11 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
           setRenaming={setRenaming}
           fileActions={fileActions}
           view={view}
+          onBlurCapture={() =>
+            focusedEntries.forEach((focusedEntry) => blurEntry(focusedEntry))
+          }
+          onFocusCapture={() => focusEntry(file)}
+          selected={focusedEntries.includes(file)}
         />
       ))}
     </ol>

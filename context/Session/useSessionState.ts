@@ -12,6 +12,7 @@ const useSessionContextState = (): SessionContextType => {
   const [foregroundId, setForegroundId] = useState("");
   const [stackOrder, setStackOrder] = useState<string[]>([]);
   const [startMenuVisible, setStartMenuVisible] = useState<boolean>(false);
+  const [focusedEntries, setFocusedEntries] = useState<string[]>([]);
 
   const { fs } = useFileSystem();
 
@@ -34,6 +35,16 @@ const useSessionContextState = (): SessionContextType => {
       ),
     [],
   );
+
+  const blurEntry = (entry: string) =>
+    setFocusedEntries((currentFocusedEntries) =>
+      currentFocusedEntries.filter((focusedEntry) => focusedEntry !== entry),
+    );
+  const focusEntry = (entry: string) =>
+    setFocusedEntries((currentFocusedEntries) => [
+      ...currentFocusedEntries,
+      entry,
+    ]);
 
   useEffect(() => {
     if (sessionLoaded) {
@@ -62,17 +73,20 @@ const useSessionContextState = (): SessionContextType => {
   }, [fs]);
 
   return {
-    themeName,
-    setThemeName,
-    windowStates,
-    setWindowStates,
+    blurEntry,
+    focusEntry,
+    focusedEntries,
     foregroundId,
-    setForegroundId,
-    stackOrder,
-    startMenuVisible,
-    toggleStartMenu,
     prependToStack,
     removeFromStack,
+    setForegroundId,
+    setThemeName,
+    setWindowStates,
+    stackOrder,
+    startMenuVisible,
+    themeName,
+    toggleStartMenu,
+    windowStates,
   };
 };
 

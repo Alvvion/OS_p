@@ -25,6 +25,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
   setRenaming,
   fileActions,
   view,
+  selected,
+  ...focusEvents
 }) => {
   const { icon, pid, url } = useFileInfo(path);
   const openFile = useFile(url);
@@ -50,13 +52,16 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const singleClick = view === "start";
 
+  const extraStyles = `focus-within:border-2 focus-within:border-transparent focus-within:p-0 focus-within:relative focus-within:before:-bottom-px focus-within:before:-left-px focus-within:before:absolute focus-within:before:-right-px focus-within:before:-top-px focus-within:${backgroundFocused} focus-within:before:border focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover} focus-within:hover:before:border focus-within:hover:before:${borderFocusedHover}`;
+
   return (
     <li
       className={
         view === "default"
-          ? `flex justify-center h-min p-0.5 focus-within:border-2 focus-within:border-transparent focus-within:p-0 focus-within:relative focus-within:before:-bottom-px focus-within:before:-left-px focus-within:before:absolute focus-within:before:-right-px focus-within:before:-top-px hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px hover:${background} hover:before:${border} hover:before:border focus-within:${backgroundFocused} z-[1] focus-within:before:border focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover} focus-within:hover:before:border focus-within:hover:before:${borderFocusedHover}`
+          ? `flex justify-center h-min p-0.5 hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px hover:${background} hover:before:${border} hover:before:border z-[1] ${selected ? extraStyles : ""}`
           : "hover:bg-[#313131] flex justify-center rounded-md"
       }
+      {...focusEvents}
     >
       <Button
         type="button"
