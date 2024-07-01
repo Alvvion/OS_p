@@ -9,7 +9,7 @@ export interface DefaultTheme {
     time: Intl.DateTimeFormatOptions;
     tooltip: Intl.DateTimeFormatOptions;
   };
-  wallpaper?: (el: HTMLElement | null) => void;
+  wallpaper?: (el?: HTMLElement | null) => void;
 }
 
 export type ThemeContextType = {

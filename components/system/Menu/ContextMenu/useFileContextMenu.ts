@@ -7,7 +7,8 @@ import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
 import { useProcesses } from "@/context/Process";
 import { processDir } from "@/context/Process/directory";
-import { SHORTCUT } from "@/utils/constants";
+import { useSession } from "@/context/Session";
+import { IMAGE_FILE_EXTENSION, SHORTCUT } from "@/utils/constants";
 
 const useFileContextMenu = (
   url: string,
@@ -25,6 +26,7 @@ const useFileContextMenu = (
   const filterdOpenWith = openWith.filter((id) => id !== pid);
   const { openProcess } = useProcesses();
   const { contextMenu } = useMenu();
+  const { setWallpaper } = useSession();
 
   const menuItems: MenuItem[] = [
     { label: "Delete", action: () => deleteFile(path) },
@@ -38,6 +40,34 @@ const useFileContextMenu = (
     menuItems.unshift({ separator: true });
 
     menuItems.unshift({ label: "Download", action: () => downloadFile(path) });
+  }
+
+  if (IMAGE_FILE_EXTENSION.has(extension)) {
+    menuItems.unshift({
+      label: "Set as desktop background",
+      menu: [
+        {
+          label: "Fill",
+          action: () => setWallpaper(path, "fill"),
+        },
+        {
+          label: "Fit",
+          action: () => setWallpaper(path, "fit"),
+        },
+        {
+          label: "Stretch",
+          action: () => setWallpaper(path, "stretch"),
+        },
+        {
+          label: "Tile",
+          action: () => setWallpaper(path, "tile"),
+        },
+        {
+          label: "Center",
+          action: () => setWallpaper(path, "center"),
+        },
+      ],
+    });
   }
 
   if (pid) {

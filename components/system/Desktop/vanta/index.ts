@@ -13,7 +13,7 @@ const disableControls = {
 
 const vantaWaves =
   (config: VantaWavesConfig) =>
-  (el: HTMLElement | null): void => {
+  (el?: HTMLElement | null): void => {
     loadFiles(libs).then(() => {
       const { VANTA } = window;
 
