@@ -27,6 +27,7 @@ const config: Config = {
         "context-fig-hover": "rgb(65,65,65)",
         startmenu: "#242424",
         peek: "hsla(0, 20%, 15%, 100%)",
+        highlightBackground: "hsl(207deg 100% 72% / 30%)",
       },
       fill: {
         "titlebar-button-disabled": "rgb(50,50,50)",
@@ -39,6 +40,7 @@ const config: Config = {
         "file-borderFocusedHover": "hsl(207deg 90% 72% / 40%)",
         "context-border": "rgb(160,160,160)",
         "rename-box-border": "rgb(100,100,100)",
+        highlight: "hsl(207deg 100% 72% / 90%)",
       },
       gridTemplateColumns: {
         filemanager: "repeat(auto-fill, 74px)",

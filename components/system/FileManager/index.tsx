@@ -11,6 +11,7 @@ import type { FileManagerProps } from "./types";
 import useFileDrop from "./useFileDrop";
 import useFocusableEntries from "./useFocusableEntries";
 import useFolder from "./useFolder";
+import useSelection from "./useSelection";
 
 const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const { files, updateFiles, fileActions, folderActions } = useFolder(url);
@@ -25,6 +26,9 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const [renaming, setRenaming] = useState("");
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
   const { focusableEntry } = useFocusableEntries(fileManagerRef);
+
+  const { isSelecting, selectionStyling, selectionEvents } =
+    useSelection(fileManagerRef);
 
   useEffect(() => {
     const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
@@ -43,9 +47,16 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
       style={{
         height: `calc(100% - ${height})`,
       }}
+      {...selectionEvents}
       {...useFileDrop(folderActions.newPath)}
       {...useFolderContextMenu(folderActions, updateFiles, setRenaming)}
     >
+      {isSelecting && (
+        <span
+          className="bg-highlightBackground absolute z-[1000] border-highlight"
+          style={selectionStyling}
+        />
+      )}
       {files.map((file) => (
         <FileEntry
           key={file}
@@ -54,6 +65,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
           renaming={renaming === file}
           setRenaming={setRenaming}
           fileActions={fileActions}
+          selecting={isSelecting}
           view={view}
           {...focusableEntry(file)}
         />

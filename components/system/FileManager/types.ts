@@ -21,6 +21,7 @@ export type FileEntryProps = FocusedEntry & {
   renaming: boolean;
   fileActions: FileActions;
   setRenaming: React.Dispatch<React.SetStateAction<string>>;
+  selecting: boolean;
   view: "default" | "start";
 };
 
@@ -51,4 +52,15 @@ export type Folder = {
   folderActions: FolderActions;
   files: string[];
   updateFiles: (appendFile?: string) => void;
+};
+
+export type Selection = {
+  isSelecting: boolean;
+  selectionStyling: React.CSSProperties;
+  selectionEvents: {
+    onMouseDown: React.MouseEventHandler<HTMLElement>;
+    onMouseMove?: React.MouseEventHandler<HTMLElement>;
+    onMouseLeave?: React.MouseEventHandler<HTMLElement>;
+    onMouseUp?: () => void;
+  };
 };
