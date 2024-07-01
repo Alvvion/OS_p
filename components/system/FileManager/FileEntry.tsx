@@ -12,10 +12,10 @@ import useFileInfo from "./useFileInfo";
 const _tailwind = [
   "hover:bg-file-background",
   "hover:before:border-file-border",
-  "focus-within:bg-file-backgroundFocused",
-  "focus-within:before:border-file-borderFocused",
-  "focus-within:hover:bg-file-backgroundFocusedHover",
-  "focus-within:hover:before:border-file-borderFocusedHover",
+  "bg-file-backgroundFocused",
+  "before:border-file-borderFocused",
+  "hover:bg-file-backgroundFocusedHover",
+  "hover:before:border-file-borderFocusedHover",
 ];
 
 const FileEntry: React.FC<FileEntryProps> = ({
@@ -53,13 +53,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const singleClick = view === "start";
   const { onClick } = useDoubleClick(() => openFile(pid), singleClick);
 
-  const extraStyles = `focus-within:border-2 focus-within:border-transparent focus-within:p-0 focus-within:relative focus-within:before:-bottom-px focus-within:before:-left-px focus-within:before:absolute focus-within:before:-right-px focus-within:before:-top-px focus-within:${backgroundFocused} focus-within:before:border focus-within:before:${borderFocused} focus-within:hover:${backgroundFocusedHover} focus-within:hover:before:border focus-within:hover:before:${borderFocusedHover}`;
+  const extraStyles = `border-2 border-transparent p-0 relative before:-bottom-px before:-left-px before:absolute before:-right-px before:-top-px ${backgroundFocused} before:border before:${borderFocused} hover:${backgroundFocusedHover} hover:before:border hover:before:${borderFocusedHover}`;
 
   return (
     <li
       className={
         view === "default"
-          ? `flex justify-center h-min p-0.5 hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px hover:${background} hover:before:${border} hover:before:border z-[1] ${selected ? extraStyles : ""}`
+          ? `flex justify-center h-min hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px hover:${background} hover:before:${border} hover:before:border z-[1] ${selected ? extraStyles : "p-0.5"}`
           : "hover:bg-[#313131] flex justify-center rounded-md"
       }
       {...focusEvents}
@@ -93,7 +93,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
                 letterSpacing,
                 textShadow: view === "default" ? textShadow : "none",
               }}
-              className="[-webkit-box-orient:vertical] [display:-webkit-box] [-webkit-line-clamp:2] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] focus-within:[-webkit-line-clamp:initial] mt-[6px]"
+              className={`[-webkit-box-orient:vertical] [display:-webkit-box] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] ${selected ? "[-webkit-line-clamp:initial]" : "[-webkit-line-clamp:2]"} mt-[6px]`}
             >
               {name}
             </figcaption>

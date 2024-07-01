@@ -1,15 +1,15 @@
 import { basename, extname, join } from "path";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import useFolderContextMenu from "@/components/system/Menu/ContextMenu/useFolderContextMenu";
 import { useFileSystem } from "@/context/FileSystem";
-import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import { MOUNTABLE_EXTENSIONS, SHORTCUT } from "@/utils/constants";
 
 import FileEntry from "./FileEntry";
 import type { FileManagerProps } from "./types";
 import useFileDrop from "./useFileDrop";
+import useFocusableEntries from "./useFocusableEntries";
 import useFolder from "./useFolder";
 
 const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
@@ -22,8 +22,9 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
     },
   } = useTheme();
   const { mountFs, unMountFs } = useFileSystem();
-  const { blurEntry, focusEntry, focusedEntries } = useSession();
   const [renaming, setRenaming] = useState("");
+  const fileManagerRef = useRef<HTMLOListElement | null>(null);
+  const { focusableEntry } = useFocusableEntries(fileManagerRef);
 
   useEffect(() => {
     const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
@@ -37,6 +38,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
 
   return (
     <ol
+      ref={fileManagerRef}
       className="grid grid-flow-col gap-x-px gap-y-[10px] py-[5px] [main>&]:pb-5 [section_&]:grid-flow-row grid-cols-filemanager grid-rows-filemanager [nav_&]:grid-cols-startmenu"
       style={{
         height: `calc(100% - ${height})`,
@@ -53,11 +55,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
           setRenaming={setRenaming}
           fileActions={fileActions}
           view={view}
-          onBlurCapture={() =>
-            focusedEntries.forEach((focusedEntry) => blurEntry(focusedEntry))
-          }
-          onFocusCapture={() => focusEntry(file)}
-          selected={focusedEntries.includes(file)}
+          {...focusableEntry(file)}
         />
       ))}
     </ol>

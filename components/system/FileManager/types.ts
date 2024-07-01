@@ -1,5 +1,3 @@
-import type { Events } from "@/hooks/types";
-
 export type FileManagerProps = {
   url: string;
   view?: "default" | "start";
@@ -11,14 +9,19 @@ export type FileActions = {
   downloadFile: (path: string) => void;
 };
 
-export type FileEntryProps = Events & {
+export type FocusedEntry = {
+  onBlurCapture: React.FocusEventHandler;
+  onClick: React.MouseEventHandler;
+  selected: boolean;
+};
+
+export type FileEntryProps = FocusedEntry & {
   name: string;
   path: string;
   renaming: boolean;
   fileActions: FileActions;
   setRenaming: React.Dispatch<React.SetStateAction<string>>;
   view: "default" | "start";
-  selected: boolean;
 };
 
 export type FileInfo = {
