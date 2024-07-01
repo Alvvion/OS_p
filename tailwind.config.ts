@@ -26,6 +26,7 @@ const config: Config = {
         "context-sperator": "rgb(128,128,128)",
         "context-fig-hover": "rgb(65,65,65)",
         startmenu: "#242424",
+        peek: "hsla(0, 20%, 15%, 100%)",
       },
       fill: {
         "titlebar-button-disabled": "rgb(50,50,50)",

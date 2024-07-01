@@ -1,4 +1,5 @@
 export type WindowPeek = {
+  hidePeek: () => void;
   PeekComponent?: React.ComponentType;
   peekEvents: {
     onMouseEnter?: () => void;
@@ -8,5 +9,5 @@ export type WindowPeek = {
 
 export type PeekWindowProps = {
   id: string;
-  image: string;
+  isPeekVisible: boolean;
 };

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import Icon from "@/components/common/Icon";
 import { useProcesses } from "@/context/Process";
@@ -8,7 +8,7 @@ import { useTheme } from "@/context/Theme";
 import useNextFocusable from "@/hooks/useNextFocusable";
 import { animateTaskbar, buttonVariant, notchVariant } from "@/utils/animate";
 
-import useWindowPeek from "./Peek/useWindowPeek";
+import PeekWindow from "./Peek/PeekWindow";
 import type { TaskbarEntryProps } from "./types";
 
 const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
@@ -26,6 +26,9 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   const { foregroundId, setForegroundId } = useSession();
   const nextFocusableId = useNextFocusable(pid);
   const isForeground = foregroundId === pid;
+  const [isPeekVisible, setPeekVisible] = useState(false);
+  const hidePeek = () => setPeekVisible(false);
+  const showPeek = () => setPeekVisible(true);
 
   const isBottomNotch = !!(minimized || !isForeground);
 
@@ -55,11 +58,11 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
     },
   } = useTheme();
 
-  const { PeekComponent, peekEvents } = useWindowPeek(pid);
-
   return (
-    <div {...peekEvents}>
-      <AnimatePresence>{PeekComponent && <PeekComponent />}</AnimatePresence>
+    <div onClick={hidePeek} onMouseEnter={showPeek} onMouseLeave={hidePeek}>
+      <AnimatePresence>
+        {PeekWindow && <PeekWindow id={pid} isPeekVisible={isPeekVisible} />}
+      </AnimatePresence>
       <motion.button
         type="button"
         ref={linkTaskbarEntry}
