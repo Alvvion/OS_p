@@ -15,7 +15,8 @@ const useWindowTransitions = (id: string): MotionProps => {
   const {
     processes: { [id]: process },
   } = useProcesses();
-  const { componentWindow, maximized, minimized, taskbarEntry } = process || {};
+  const { closing, componentWindow, maximized, minimized, taskbarEntry } =
+    process || {};
 
   const { currentTheme: { sizes: { taskbar } = {} } = {} } = useTheme();
 
@@ -58,7 +59,10 @@ const useWindowTransitions = (id: string): MotionProps => {
   }, [minimized, taskbarEntry, componentWindow]);
 
   return {
-    animate: (minimized && "minimize") || (maximized && "maximize") || "active",
+    animate:
+      (minimized && "minimize") ||
+      (!closing && maximized && "maximize") ||
+      "active",
     exit: "initial",
     initial: "initial",
     transition: {
