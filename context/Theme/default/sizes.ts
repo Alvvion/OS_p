@@ -40,6 +40,12 @@ const sizes = {
   fileExplorer: {
     height: "51px",
   },
+  fileManager: {
+    gridEntryHeight: "70px",
+    gridEntryWidth: "74px",
+    padding: "5px 0",
+    rowGap: "28px",
+  },
   startMenu: {
     height: "390px",
     width: "320px",

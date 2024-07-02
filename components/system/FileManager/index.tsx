@@ -19,6 +19,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
     currentTheme: {
       sizes: {
         taskbar: { height },
+        fileManager: { gridEntryWidth, gridEntryHeight, padding, rowGap },
       },
     },
   } = useTheme();
@@ -43,9 +44,13 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   return (
     <ol
       ref={fileManagerRef}
-      className="grid grid-flow-col gap-x-px gap-y-[10px] py-[5px] [main>&]:pb-5 [section_&]:grid-flow-row grid-cols-filemanager grid-rows-filemanager [nav_&]:grid-cols-startmenu"
+      className="grid grid-flow-col [main>&]:pb-5 [section_&]:grid-flow-row"
       style={{
         height: `calc(100% - ${height})`,
+        gridTemplateColumns: `repeat(auto-fill, ${gridEntryWidth})`,
+        gridTemplateRows: `repeat(auto-fill, ${gridEntryHeight})`,
+        padding,
+        rowGap,
       }}
       {...selectionEvents}
       {...useFileDrop(folderActions.newPath)}
