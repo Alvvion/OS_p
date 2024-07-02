@@ -29,7 +29,7 @@ const IconComponent: React.FC<ImageProps> = ({
       height={size}
       width={size}
       src={src}
-      className={`${className} ${visibility ? "" : "invisible"}`}
+      className={`${className} ${visibility ? "" : "invisible"} object-contain`}
       {...restProps}
     />
   );
