@@ -23,15 +23,16 @@ const _tailwind = [
 ];
 
 const FileEntry: React.FC<FileEntryProps> = ({
+  fileActions,
+  fileManagerRef,
+  isSelected,
   name,
   path,
   renaming,
-  setRenaming,
-  fileActions,
-  view,
-  selectionRect,
-  isSelected,
   selecting,
+  selectionRect,
+  setRenaming,
+  view,
   ...focusEvents
 }) => {
   const { icon, pid, url } = useFileInfo(path);
@@ -71,10 +72,11 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const extraStyles = `border-2 border-transparent p-0 relative before:-bottom-px before:-left-px before:absolute before:-right-px before:-top-px ${backgroundFocused} before:border before:${borderFocused} hover:${backgroundFocusedHover} hover:before:border hover:before:${borderFocusedHover}`;
 
   useEffect(() => {
-    if (selectionRect && buttonRef.current) {
+    if (selectionRect && buttonRef.current && fileManagerRef.current) {
       const isFocused = focusedEntries.includes(fileName);
       const selected = isSelectionIntersecting(
         buttonRef.current.getBoundingClientRect(),
+        fileManagerRef.current.getBoundingClientRect(),
         selectionRect,
       );
 
@@ -85,7 +87,14 @@ const FileEntry: React.FC<FileEntryProps> = ({
         blurEntry(fileName);
       }
     }
-  }, [blurEntry, fileName, focusEntry, focusedEntries, selectionRect]);
+  }, [
+    blurEntry,
+    fileManagerRef,
+    fileName,
+    focusEntry,
+    focusedEntries,
+    selectionRect,
+  ]);
 
   return (
     <li
@@ -129,7 +138,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
                 letterSpacing,
                 textShadow: view === "default" ? textShadow : "none",
               }}
-              className={`[-webkit-box-orient:vertical] [display:-webkit-box] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] ${isSelected ? "[-webkit-line-clamp:initial]" : "[-webkit-line-clamp:2]"} mt-[6px]`}
+              className={`[-webkit-box-orient:vertical] [display:-webkit-box] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] ${focusedEntries.length === 1 ? "[-webkit-line-clamp:initial]" : "[-webkit-line-clamp:2]"} mt-[6px]`}
             >
               {name}
             </figcaption>

@@ -28,7 +28,7 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
 
     const [windowContainer, resizeHandleContainer] =
       rndWindowElements as HTMLElement[];
-    const resizeHandles = [...resizeHandleContainer.children];
+    const resizeHandles = [...(resizeHandleContainer.children || [])];
 
     resizeHandles.forEach(reRouteFoucs(windowContainer));
 

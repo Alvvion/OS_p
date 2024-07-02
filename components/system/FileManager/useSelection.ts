@@ -15,22 +15,31 @@ const useSelection = (
   const { height: h, width: w } = size || {};
 
   const onMouseMove: React.MouseEventHandler<HTMLElement> = ({
-    pageX,
-    pageY,
-  }) =>
+    clientX,
+    clientY,
+  }) => {
+    const { x: targetX = 0, y: targetY = 0 } =
+      containerRef.current?.getBoundingClientRect() || {};
+
     setSize({
-      width: pageX - (x || 0),
-      height: pageY - (y || 0),
+      width: clientX - targetX - (x || 0),
+      height: clientY - targetY - (y || 0),
     });
+  };
 
   const onMouseDown: React.MouseEventHandler<HTMLElement> = ({
-    pageX,
-    pageY,
+    clientX,
+    clientY,
     target,
   }) => {
     if (target === containerRef?.current) {
+      const { x: targetX = 0, y: targetY = 0 } =
+        containerRef.current.getBoundingClientRect();
       setSize({} as Size);
-      setPosition({ x: pageX, y: pageY });
+      setPosition({
+        x: clientX - targetX,
+        y: clientY - targetY,
+      });
     }
   };
 

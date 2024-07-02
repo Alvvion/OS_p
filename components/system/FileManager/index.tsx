@@ -53,7 +53,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
     >
       {isSelecting && (
         <span
-          className="bg-highlightBackground absolute z-10 border-highlight"
+          className="bg-highlightBackground absolute z-[1000] border-highlight"
           style={selectionStyling}
         />
       )}
@@ -64,6 +64,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
           path={join(url, file)}
           renaming={renaming === file}
           setRenaming={setRenaming}
+          fileManagerRef={fileManagerRef}
           fileActions={fileActions}
           selecting={isSelecting}
           selectionRect={selectionRect}

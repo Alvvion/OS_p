@@ -48,13 +48,14 @@ const Window: React.FC<WindowComponentProps> = ({
   return (
     <RndWindow id={id} style={{ zIndex }}>
       <motion.section
-        {...windowTransition}
         style={{
           backgroundColor,
           boxShadow: isForeground ? boxShadow : boxShadowInactive,
           outline: isForeground ? outline : outlineInactive,
         }}
         className="absolute w-full h-full overflow-hidden rounded-[5px]"
+        onContextMenu={(event) => event.preventDefault()}
+        {...windowTransition}
         {...focusableProps}
       >
         <Titlebar id={id} bar={titlebarStyle} />

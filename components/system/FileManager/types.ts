@@ -14,9 +14,9 @@ export type FileActions = {
 };
 
 export type FocusedEntry = {
+  isSelected: boolean;
   onBlurCapture: React.FocusEventHandler;
   onClick: React.MouseEventHandler;
-  isSelected: boolean;
 };
 
 export type SelectionRect = Partial<Size> & Partial<Position>;
@@ -26,9 +26,10 @@ export type FileEntryProps = FocusedEntry & {
   path: string;
   renaming: boolean;
   fileActions: FileActions;
-  setRenaming: React.Dispatch<React.SetStateAction<string>>;
+  fileManagerRef: React.MutableRefObject<HTMLOListElement | null>;
   selectionRect?: SelectionRect;
   selecting: boolean;
+  setRenaming: React.Dispatch<React.SetStateAction<string>>;
   view: "default" | "start";
 };
 

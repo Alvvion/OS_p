@@ -72,10 +72,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
       </header>
       <FileManager url={url} />
     </div>
-  ) : (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <></>
-  );
+  ) : undefined;
 };
 
 export default FileExplorer;
