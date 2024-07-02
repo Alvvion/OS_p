@@ -19,6 +19,7 @@ const useDraggableEntries = (
       focusedEntries.forEach((focusedEntry) => blurEntry(focusedEntry));
       focusEntry(file);
       event.dataTransfer.setData("text/plain", join(url, file));
+      Object.assign(event.dataTransfer, { effectAllowed: "move" });
     };
   const onDragEnd = () => {
     setDragging(false);
