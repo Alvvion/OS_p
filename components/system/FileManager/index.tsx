@@ -56,7 +56,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
       {...useFileDrop(folderActions.newPath)}
       {...useFolderContextMenu(folderActions, updateFiles, setRenaming)}
     >
-      {isSelecting && (
+      {isSelecting && view === "default" && (
         <span
           className="bg-highlightBackground absolute z-[1000] border-highlight"
           style={selectionStyling}
