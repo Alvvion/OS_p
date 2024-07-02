@@ -10,8 +10,8 @@ const extensions: Extensions = {
     process: ["FileExplorer", "V86"],
   },
   ".jsdos": {
-    icon: "/assets/compressed.png",
-    process: ["JSDOS"],
+    icon: "/assets/jsdos.png",
+    process: ["JSDOS", "FileExplorer"],
   },
   ".mp3": {
     icon: "/assets/music_48.png",
@@ -27,7 +27,7 @@ const extensions: Extensions = {
   },
   ".zip": {
     icon: "/assets/compressed.png",
-    process: ["FileExplorer"],
+    process: ["FileExplorer", "JSDOS"],
   },
 };
 
