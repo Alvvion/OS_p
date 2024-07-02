@@ -8,7 +8,7 @@ import type { DraggableEntries } from "./types";
 const useDraggableEntries = (
   updateFiles: (appendFile?: string) => void,
 ): DraggableEntries => {
-  const { blurEntry, focusEntry, focusedEntries } = useSession();
+  const { blurEntry, focusEntry } = useSession();
 
   const [dragging, setDragging] = useState(false);
 
@@ -16,7 +16,7 @@ const useDraggableEntries = (
     (url: string, file: string): React.DragEventHandler =>
     (event) => {
       setDragging(true);
-      focusedEntries.forEach((focusedEntry) => blurEntry(focusedEntry));
+      blurEntry();
       focusEntry(file);
       event.dataTransfer.setData("text/plain", join(url, file));
       Object.assign(event.dataTransfer, { effectAllowed: "move" });
