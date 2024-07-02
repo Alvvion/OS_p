@@ -7,3 +7,7 @@ export type MenuItemProps = MenuItem & {
 export type MenuProps = {
   subMenu?: MenuState;
 };
+
+export type ContextMenu = {
+  onContextMenuCapture: React.MouseEventHandler<HTMLElement>;
+};

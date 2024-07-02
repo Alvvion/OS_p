@@ -4,7 +4,9 @@ import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
 import { useProcesses } from "@/context/Process";
 
-const useTaskbarContextMenu = () => {
+import type { ContextMenu } from "../types";
+
+const useTaskbarContextMenu = (): ContextMenu => {
   const { contextMenu } = useMenu();
   const { minimize, processes } = useProcesses();
   const processArray = Object.entries(processes);

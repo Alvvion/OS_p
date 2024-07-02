@@ -2,11 +2,13 @@ import type { FolderActions } from "@/components/system/FileManager/types";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
 
+import type { ContextMenu } from "../types";
+
 const useFolderContextMenu = (
   { newPath, addToFolder }: FolderActions,
   updateFiles: (appendFile?: string) => void,
   setRenaming: React.Dispatch<React.SetStateAction<string>>,
-) => {
+): ContextMenu => {
   const { contextMenu } = useMenu();
   const menuItems: MenuItem[] = [
     { label: "Refresh", action: () => updateFiles() },

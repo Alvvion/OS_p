@@ -10,13 +10,16 @@ import { processDir } from "@/context/Process/directory";
 import { useSession } from "@/context/Session";
 import { IMAGE_FILE_EXTENSION, SHORTCUT } from "@/utils/constants";
 
+import type { ContextMenu } from "../types";
+
 const useFileContextMenu = (
   url: string,
   pid: string,
   path: string,
   setState: React.Dispatch<React.SetStateAction<string>>,
   { deleteFile, downloadFile }: FileActions,
-) => {
+  focusEntry: (entry: string) => void,
+): ContextMenu => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
 
@@ -102,7 +105,10 @@ const useFileContextMenu = (
   }
 
   return {
-    onContextMenuCapture: contextMenu(menuItems),
+    onContextMenuCapture: (event) => {
+      focusEntry(basename(path));
+      contextMenu?.(menuItems)(event);
+    },
   };
 };
 

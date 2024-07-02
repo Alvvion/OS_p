@@ -3,11 +3,9 @@ import type { MenuItem } from "@/context/Menu/types";
 import { useProcesses } from "@/context/Process";
 import useWindowActions from "@/hooks/useWindowActions";
 
-const useTitlebarContextMenu = (
-  id: string,
-): {
-  onContextMenuCapture: React.MouseEventHandler<HTMLElement>;
-} => {
+import type { ContextMenu } from "../types";
+
+const useTitlebarContextMenu = (id: string): ContextMenu => {
   const { contextMenu } = useMenu();
   const { onClose, onMaximize, onMinimize } = useWindowActions(id);
   const {

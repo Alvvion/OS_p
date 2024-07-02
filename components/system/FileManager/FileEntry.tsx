@@ -113,7 +113,14 @@ const FileEntry: React.FC<FileEntryProps> = ({
         ref={buttonRef}
         className="relative cursor-context-menu outline-none"
         onClick={onClick}
-        {...useFileContextMenu(url, pid, path, setRenaming, fileActions)}
+        {...useFileContextMenu(
+          url,
+          pid,
+          path,
+          setRenaming,
+          fileActions,
+          focusEntry,
+        )}
       >
         <figure className="flex flex-col place-items-center mb-[-3px]">
           <Icon
