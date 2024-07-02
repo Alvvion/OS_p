@@ -28,7 +28,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const [renaming, setRenaming] = useState("");
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
   const focusableEntry = useFocusableEntries(fileManagerRef);
-  const draggableEntry = useDraggableEntries();
+  const draggableEntry = useDraggableEntries(updateFiles);
 
   const { isSelecting, selectionRect, selectionStyling, selectionEvents } =
     useSelection(fileManagerRef);
@@ -77,7 +77,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
           selectionRect={selectionRect}
           view={view}
           {...focusableEntry(file)}
-          {...draggableEntry(file)}
+          {...draggableEntry(url, file)}
         />
       ))}
     </ol>

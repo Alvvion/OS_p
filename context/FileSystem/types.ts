@@ -7,7 +7,7 @@ export type FileSystemStateType = {
   setFileInput: React.Dispatch<
     React.SetStateAction<HTMLInputElement | undefined>
   >;
-  addFile: (callback: (name: string, buffer: Buffer) => void) => void;
+  addFile: (callback: (name: string, buffer?: Buffer) => void) => void;
 };
 
 export type Extensions = {

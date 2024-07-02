@@ -38,7 +38,7 @@ const useFileSystemState = (): FileSystemStateType => {
     });
 
   const unMountFs = (url: string): void => rootFs?.umount(url);
-  const addFile = (callback: (name: string, buffer: Buffer) => void): void => {
+  const addFile = (callback: (name: string, buffer?: Buffer) => void): void => {
     if (fileInput) {
       fileInput.addEventListener(
         "change",

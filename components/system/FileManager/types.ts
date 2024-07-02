@@ -28,7 +28,7 @@ export type DraggableEntry = {
   onDragEnd: React.DragEventHandler;
 };
 
-export type DraggableEntries = (file: string) => DraggableEntry;
+export type DraggableEntries = (url: string, file: string) => DraggableEntry;
 
 export type SelectionRect = Partial<Size> & Partial<Position>;
 

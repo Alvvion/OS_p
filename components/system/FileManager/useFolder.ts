@@ -1,5 +1,5 @@
 import type { BFSOneArgCallback } from "browserfs/dist/node/core/file_system";
-import { basename, join } from "path";
+import { basename, dirname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
@@ -70,20 +70,24 @@ const useFolder: (directory: string) => Folder = (directory) => {
   };
 
   const newPath = (name: string, buffer?: Buffer, iteration = 0): void => {
-    const uniqueName = iteration ? iterateFileNames(name, iteration) : name;
-    const resolvedPath = join(directory, uniqueName);
-    const checkWrite: BFSOneArgCallback = (error) => {
-      if (!error) {
-        updateFiles(uniqueName);
-      } else if (error.code === "EEXIST") {
-        newPath(name, buffer, iteration + 1);
-      }
-    };
-
-    if (buffer) {
-      fs?.writeFile(resolvedPath, buffer, { flag: "wx" }, checkWrite);
+    if (!buffer && ![".", directory].includes(dirname(name))) {
+      fs?.rename(name, join(directory, basename(name)), () => updateFiles());
     } else {
-      fs?.mkdir(resolvedPath, { flag: "wx" }, checkWrite);
+      const uniqueName = iteration ? iterateFileNames(name, iteration) : name;
+      const resolvedPath = join(directory, uniqueName);
+      const checkWrite: BFSOneArgCallback = (error) => {
+        if (!error) {
+          updateFiles(uniqueName);
+        } else if (error.code === "EEXIST") {
+          newPath(name, buffer, iteration + 1);
+        }
+      };
+
+      if (buffer) {
+        fs?.writeFile(resolvedPath, buffer, { flag: "wx" }, checkWrite);
+      } else {
+        fs?.mkdir(resolvedPath, { flag: "wx" }, checkWrite);
+      }
     }
   };
 
