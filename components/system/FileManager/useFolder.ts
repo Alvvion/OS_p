@@ -10,7 +10,10 @@ import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 import { filterSystemFiles, iterateFileNames, sortContents } from "./functions";
 import type { Folder } from "./types";
 
-const useFolder: (directory: string) => Folder = (directory) => {
+const useFolder = (
+  directory: string,
+  setRenaming: React.Dispatch<React.SetStateAction<string>>,
+): Folder => {
   const { addFile, fs } = useFileSystem();
   const { focusEntry } = useSession();
   const [files, setFiles] = useState<string[]>([]);
@@ -77,7 +80,12 @@ const useFolder: (directory: string) => Folder = (directory) => {
     });
   };
 
-  const newPath = (name: string, buffer?: Buffer, iteration = 0): void => {
+  const newPath = (
+    name: string,
+    buffer?: Buffer,
+    rename = false,
+    iteration = 0,
+  ): void => {
     if (!buffer && ![".", directory].includes(dirname(name))) {
       fs?.rename(name, join(directory, basename(name)), () => updateFiles());
     } else {
@@ -86,9 +94,13 @@ const useFolder: (directory: string) => Folder = (directory) => {
       const checkWrite: BFSOneArgCallback = (error) => {
         if (!error) {
           updateFiles(uniqueName);
-          focusEntry(uniqueName);
+          if (rename) {
+            setRenaming(uniqueName);
+          } else {
+            focusEntry(uniqueName);
+          }
         } else if (error.code === "EEXIST") {
-          newPath(name, buffer, iteration + 1);
+          newPath(name, buffer, rename, iteration + 1);
         }
       };
 

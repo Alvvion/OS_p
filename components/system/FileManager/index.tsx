@@ -15,7 +15,6 @@ import useFolder from "./useFolder";
 import useSelection from "./useSelection";
 
 const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
-  const { files, updateFiles, fileActions, folderActions } = useFolder(url);
   const {
     currentTheme: {
       sizes: {
@@ -27,6 +26,12 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const { mountFs, unMountFs } = useFileSystem();
   const [renaming, setRenaming] = useState("");
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
+
+  const { files, updateFiles, fileActions, folderActions } = useFolder(
+    url,
+    setRenaming,
+  );
+
   const focusableEntry = useFocusableEntries(fileManagerRef);
   const draggableEntry = useDraggableEntries(updateFiles);
 
@@ -56,7 +61,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
       }}
       {...selectionEvents}
       {...useFileDrop(folderActions.newPath)}
-      {...useFolderContextMenu(folderActions, updateFiles, setRenaming)}
+      {...useFolderContextMenu(folderActions, updateFiles)}
     >
       {isSelecting && view === "default" && (
         <span
