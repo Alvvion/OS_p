@@ -42,18 +42,24 @@ const useFolder: (directory: string) => Folder = (directory) => {
   };
 
   const renameFile = (path: string, name?: string) => {
-    if (name) {
+    const newName = name?.trim();
+
+    if (newName) {
       const newPath = join(
         directory,
-        `${name}${path.endsWith(SHORTCUT) ? SHORTCUT : ""}`,
+        `${newName}${path.endsWith(SHORTCUT) ? SHORTCUT : ""}`,
       );
 
-      fs?.rename(path, newPath, () => {
-        setFiles((currentFiles) =>
-          currentFiles.map((file) =>
-            file === basename(path) ? basename(newPath) : file,
-          ),
-        );
+      fs?.exists(newPath, (exists) => {
+        if (!exists) {
+          fs?.rename(path, newPath, () =>
+            setFiles((currentFiles) =>
+              currentFiles.map((file) =>
+                file === basename(path) ? basename(newPath) : file,
+              ),
+            ),
+          );
+        }
       });
     }
   };
