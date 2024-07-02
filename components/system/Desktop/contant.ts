@@ -7,11 +7,7 @@ export const cssFit: Record<WallpaperFit, string> = {
     background-repeat: no-repeat;
     background-size: contain;
   `,
-  stretch: "background-size: 100% auto;",
-  tile: "background-size: contain;",
-  center: `
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-  `,
+  stretch: "background-size: 100% 100%;",
+  tile: "",
+  center: "background-repeat: no-repeat;",
 };
