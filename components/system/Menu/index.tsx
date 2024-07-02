@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Position } from "react-rnd";
 
 import { useMenu } from "@/context/Menu";
 import { useTheme } from "@/context/Theme";
 import { animateContextMenu } from "@/utils/animate";
+import { ONE_TIME_PASSIVE_EVENT } from "@/utils/constants";
 import { pxToNumber } from "@/utils/functions";
 
 import MenuItemEntry from "./MenuItemEntry";
@@ -24,20 +25,46 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
     },
   } = useTheme();
 
-  const resetMenu = ({
-    relatedTarget,
-  }: Partial<FocusEvent | MouseEvent> = {}) => {
-    if (
-      !(relatedTarget instanceof HTMLElement) ||
-      !menuRef.current?.contains(relatedTarget)
-    ) {
-      setMenu({});
-    }
-  };
+  const resetMenu = useCallback(
+    ({ relatedTarget }: Partial<FocusEvent | MouseEvent> = {}) => {
+      if (
+        !(relatedTarget instanceof HTMLElement) ||
+        !menuRef.current?.contains(relatedTarget)
+      ) {
+        setMenu({});
+      }
+    },
+    [setMenu],
+  );
 
   useEffect(() => {
-    if (items && !subMenu) menuRef?.current?.focus();
-  }, [items, subMenu]);
+    if (items && !subMenu) {
+      const focusedElement = document.activeElement;
+
+      if (
+        focusedElement instanceof HTMLElement &&
+        focusedElement !== document.body
+      ) {
+        const options: AddEventListenerOptions = {
+          capture: true,
+          ...ONE_TIME_PASSIVE_EVENT,
+        };
+
+        const menuUnfocused: EventListener = ({ type }) => {
+          resetMenu();
+          focusedElement.removeEventListener(
+            type === "click" ? "blur" : "click",
+            menuUnfocused,
+          );
+        };
+
+        focusedElement.addEventListener("click", menuUnfocused, options);
+        focusedElement.addEventListener("blur", menuUnfocused, options);
+      } else {
+        menuRef.current?.focus();
+      }
+    }
+  }, [items, resetMenu, subMenu]);
 
   useEffect(() => {
     const { height = 0, width = 0 } =
