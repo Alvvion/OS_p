@@ -73,19 +73,24 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const extraStyles = `border-2 border-transparent p-0 relative before:-bottom-px before:-left-px before:absolute before:-right-px before:-top-px ${isDragging ? "" : `${backgroundFocused} before:border before:${borderFocused} hover:${backgroundFocusedHover} hover:before:border hover:before:${borderFocusedHover}`}`;
 
   useEffect(() => {
-    if (selectionRect && buttonRef.current && fileManagerRef.current) {
+    if (buttonRef.current) {
       const isFocused = focusedEntries.includes(fileName);
-      const selected = isSelectionIntersecting(
-        buttonRef.current.getBoundingClientRect(),
-        fileManagerRef.current.getBoundingClientRect(),
-        selectionRect,
-      );
 
-      if (selected && !isFocused) {
-        focusEntry(fileName);
+      if (selectionRect && fileManagerRef.current) {
+        const selected = isSelectionIntersecting(
+          buttonRef.current.getBoundingClientRect(),
+          fileManagerRef.current.getBoundingClientRect(),
+          selectionRect,
+        );
+
+        if (selected && !isFocused) {
+          focusEntry(fileName);
+          buttonRef.current.focus();
+        } else if (!selected && isFocused) {
+          blurEntry(fileName);
+        }
+      } else if (isFocused && document.activeElement !== buttonRef.current) {
         buttonRef.current.focus();
-      } else if (!selected && isFocused) {
-        blurEntry(fileName);
       }
     }
   }, [
@@ -101,7 +106,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
     <li
       className={
         view === "default"
-          ? `flex justify-center h-min hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px ${isDragging ? "" : `hover:${background} hover:before:${border} hover:before:border`} z-[1] ${isSelected ? extraStyles : "p-0.5"}`
+          ? `flex justify-center h-full items-end hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px ${isDragging ? "" : `hover:${background} hover:before:${border} hover:before:border`} z-[1] ${isSelected ? extraStyles : "p-0.5"}`
           : "hover:bg-[#313131] flex justify-center rounded-md"
       }
       style={{
@@ -146,7 +151,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
                 letterSpacing,
                 textShadow: view === "default" ? textShadow : "none",
               }}
-              className={`[-webkit-box-orient:vertical] [display:-webkit-box] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] ${focusedEntries.length === 1 ? "[-webkit-line-clamp:initial]" : "[-webkit-line-clamp:2]"} mt-[6px]`}
+              className={`[-webkit-box-orient:vertical] [display:-webkit-box] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] ${focusedEntries.length === 1 ? "[-webkit-line-clamp:initial]" : "[-webkit-line-clamp:2]"}`}
             >
               {name}
             </figcaption>

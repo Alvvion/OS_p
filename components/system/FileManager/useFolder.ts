@@ -3,6 +3,7 @@ import { basename, dirname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
+import { useSession } from "@/context/Session";
 import { SHORTCUT } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
@@ -11,6 +12,7 @@ import type { Folder } from "./types";
 
 const useFolder: (directory: string) => Folder = (directory) => {
   const { addFile, fs } = useFileSystem();
+  const { focusEntry } = useSession();
   const [files, setFiles] = useState<string[]>([]);
   const [downloadLink, setDownloadLink] = useState("");
 
@@ -78,6 +80,7 @@ const useFolder: (directory: string) => Folder = (directory) => {
       const checkWrite: BFSOneArgCallback = (error) => {
         if (!error) {
           updateFiles(uniqueName);
+          focusEntry(uniqueName);
         } else if (error.code === "EEXIST") {
           newPath(name, buffer, iteration + 1);
         }
