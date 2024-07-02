@@ -1,6 +1,8 @@
 import { extname } from "path";
 import { useEffect, useRef } from "react";
 
+import { haltEvent } from "@/context/FileSystem/functions";
+
 import type { RenameBoxProps } from "./types";
 
 const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
@@ -22,7 +24,7 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
       type="text"
       size={1}
       onKeyDown={({ key }) => key === "Enter" && saveRename()}
-      onKeyUp={(event) => event.preventDefault()}
+      onKeyUp={haltEvent}
       className="border-rename-box-border border text-[11.5px] mb-0.5 py-px px-[5px] relative text-center top-0.5 w-[60px] rounded-none focus:outline-none"
     />
   );

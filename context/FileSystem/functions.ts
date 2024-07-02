@@ -8,7 +8,9 @@ export const getIconByFileExtension = (extention: string): string =>
 export const getProcessByFileExtension = (extention: string): string =>
   extensions[extention]?.process[0] || "";
 
-export const haltEvent = (event: Event | React.DragEvent): void => {
+export const haltEvent = (
+  event: Event | React.DragEvent | React.KeyboardEvent | React.MouseEvent,
+): void => {
   event.preventDefault();
   event.stopPropagation();
 };
