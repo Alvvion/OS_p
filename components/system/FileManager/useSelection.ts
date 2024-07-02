@@ -42,19 +42,21 @@ const useSelection = (
     setPosition({} as Position);
   };
 
-  const selectionStyling =
-    hasSize && hasPosition
-      ? {
-          height: `${Math.abs(Number(h))}px`,
-          width: `${Math.abs(Number(w))}px`,
-          transform: `translate(
+  const isSelecting = hasSize && hasPosition;
+
+  const selectionStyling = isSelecting
+    ? {
+        height: `${Math.abs(Number(h))}px`,
+        width: `${Math.abs(Number(w))}px`,
+        transform: `translate(
             ${Number(x) + (Number(w) < 0 ? Number(w) : 0)}px,
             ${Number(y) + (Number(h) < 0 ? Number(h) : 0)}px)`,
-        }
-      : {};
+      }
+    : {};
 
   return {
-    isSelecting: hasSize && hasPosition,
+    isSelecting,
+    selectionRect: isSelecting ? { ...position, ...size } : undefined,
     selectionStyling,
     selectionEvents: {
       onMouseDown,

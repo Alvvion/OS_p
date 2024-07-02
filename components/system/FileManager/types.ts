@@ -1,3 +1,7 @@
+import type { Position } from "react-rnd";
+
+import type { Size } from "@/components/common/types";
+
 export type FileManagerProps = {
   url: string;
   view?: "default" | "start";
@@ -12,8 +16,10 @@ export type FileActions = {
 export type FocusedEntry = {
   onBlurCapture: React.FocusEventHandler;
   onClick: React.MouseEventHandler;
-  selected: boolean;
+  isSelected: boolean;
 };
+
+export type SelectionRect = Partial<Size> & Partial<Position>;
 
 export type FileEntryProps = FocusedEntry & {
   name: string;
@@ -21,6 +27,7 @@ export type FileEntryProps = FocusedEntry & {
   renaming: boolean;
   fileActions: FileActions;
   setRenaming: React.Dispatch<React.SetStateAction<string>>;
+  selectionRect?: SelectionRect;
   selecting: boolean;
   view: "default" | "start";
 };
@@ -56,6 +63,7 @@ export type Folder = {
 
 export type Selection = {
   isSelecting: boolean;
+  selectionRect?: SelectionRect;
   selectionStyling: React.CSSProperties;
   selectionEvents: {
     onMouseDown: React.MouseEventHandler<HTMLElement>;

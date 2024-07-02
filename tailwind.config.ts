@@ -27,7 +27,7 @@ const config: Config = {
         "context-fig-hover": "rgb(65,65,65)",
         startmenu: "#242424",
         peek: "hsla(0, 20%, 15%, 100%)",
-        highlightBackground: "hsl(207deg 100% 72% / 30%)",
+        highlightBackground: "hsl(207deg 100% 72% / 20%)",
       },
       fill: {
         "titlebar-button-disabled": "rgb(50,50,50)",

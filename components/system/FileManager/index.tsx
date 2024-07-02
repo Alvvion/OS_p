@@ -27,7 +27,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
   const { focusableEntry } = useFocusableEntries(fileManagerRef);
 
-  const { isSelecting, selectionStyling, selectionEvents } =
+  const { isSelecting, selectionRect, selectionStyling, selectionEvents } =
     useSelection(fileManagerRef);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
     >
       {isSelecting && (
         <span
-          className="bg-highlightBackground absolute z-[1000] border-highlight"
+          className="bg-highlightBackground absolute z-10 border-highlight"
           style={selectionStyling}
         />
       )}
@@ -66,6 +66,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
           setRenaming={setRenaming}
           fileActions={fileActions}
           selecting={isSelecting}
+          selectionRect={selectionRect}
           view={view}
           {...focusableEntry(file)}
         />

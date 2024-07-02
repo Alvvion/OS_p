@@ -30,7 +30,7 @@ const useFocusableEntries = (
         focusEntry(file);
       }
     };
-    return { selected: !!selectedFile, onBlurCapture, onClick };
+    return { isSelected: !!selectedFile, onBlurCapture, onClick };
   };
 
   return { focusableEntry };

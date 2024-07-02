@@ -1,9 +1,13 @@
-import Button from "@/components/common/Button";
+import { basename } from "path";
+import { useEffect, useRef } from "react";
+
 import Icon from "@/components/common/Icon";
 import useFileContextMenu from "@/components/system/Menu/ContextMenu/useFileContextMenu";
+import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useDoubleClick from "@/hooks/useDoubleClick";
 
+import { isSelectionIntersecting } from "./functions";
 import RenameBox from "./RenameBox";
 import type { FileEntryProps } from "./types";
 import useFile from "./useFile";
@@ -25,12 +29,21 @@ const FileEntry: React.FC<FileEntryProps> = ({
   setRenaming,
   fileActions,
   view,
-  selected,
+  selectionRect,
+  isSelected,
   selecting,
   ...focusEvents
 }) => {
   const { icon, pid, url } = useFileInfo(path);
+
+  const { blurEntry, focusEntry, focusedEntries } = useSession();
+
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
   const openFile = useFile(url);
+
+  const fileName = basename(path);
+
   const {
     currentTheme: {
       sizes: {
@@ -52,15 +65,33 @@ const FileEntry: React.FC<FileEntryProps> = ({
   } = useTheme();
 
   const singleClick = view === "start";
+
   const { onClick } = useDoubleClick(() => openFile(pid), singleClick);
 
   const extraStyles = `border-2 border-transparent p-0 relative before:-bottom-px before:-left-px before:absolute before:-right-px before:-top-px ${backgroundFocused} before:border before:${borderFocused} hover:${backgroundFocusedHover} hover:before:border hover:before:${borderFocusedHover}`;
+
+  useEffect(() => {
+    if (selectionRect && buttonRef.current) {
+      const isFocused = focusedEntries.includes(fileName);
+      const selected = isSelectionIntersecting(
+        buttonRef.current.getBoundingClientRect(),
+        selectionRect,
+      );
+
+      if (selected && !isFocused) {
+        focusEntry(fileName);
+        buttonRef.current.focus();
+      } else if (!selected && isFocused) {
+        blurEntry(fileName);
+      }
+    }
+  }, [blurEntry, fileName, focusEntry, focusedEntries, selectionRect]);
 
   return (
     <li
       className={
         view === "default"
-          ? `flex justify-center h-min hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px hover:${background} hover:before:${border} hover:before:border z-[1] ${selected ? extraStyles : "p-0.5"}`
+          ? `flex justify-center h-min hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px hover:${background} hover:before:${border} hover:before:border z-[1] ${isSelected ? extraStyles : "p-0.5"}`
           : "hover:bg-[#313131] flex justify-center rounded-md"
       }
       style={{
@@ -68,9 +99,10 @@ const FileEntry: React.FC<FileEntryProps> = ({
       }}
       {...focusEvents}
     >
-      <Button
+      <button
         type="button"
-        extraStyles="relative"
+        ref={buttonRef}
+        className="relative cursor-context-menu outline-none"
         onClick={onClick}
         {...useFileContextMenu(url, pid, path, setRenaming, fileActions)}
       >
@@ -97,13 +129,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
                 letterSpacing,
                 textShadow: view === "default" ? textShadow : "none",
               }}
-              className={`[-webkit-box-orient:vertical] [display:-webkit-box] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] ${selected ? "[-webkit-line-clamp:initial]" : "[-webkit-line-clamp:2]"} mt-[6px]`}
+              className={`[-webkit-box-orient:vertical] [display:-webkit-box] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] ${isSelected ? "[-webkit-line-clamp:initial]" : "[-webkit-line-clamp:2]"} mt-[6px]`}
             >
               {name}
             </figcaption>
           )}
         </figure>
-      </Button>
+      </button>
     </li>
   );
 };
