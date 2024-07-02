@@ -1,14 +1,13 @@
 import { useSession } from "@/context/Session";
 
-import type { FocusedEntry } from "./types";
+import type { FocusableEntries } from "./types";
 
 const useFocusableEntries = (
   fileManagerRef: React.MutableRefObject<HTMLOListElement | null>,
-): {
-  focusableEntry: (file: string) => FocusedEntry;
-} => {
+): FocusableEntries => {
   const { focusedEntries, blurEntry, focusEntry } = useSession();
-  const focusableEntry = (file: string): FocusedEntry => {
+
+  return (file: string) => {
     const selectedFile = focusedEntries.includes(file);
     const onBlurCapture: React.FocusEventHandler = ({ relatedTarget }) => {
       if (
@@ -32,8 +31,6 @@ const useFocusableEntries = (
     };
     return { isSelected: !!selectedFile, onBlurCapture, onClick };
   };
-
-  return { focusableEntry };
 };
 
 export default useFocusableEntries;

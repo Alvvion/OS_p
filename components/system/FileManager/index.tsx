@@ -8,6 +8,7 @@ import { MOUNTABLE_EXTENSIONS, SHORTCUT } from "@/utils/constants";
 
 import FileEntry from "./FileEntry";
 import type { FileManagerProps } from "./types";
+import useDraggableEntries from "./useDraggableEntries";
 import useFileDrop from "./useFileDrop";
 import useFocusableEntries from "./useFocusableEntries";
 import useFolder from "./useFolder";
@@ -26,7 +27,8 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const { mountFs, unMountFs } = useFileSystem();
   const [renaming, setRenaming] = useState("");
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
-  const { focusableEntry } = useFocusableEntries(fileManagerRef);
+  const focusableEntry = useFocusableEntries(fileManagerRef);
+  const draggableEntry = useDraggableEntries();
 
   const { isSelecting, selectionRect, selectionStyling, selectionEvents } =
     useSelection(fileManagerRef);
@@ -75,6 +77,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
           selectionRect={selectionRect}
           view={view}
           {...focusableEntry(file)}
+          {...draggableEntry(file)}
         />
       ))}
     </ol>

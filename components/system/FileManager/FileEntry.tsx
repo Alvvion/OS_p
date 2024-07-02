@@ -25,6 +25,7 @@ const _tailwind = [
 const FileEntry: React.FC<FileEntryProps> = ({
   fileActions,
   fileManagerRef,
+  isDragging,
   isSelected,
   name,
   path,
@@ -33,7 +34,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   selectionRect,
   setRenaming,
   view,
-  ...focusEvents
+  ...events
 }) => {
   const { icon, pid, url } = useFileInfo(path);
 
@@ -69,7 +70,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const { onClick } = useDoubleClick(() => openFile(pid), singleClick);
 
-  const extraStyles = `border-2 border-transparent p-0 relative before:-bottom-px before:-left-px before:absolute before:-right-px before:-top-px ${backgroundFocused} before:border before:${borderFocused} hover:${backgroundFocusedHover} hover:before:border hover:before:${borderFocusedHover}`;
+  const extraStyles = `border-2 border-transparent p-0 relative before:-bottom-px before:-left-px before:absolute before:-right-px before:-top-px ${isDragging ? "" : `${backgroundFocused} before:border before:${borderFocused} hover:${backgroundFocusedHover} hover:before:border hover:before:${borderFocusedHover}`}`;
 
   useEffect(() => {
     if (selectionRect && buttonRef.current && fileManagerRef.current) {
@@ -100,13 +101,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
     <li
       className={
         view === "default"
-          ? `flex justify-center h-min hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px hover:${background} hover:before:${border} hover:before:border z-[1] ${isSelected ? extraStyles : "p-0.5"}`
+          ? `flex justify-center h-min hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px ${isDragging ? "" : `hover:${background} hover:before:${border} hover:before:border`} z-[1] ${isSelected ? extraStyles : "p-0.5"}`
           : "hover:bg-[#313131] flex justify-center rounded-md"
       }
       style={{
         pointerEvents: view === "default" && selecting ? "none" : "all",
       }}
-      {...focusEvents}
+      {...events}
     >
       <button
         type="button"

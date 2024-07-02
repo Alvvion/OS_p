@@ -13,25 +13,37 @@ export type FileActions = {
   downloadFile: (path: string) => void;
 };
 
-export type FocusedEntry = {
+export type FocusableEntry = {
   isSelected: boolean;
   onBlurCapture: React.FocusEventHandler;
   onClick: React.MouseEventHandler;
 };
 
+export type FocusableEntries = (file: string) => FocusableEntry;
+
+export type DraggableEntry = {
+  draggable: boolean;
+  isDragging: boolean;
+  onDragStart: React.DragEventHandler;
+  onDragEnd: React.DragEventHandler;
+};
+
+export type DraggableEntries = (file: string) => DraggableEntry;
+
 export type SelectionRect = Partial<Size> & Partial<Position>;
 
-export type FileEntryProps = FocusedEntry & {
-  name: string;
-  path: string;
-  renaming: boolean;
-  fileActions: FileActions;
-  fileManagerRef: React.MutableRefObject<HTMLOListElement | null>;
-  selectionRect?: SelectionRect;
-  selecting: boolean;
-  setRenaming: React.Dispatch<React.SetStateAction<string>>;
-  view: "default" | "start";
-};
+export type FileEntryProps = FocusableEntry &
+  DraggableEntry & {
+    name: string;
+    path: string;
+    renaming: boolean;
+    fileActions: FileActions;
+    fileManagerRef: React.MutableRefObject<HTMLOListElement | null>;
+    selectionRect?: SelectionRect;
+    selecting: boolean;
+    setRenaming: React.Dispatch<React.SetStateAction<string>>;
+    view: "default" | "start";
+  };
 
 export type FileInfo = {
   icon: string;
