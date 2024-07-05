@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
+import { useSession } from "@/context/Session";
 import useTitle from "@/hooks/useTitle";
 import { SAVE_PATH } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
@@ -21,6 +22,7 @@ const useDosCI = (
   const { appendFileToTitle } = useTitle(id);
   const { fs } = useFileSystem();
   const { linkElement } = useProcesses();
+  const { updateFolder } = useSession();
   const [dosCI, setDosCI] = useState<CommandInterface>();
 
   useEffect(() => {
@@ -60,7 +62,10 @@ const useDosCI = (
             fs.writeFile(
               join(SAVE_PATH, `${basename(url)}${saveExtension}`),
               Buffer.from(saveZip),
-              () => dosInstance?.stop(),
+              () => {
+                dosInstance?.stop();
+                updateFolder(SAVE_PATH);
+              },
             ),
           );
         });
@@ -74,6 +79,7 @@ const useDosCI = (
     fs,
     id,
     linkElement,
+    updateFolder,
     url,
   ]);
 

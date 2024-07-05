@@ -71,7 +71,6 @@ export type Folder = {
   fileActions: FileActions;
   folderActions: FolderActions;
   files: string[];
-  updateFiles: (appendFile?: string) => void;
 };
 
 export type Selection = {

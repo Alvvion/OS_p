@@ -25,13 +25,10 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const [renaming, setRenaming] = useState("");
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
 
-  const { files, updateFiles, fileActions, folderActions } = useFolder(
-    url,
-    setRenaming,
-  );
+  const { files, fileActions, folderActions } = useFolder(url, setRenaming);
 
   const focusableEntry = useFocusableEntries(fileManagerRef);
-  const draggableEntry = useDraggableEntries(updateFiles);
+  const draggableEntry = useDraggableEntries(url);
 
   const { isSelecting, selectionRect, selectionStyling, selectionEvents } =
     useSelection(fileManagerRef);
@@ -39,12 +36,12 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   useEffect(() => {
     const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
 
-    if (isMountable && files.length === 0) mountFs(url, updateFiles);
+    if (isMountable && files.length === 0) mountFs(url);
 
     return () => {
       if (isMountable && files.length > 0) unMountFs(url);
     };
-  }, [url, files.length, mountFs, unMountFs, updateFiles]);
+  }, [url, files.length, mountFs, unMountFs]);
 
   return (
     <ol
@@ -59,7 +56,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
       }}
       {...selectionEvents}
       {...useFileDrop(folderActions.newPath)}
-      {...useFolderContextMenu(folderActions, updateFiles)}
+      {...useFolderContextMenu(url, folderActions)}
     >
       {isSelecting && view === "default" && (
         <span

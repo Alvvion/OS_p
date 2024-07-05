@@ -2,6 +2,7 @@ import { basename, extname, join } from "path";
 import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
+import { useSession } from "@/context/Session";
 import useTitle from "@/hooks/useTitle";
 import { SAVE_PATH } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
@@ -25,6 +26,7 @@ const useV86 = (
   const { appendFileToTitle } = useTitle(id);
   const [emulator, setEmulator] = useState<V86Starter>();
   const { fs } = useFileSystem();
+  const { updateFolder } = useSession();
 
   useV86ScreenSize(id, containerRef, emulator);
 
@@ -84,13 +86,16 @@ const useV86 = (
             fs.writeFile(
               join(SAVE_PATH, `${basename(url)}${saveExtension}`),
               Buffer.from(new Uint8Array(newState)),
-              () => emulator?.destroy?.(),
+              () => {
+                emulator?.destroy?.();
+                updateFolder(SAVE_PATH);
+              },
             ),
           ),
         );
       }
     };
-  }, [appendFileToTitle, containerRef, emulator, fs, url]);
+  }, [appendFileToTitle, containerRef, emulator, fs, updateFolder, url]);
 };
 
 export default useV86;

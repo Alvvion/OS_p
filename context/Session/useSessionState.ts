@@ -1,7 +1,13 @@
+import { dirname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "../FileSystem";
-import type { SessionContextType, WallpaperFit, WindowStates } from "./types";
+import type {
+  SessionContextType,
+  UpdateFiles,
+  WallpaperFit,
+  WindowStates,
+} from "./types";
 
 const SESSION_FILE = "/session.json";
 
@@ -15,6 +21,9 @@ const useSessionContextState = (): SessionContextType => {
   const [focusedEntries, setFocusedEntries] = useState<string[]>([]);
   const [wallpaperFit, setWallpaperFit] = useState<WallpaperFit>("fill");
   const [wallpaperImage, setWallpaperImage] = useState("");
+  const [fsWatchers, setFsWatchers] = useState<Record<string, UpdateFiles[]>>(
+    {},
+  );
 
   const { fs } = useFileSystem();
 
@@ -59,6 +68,43 @@ const useSessionContextState = (): SessionContextType => {
     setWallpaperImage(image);
   };
 
+  const updateFolder = useCallback(
+    (folder: string, newFile?: string, oldFile?: string): void => {
+      const relevantPaths = Object.keys(fsWatchers).filter(
+        (watchedFolder) =>
+          watchedFolder === folder ||
+          watchedFolder === dirname(folder) ||
+          watchedFolder.startsWith(join(folder, "/")),
+      );
+
+      relevantPaths.forEach((watchedFolder) =>
+        fsWatchers[watchedFolder].forEach((updateFiles) =>
+          updateFiles(newFile, oldFile),
+        ),
+      );
+    },
+
+    [fsWatchers],
+  );
+  const addFsWatcher = useCallback(
+    (folder: string, updateFiles: UpdateFiles): void =>
+      setFsWatchers((currentFsWatcher) => ({
+        ...currentFsWatcher,
+        [folder]: [...(currentFsWatcher?.[folder] || []), updateFiles],
+      })),
+    [],
+  );
+  const removeFsWatcher = useCallback(
+    (folder: string, updateFiles: UpdateFiles): void =>
+      setFsWatchers((currentFsWatcher) => ({
+        ...currentFsWatcher,
+        [folder]: currentFsWatcher?.[folder]?.filter(
+          (updateFilesInstance) => updateFilesInstance !== updateFiles,
+        ),
+      })),
+    [],
+  );
+
   useEffect(() => {
     if (sessionLoaded) {
       fs?.writeFile(
@@ -98,12 +144,14 @@ const useSessionContextState = (): SessionContextType => {
   }, [fs]);
 
   return {
+    addFsWatcher,
     blurEntry,
     focusEntry,
     focusedEntries,
     foregroundId,
     prependToStack,
     removeFromStack,
+    removeFsWatcher,
     sessionLoaded,
     setForegroundId,
     setThemeName,
@@ -113,6 +161,7 @@ const useSessionContextState = (): SessionContextType => {
     startMenuVisible,
     themeName,
     toggleStartMenu,
+    updateFolder,
     wallpaperImage,
     wallpaperFit,
     windowStates,

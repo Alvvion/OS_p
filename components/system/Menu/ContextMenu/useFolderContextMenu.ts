@@ -1,16 +1,18 @@
 import type { FolderActions } from "@/components/system/FileManager/types";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
+import { useSession } from "@/context/Session";
 
 import type { ContextMenu } from "../types";
 
 const useFolderContextMenu = (
+  url: string,
   { newPath, addToFolder }: FolderActions,
-  updateFiles: (appendFile?: string) => void,
 ): ContextMenu => {
   const { contextMenu } = useMenu();
+  const { updateFolder } = useSession();
   const menuItems: MenuItem[] = [
-    { label: "Refresh", action: () => updateFiles() },
+    { label: "Refresh", action: () => updateFolder(url) },
     { separator: true },
     { label: "Add file", action: () => addToFolder() },
     { separator: true },

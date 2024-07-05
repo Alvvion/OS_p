@@ -15,14 +15,25 @@ const useFolder = (
   setRenaming: React.Dispatch<React.SetStateAction<string>>,
 ): Folder => {
   const { addFile, fs } = useFileSystem();
-  const { focusEntry } = useSession();
+  const { addFsWatcher, focusEntry, removeFsWatcher, updateFolder } =
+    useSession();
   const [files, setFiles] = useState<string[]>([]);
   const [downloadLink, setDownloadLink] = useState("");
 
   const updateFiles = useCallback(
-    (appendFile = "") => {
-      if (appendFile) {
-        setFiles((currentFiles) => [...currentFiles, basename(appendFile)]);
+    (newFile = "", oldFile = "") => {
+      if (oldFile && newFile) {
+        setFiles((currentFiles) =>
+          currentFiles.map((file) =>
+            file === basename(oldFile) ? basename(newFile) : file,
+          ),
+        );
+      } else if (oldFile) {
+        setFiles((currentFiles) =>
+          currentFiles.filter((file) => file !== basename(oldFile)),
+        );
+      } else if (newFile) {
+        setFiles((currentFiles) => [...currentFiles, basename(newFile)]);
       } else {
         fs?.readdir(directory, (_error, contents = []) =>
           setFiles(sortContents(contents).filter(filterSystemFiles(directory))),
@@ -32,17 +43,12 @@ const useFolder = (
     [directory, fs],
   );
 
-  const deleteFile = (path: string): void => {
-    const removeFile = (): void =>
-      setFiles((currentFiles) =>
-        currentFiles.filter((file) => file !== basename(path)),
-      );
+  const deleteFile = (path: string): void =>
+    fs?.stat(path, (_error, stats) => {
+      const fsDelete = stats?.isDirectory() ? fs.rmdir : fs.unlink;
 
-    fs?.stat(path, (_e, stats) => {
-      if (stats?.isDirectory()) fs?.rmdir(path, removeFile);
-      else fs?.unlink(path, removeFile);
+      fsDelete(path, () => updateFolder(directory, "", path));
     });
-  };
 
   const renameFile = (path: string, name?: string): void => {
     const newName = name?.trim();
@@ -56,11 +62,7 @@ const useFolder = (
       fs?.exists(newPath, (exists) => {
         if (!exists) {
           fs?.rename(path, newPath, () =>
-            setFiles((currentFiles) =>
-              currentFiles.map((file) =>
-                file === basename(path) ? basename(newPath) : file,
-              ),
-            ),
+            updateFolder(directory, newPath, path),
           );
         }
       });
@@ -87,13 +89,15 @@ const useFolder = (
     iteration = 0,
   ): void => {
     if (!buffer && ![".", directory].includes(dirname(name))) {
-      fs?.rename(name, join(directory, basename(name)), () => updateFiles());
+      fs?.rename(name, join(directory, basename(name)), () =>
+        updateFolder(dirname(name), "", name),
+      );
     } else {
       const uniqueName = iteration ? iterateFileNames(name, iteration) : name;
       const resolvedPath = join(directory, uniqueName);
       const checkWrite: BFSOneArgCallback = (error) => {
         if (!error) {
-          updateFiles(uniqueName);
+          updateFolder(directory, uniqueName);
           if (rename) {
             setRenaming(uniqueName);
           } else {
@@ -121,9 +125,14 @@ const useFolder = (
     [downloadLink],
   );
 
+  useEffect(() => {
+    addFsWatcher(directory, updateFiles);
+
+    return () => removeFsWatcher(directory, updateFiles);
+  }, [addFsWatcher, directory, removeFsWatcher, updateFiles]);
+
   return {
     files,
-    updateFiles,
     fileActions: {
       deleteFile,
       renameFile,

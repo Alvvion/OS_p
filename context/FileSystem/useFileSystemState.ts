@@ -10,6 +10,7 @@ import type { FSModule } from "browserfs/dist/node/core/FS";
 import { extname } from "path";
 import { useEffect, useState } from "react";
 
+import { useSession } from "@/context/Session";
 import * as BrowserFS from "@/public/libs/browserfs/browserfs.min.js";
 
 import FileSystemConfig from "./config";
@@ -21,15 +22,17 @@ const { BFSRequire, configure, FileSystem } = BrowserFS as typeof IBrowserFS;
 const useFileSystemState = (): FileSystemStateType => {
   const [fs, setFs] = useState<FSModule>();
   const [fileInput, setFileInput] = useState<HTMLInputElement>();
+  const { updateFolder } = useSession();
+
   const rootFs = fs?.getRootFS() as MountableFileSystem;
 
-  const mountFs = (url: string, callback: () => void): void =>
+  const mountFs = (url: string): void =>
     fs?.readFile(url, (_readErr, fileData = Buffer.from("")) => {
       const isISO = extname(url) === ".iso";
       const createFs: BFSCallback<IsoFS | ZipFS> = (_createErr, newFs) => {
         if (newFs) {
           rootFs?.mount(url, newFs);
-          callback();
+          updateFolder(url);
         }
       };
 
@@ -41,6 +44,7 @@ const useFileSystemState = (): FileSystemStateType => {
     });
 
   const unMountFs = (url: string): void => rootFs?.umount(url);
+
   const addFile = (callback: (name: string, buffer?: Buffer) => void): void => {
     if (fileInput) {
       fileInput.addEventListener(
