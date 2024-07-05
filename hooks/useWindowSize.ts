@@ -9,9 +9,7 @@ import type { WindowSize } from "./types";
 const useWindowSize = (id: string): WindowSize => {
   const { setWindowStates } = useSession();
   const {
-    currentTheme: {
-      sizes: { titlebar },
-    },
+    sizes: { titlebar },
   } = useTheme();
 
   const updateWindowSize = useCallback(

@@ -16,3 +16,7 @@ export type ThemeContextType = {
   currentTheme: DefaultTheme;
   setCurrentTheme: React.Dispatch<React.SetStateAction<DefaultTheme>>;
 };
+
+export type ThemeHook = DefaultTheme & {
+  setCurrentTheme: React.Dispatch<React.SetStateAction<DefaultTheme>>;
+};

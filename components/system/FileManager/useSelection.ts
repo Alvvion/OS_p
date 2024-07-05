@@ -46,7 +46,7 @@ const useSelection = (
   const hasSize = typeof w === "number" && typeof h === "number";
   const hasPosition = typeof x === "number" && typeof y === "number";
 
-  const resetSelection = () => {
+  const resetSelection = (): void => {
     setSize({} as Size);
     setPosition({} as Position);
   };

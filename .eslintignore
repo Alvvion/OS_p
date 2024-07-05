@@ -6,3 +6,4 @@
 /tailwind.config.ts
 /public
 /next-env.d.ts
+/utils/fs2json.js

@@ -13,15 +13,13 @@ const StartButton: React.FC<StartButtonProps> = ({
   onClick,
 }) => {
   const {
-    currentTheme: {
-      sizes: {
-        taskbar: {
-          startButton: { width: buttonWidth },
-        },
+    sizes: {
+      taskbar: {
+        startButton: { width: buttonWidth },
       },
-      colors: {
-        taskbar: { buttonHover },
-      },
+    },
+    colors: {
+      taskbar: { buttonHover },
     },
   } = useTheme();
 

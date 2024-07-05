@@ -7,7 +7,7 @@ import type { RenameBoxProps } from "./types";
 
 const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const saveRename = () => {
+  const saveRename = (): void => {
     renameFile(path, inputRef?.current?.value);
   };
 

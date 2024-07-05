@@ -12,7 +12,7 @@ const StartMenu: React.FC = () => {
   const { toggleStartMenu } = useSession();
   const menuRef = useRef<HTMLElement | null>(null);
 
-  const maybeCloseMenu = ({ relatedTarget }: React.FocusEvent) => {
+  const maybeCloseMenu = ({ relatedTarget }: React.FocusEvent): void => {
     const focusedElement = relatedTarget as HTMLElement | null;
     const focusedInsideMenu =
       focusedElement && menuRef.current?.contains(focusedElement);

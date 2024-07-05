@@ -27,7 +27,7 @@ export const getInfoWithoutExtension = (
   fs: FSModule,
   path: string,
   callback: React.Dispatch<React.SetStateAction<FileInfo>>,
-) => {
+): void => {
   fs.stat(path, (_err, stats) => {
     const isDirectory = stats ? stats.isDirectory() : false;
     callback({
@@ -45,8 +45,8 @@ export const getInfoWithExtension = (
   path: string,
   extension: string,
   callback: React.Dispatch<React.SetStateAction<FileInfo>>,
-) => {
-  const getInfoByFileExtension = (icon?: string) =>
+): void => {
+  const getInfoByFileExtension = (icon?: string): void =>
     callback({
       icon: icon || getIconByFileExtension(extension),
       pid: getProcessByFileExtension(extension),
@@ -99,7 +99,7 @@ export const filterSystemFiles =
   (file: string): boolean =>
     !SYSTEM_FILES.has(join(directory, file));
 
-const sortCaseInsensitive = (a: string, b: string) =>
+const sortCaseInsensitive = (a: string, b: string): number =>
   a.localeCompare(b, "en", { sensitivity: "base" });
 
 export const sortContents = (contents: string[]): string[] => {

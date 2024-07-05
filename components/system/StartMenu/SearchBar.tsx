@@ -3,7 +3,7 @@ import { IoMdSearch } from "react-icons/io";
 
 import { useSession } from "@/context/Session";
 
-const SearchBar = () => {
+const SearchBar: React.FC = () => {
   const searchRef = useRef<HTMLInputElement | null>(null);
   const { startMenuVisible } = useSession();
 

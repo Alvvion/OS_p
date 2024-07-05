@@ -4,7 +4,7 @@ import Button from "@/components/common/Button";
 import { Avatar } from "@/components/common/Icons";
 import { useFileSystem } from "@/context/FileSystem";
 
-const Footer = () => {
+const Footer: React.FC = () => {
   const { resetFs } = useFileSystem();
 
   return (

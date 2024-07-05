@@ -18,17 +18,15 @@ const _tailwind = ["hover:bg-taskbar-button-hover"];
 
 const StartMenu = dynamic(() => import("@/components/system/StartMenu"));
 
-const Taskbar = () => {
+const Taskbar: React.FC = () => {
   const { processes } = useProcesses();
   const { startMenuVisible, toggleStartMenu } = useSession();
   const {
-    currentTheme: {
-      colors: {
-        taskbar: { bgColor, text, buttonHover },
-      },
-      sizes: {
-        taskbar: { height },
-      },
+    colors: {
+      taskbar: { bgColor, text, buttonHover },
+    },
+    sizes: {
+      taskbar: { height },
     },
   } = useTheme();
 

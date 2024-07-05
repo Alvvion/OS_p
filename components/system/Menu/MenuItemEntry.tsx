@@ -23,9 +23,7 @@ const MenuItemEntry: React.FC<MenuItemProps> = ({
   const entryRef = useRef<HTMLLIElement | null>(null);
   const [subMenuOffset, setSubMenuOffset] = useState<Position>({ x: 0, y: 0 });
   const [showSubMenu, setShowSubMenu] = useState(false);
-  const {
-    currentTheme: { sizes },
-  } = useTheme();
+  const { sizes } = useTheme();
   const onMouseEnter: React.MouseEventHandler = () => setShowSubMenu(true);
   const onMouseLeave: React.MouseEventHandler = ({ relatedTarget }) => {
     if (

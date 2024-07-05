@@ -17,9 +17,9 @@ import {
   parseTrack,
   updateWebampPostion,
 } from "./functions";
-import type { WebampCI } from "./types";
+import type { WebampCI, WebampHook } from "./types";
 
-const useWebamp = (id: string) => {
+const useWebamp = (id: string): WebampHook => {
   const { onClose, onMinimize } = useWindowActions(id);
 
   const { setWindowStates, windowStates: { [id]: windowState } = {} } =
@@ -35,10 +35,8 @@ const useWebamp = (id: string) => {
   const { componentWindow } = process || {};
 
   const {
-    currentTheme: {
-      sizes: {
-        taskbar: { height: taskbarHeight },
-      },
+    sizes: {
+      taskbar: { height: taskbarHeight },
     },
   } = useTheme();
 
@@ -64,14 +62,14 @@ const useWebamp = (id: string) => {
           butterchurnOpen: true,
         },
       };
-      const runWebamp = (options?: Options) => {
+      const runWebamp = (options?: Options): void => {
         const webamp = new window.Webamp({
           ...butterChurn,
           ...BASE_WEBAMP_SKINS,
           ...options,
         }) as WebampCI;
 
-        const setupElement = () => {
+        const setupElement = (): void => {
           const webampElement = getWebampElement();
           if (webampElement) {
             const mainWindow =

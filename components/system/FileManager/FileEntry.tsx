@@ -47,21 +47,19 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const fileName = basename(path);
 
   const {
-    currentTheme: {
-      sizes: {
-        fileEntry: { iconSize, fontSize, letterSpacing },
-      },
-      colors: {
-        fileEntry: {
-          text,
-          textShadow,
-          background,
-          border,
-          backgroundFocused,
-          borderFocused,
-          backgroundFocusedHover,
-          borderFocusedHover,
-        },
+    sizes: {
+      fileEntry: { iconSize, fontSize, letterSpacing },
+    },
+    colors: {
+      fileEntry: {
+        text,
+        textShadow,
+        background,
+        border,
+        backgroundFocused,
+        borderFocused,
+        backgroundFocusedHover,
+        borderFocusedHover,
       },
     },
   } = useTheme();

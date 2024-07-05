@@ -12,13 +12,11 @@ const _tailwind = ["hover:bg-titlebar-backgroundHover"];
 
 const FileExplorerBar: React.FC<ComponentProps> = ({ id }) => {
   const {
-    currentTheme: {
-      colors: {
-        titlebar: { bgColor, text, backgroundHover },
-      },
-      sizes: {
-        titlebar: { height, buttonIconWidth, iconMargin, fontSize },
-      },
+    colors: {
+      titlebar: { bgColor, text, backgroundHover },
+    },
+    sizes: {
+      titlebar: { height, buttonIconWidth, iconMargin, fontSize },
     },
   } = useTheme();
 

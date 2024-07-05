@@ -2,11 +2,13 @@ import { useProcesses } from "@/context/Process";
 import { createPid } from "@/context/Process/functions";
 import { useSession } from "@/context/Session";
 
-const useFile = (url: string) => {
+import type { UseFile } from "./types";
+
+const useFile = (url: string): UseFile => {
   const { openProcess, processes, minimize } = useProcesses();
   const { setForegroundId } = useSession();
 
-  const openFile = (pid: string) => {
+  return (pid: string): void => {
     const id = createPid(pid, url);
     if (processes[id]) {
       if (processes[id].minimized) minimize(id);
@@ -15,8 +17,6 @@ const useFile = (url: string) => {
       openProcess(pid, url);
     }
   };
-
-  return openFile;
 };
 
 export default useFile;

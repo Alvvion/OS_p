@@ -8,10 +8,8 @@ import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
 import { cssFit } from "./contant";
 
-const useWallpaper = (refElement: RefObject<HTMLElement>) => {
-  const {
-    currentTheme: { wallpaper },
-  } = useTheme();
+const useWallpaper = (refElement: RefObject<HTMLElement>): void => {
+  const { wallpaper } = useTheme();
   const { fs } = useFileSystem();
   const { wallpaperImage, wallpaperFit } = useSession();
 

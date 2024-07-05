@@ -19,13 +19,11 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
   } = useProcesses();
 
   const {
-    currentTheme: {
-      sizes: {
-        fileExplorer: { height },
-      },
-      colors: {
-        titlebar: { backgroundHover, text },
-      },
+    sizes: {
+      fileExplorer: { height },
+    },
+    colors: {
+      titlebar: { backgroundHover, text },
     },
   } = useTheme();
 

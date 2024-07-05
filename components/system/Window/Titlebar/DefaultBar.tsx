@@ -12,13 +12,11 @@ const DefaultBar: React.FC<ComponentProps> = ({ id }) => {
   } = useProcesses();
 
   const {
-    currentTheme: {
-      colors: {
-        titlebar: { bgColor, text },
-      },
-      sizes: {
-        titlebar: { fontSize, height, buttonIconWidth, iconMargin },
-      },
+    colors: {
+      titlebar: { bgColor, text },
+    },
+    sizes: {
+      titlebar: { fontSize, height, buttonIconWidth, iconMargin },
     },
   } = useTheme();
 

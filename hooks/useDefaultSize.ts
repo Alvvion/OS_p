@@ -10,9 +10,7 @@ const useDefaultSize = (id: string): Size => {
   } = useProcesses();
   const { defaultSize } = process || {};
   const {
-    currentTheme: {
-      sizes: { titlebar },
-    },
+    sizes: { titlebar },
   } = useTheme();
 
   return defaultSize

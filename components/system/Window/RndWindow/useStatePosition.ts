@@ -15,11 +15,9 @@ import type { StatePosition } from "./types";
 
 const useStatePosition = (id: string, size: Size): StatePosition => {
   const {
-    currentTheme: {
-      sizes: {
-        taskbar: { height: taskbarHeight },
-        window: { cascadeOffset },
-      },
+    sizes: {
+      taskbar: { height: taskbarHeight },
+      window: { cascadeOffset },
     },
   } = useTheme();
 

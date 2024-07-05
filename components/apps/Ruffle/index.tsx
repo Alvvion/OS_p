@@ -6,9 +6,7 @@ import useRuffle from "./useRuffle";
 
 const Ruffle: React.FC<ComponentProps> = ({ id }) => {
   const {
-    currentTheme: {
-      sizes: { titlebar },
-    },
+    sizes: { titlebar },
   } = useTheme();
 
   return (

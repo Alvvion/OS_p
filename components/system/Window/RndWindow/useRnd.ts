@@ -4,10 +4,11 @@ import type { RndResizeCallback } from "react-rnd";
 import { useProcesses } from "@/context/Process";
 import { rndDefaults } from "@/utils/constants";
 
+import type { RndHook } from "./types";
 import useStatePosition from "./useStatePosition";
 import useStateSize from "./useStateSize";
 
-const useRnd = (id: string, maximized = false) => {
+const useRnd = (id: string, maximized = false): RndHook => {
   const {
     processes: { [id]: { autoSizing = false, lockAspectRatio = false } = {} },
   } = useProcesses();

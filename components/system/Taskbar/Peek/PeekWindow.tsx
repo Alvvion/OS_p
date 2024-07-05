@@ -20,13 +20,11 @@ const _tailwind = [
 
 const PeekWindow: React.FC<PeekWindowProps> = ({ id, isPeekVisible }) => {
   const {
-    currentTheme: {
-      colors: {
-        titlebar: { closeActive, closeHover, text },
-      },
-      sizes: {
-        titlebar: { buttonIconWidth, iconMargin, fontSize },
-      },
+    colors: {
+      titlebar: { closeActive, closeHover, text },
+    },
+    sizes: {
+      titlebar: { buttonIconWidth, iconMargin, fontSize },
     },
   } = useTheme();
   const [offsetX, setOffsetX] = useState(0);
@@ -43,7 +41,7 @@ const PeekWindow: React.FC<PeekWindowProps> = ({ id, isPeekVisible }) => {
   const { onClose } = useWindowActions(id);
   const image = useWindowPeek(id);
 
-  const onClick = () => {
+  const onClick: React.MouseEventHandler = () => {
     if (minimized) minimize(id);
 
     setForegroundId(id);

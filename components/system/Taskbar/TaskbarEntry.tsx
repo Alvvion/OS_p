@@ -27,12 +27,12 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   const nextFocusableId = useNextFocusable(pid);
   const isForeground = foregroundId === pid;
   const [isPeekVisible, setPeekVisible] = useState(false);
-  const hidePeek = () => setPeekVisible(false);
-  const showPeek = () => setPeekVisible(true);
+  const hidePeek = (): void => setPeekVisible(false);
+  const showPeek = (): void => setPeekVisible(true);
 
   const isBottomNotch = !!(minimized || !isForeground);
 
-  const onClick = () => {
+  const onClick: React.MouseEventHandler = () => {
     if (minimized || isForeground) minimize(pid);
     setForegroundId(isForeground ? nextFocusableId : pid);
   };
@@ -46,15 +46,13 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   );
 
   const {
-    currentTheme: {
-      sizes: {
-        taskbar: {
-          startButton: { width: buttonWidth },
-        },
+    sizes: {
+      taskbar: {
+        startButton: { width: buttonWidth },
       },
-      colors: {
-        taskbar: { buttonHover },
-      },
+    },
+    colors: {
+      taskbar: { buttonHover },
     },
   } = useTheme();
 

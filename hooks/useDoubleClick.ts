@@ -8,7 +8,7 @@ const useDoubleClick = (
 ): { onClick: React.MouseEventHandler } => {
   const timer = useRef<NodeJS.Timeout | undefined>();
   const onClick: React.MouseEventHandler = (event) => {
-    const runHandler = () => {
+    const runHandler = (): void => {
       event?.stopPropagation();
       handler(event);
     };

@@ -6,6 +6,7 @@ import {
   MaximizeIcon,
   MinimizeIcon,
 } from "@/components/common/Icons";
+import type { ComponentProps } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
@@ -22,7 +23,7 @@ const _tailwind = [
   "fill-titlebar-buttonInactive",
 ];
 
-const WindowActionButton = ({ id }: { id: string }) => {
+const WindowActionButton: React.FC<ComponentProps> = ({ id }) => {
   const { onMinimize, onMaximize, onClose } = useWindowActions(id);
   const {
     processes: {
@@ -40,20 +41,18 @@ const WindowActionButton = ({ id }: { id: string }) => {
   const diasbleMaximize = autoSizing && !lockAspectRatio;
 
   const {
-    currentTheme: {
-      sizes: {
-        titlebar: { buttonWidth },
-      },
-      colors: {
-        titlebar: {
-          backgroundHover,
-          disabled,
-          closeHover,
-          backgroundActive,
-          closeActive,
-          disabledInactive,
-          buttonInactive,
-        },
+    sizes: {
+      titlebar: { buttonWidth },
+    },
+    colors: {
+      titlebar: {
+        backgroundHover,
+        disabled,
+        closeHover,
+        backgroundActive,
+        closeActive,
+        disabledInactive,
+        buttonInactive,
       },
     },
   } = useTheme();

@@ -27,10 +27,8 @@ const Window: React.FC<WindowComponentProps> = ({
   const isForeground = id === foregroundId;
 
   const {
-    currentTheme: {
-      sizes: {
-        window: { boxShadow, outline, outlineInactive, boxShadowInactive },
-      },
+    sizes: {
+      window: { boxShadow, outline, outlineInactive, boxShadowInactive },
     },
   } = useTheme();
   const viewportRef = useRef<HTMLDivElement | null>(null);

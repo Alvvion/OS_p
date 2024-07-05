@@ -18,7 +18,7 @@ const useSessionContextState = (): SessionContextType => {
 
   const { fs } = useFileSystem();
 
-  const toggleStartMenu = (showMenu?: boolean) =>
+  const toggleStartMenu = (showMenu?: boolean): void =>
     setStartMenuVisible((current) => showMenu ?? !current);
 
   const prependToStack = useCallback(
@@ -38,7 +38,7 @@ const useSessionContextState = (): SessionContextType => {
     [],
   );
 
-  const blurEntry = (entry?: string) =>
+  const blurEntry = (entry?: string): void =>
     setFocusedEntries(
       entry
         ? (currentFocusedEntries) =>
@@ -48,13 +48,13 @@ const useSessionContextState = (): SessionContextType => {
         : [],
     );
 
-  const focusEntry = (entry: string) =>
+  const focusEntry = (entry: string): void =>
     setFocusedEntries((currentFocusedEntries) => [
       ...currentFocusedEntries,
       entry,
     ]);
 
-  const setWallpaper = (image: string, fit: WallpaperFit) => {
+  const setWallpaper = (image: string, fit: WallpaperFit): void => {
     setWallpaperFit(fit);
     setWallpaperImage(image);
   };

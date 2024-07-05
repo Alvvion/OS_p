@@ -10,7 +10,7 @@ import { ProcessProvider } from "@/context/Process";
 import { SessionProvider } from "@/context/Session";
 import { ThemeProvider } from "@/context/Theme";
 
-export default function Home() {
+export default function Home(): JSX.Element {
   return (
     <FileSystemProvider>
       <SessionProvider>

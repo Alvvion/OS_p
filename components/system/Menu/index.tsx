@@ -17,12 +17,10 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
   const [offset, setOffset] = useState<Position>({ x: 0, y: 0 });
   const menuRef = useRef<HTMLElement | null>(null);
   const {
-    currentTheme: {
-      colors: {
-        contextMenu: { boxShadow },
-      },
-      sizes: { taskbar },
+    colors: {
+      contextMenu: { boxShadow },
     },
+    sizes: { taskbar },
   } = useTheme();
 
   const resetMenu = useCallback(
@@ -53,7 +51,7 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
         const menuUnfocused = ({
           relatedTarget,
           type,
-        }: MouseEvent | FocusEvent) => {
+        }: MouseEvent | FocusEvent): void => {
           if (
             !(relatedTarget instanceof HTMLElement) ||
             !menuRef.current?.contains(relatedTarget)

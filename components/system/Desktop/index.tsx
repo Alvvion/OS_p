@@ -8,11 +8,11 @@ import useWallpaper from "./useWallpaper";
 const Desktop: React.FC<ChildrenProp> = ({ children }) => {
   const desktopRef = useRef<HTMLElement>(null);
 
-  const { currentTheme } = useTheme();
+  const { colors } = useTheme();
   useWallpaper(desktopRef);
   return (
     <main
-      className={`overflow-hidden h-[100vh] w-[100vw] bg-center absolute inset-0 bg-[${currentTheme.colors.desktopBgColor}] [&>ol]:pb-6
+      className={`overflow-hidden h-[100vh] w-[100vw] bg-center absolute inset-0 bg-[${colors.desktopBgColor}] [&>ol]:pb-6
       `}
       ref={desktopRef}
     >

@@ -85,3 +85,5 @@ export type Selection = {
     onMouseUp?: () => void;
   };
 };
+
+export type UseFile = (pid: string) => void;

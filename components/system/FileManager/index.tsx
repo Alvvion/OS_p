@@ -16,11 +16,9 @@ import useSelection from "./useSelection";
 
 const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const {
-    currentTheme: {
-      sizes: {
-        taskbar: { height },
-        fileManager: { gridEntryWidth, gridEntryHeight, padding, rowGap },
-      },
+    sizes: {
+      taskbar: { height },
+      fileManager: { gridEntryWidth, gridEntryHeight, padding, rowGap },
     },
   } = useTheme();
   const { mountFs, unMountFs } = useFileSystem();

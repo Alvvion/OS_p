@@ -12,7 +12,10 @@ const isFileInZip = (buffer: Buffer, zipFilePath: string): Promise<boolean> =>
     );
   });
 
-export const addFileToZippable = (path: string, file: Buffer) => {
+export const addFileToZippable = (
+  path: string,
+  file: Buffer,
+): AsyncZippable => {
   const zippableData: AsyncZippable = {};
 
   path.split("/").reduce((walkedPath, partPath, index, { length }) => {
@@ -54,5 +57,5 @@ export const addJSDOSConfig = async (
     ? buffer
     : addFileToZip(buffer, defaultConfig, zipConfigPath, fs);
 
-export const cleanUpLoader = () =>
+export const cleanUpLoader = (): void =>
   globals.forEach((global) => delete (window as never)[global]);

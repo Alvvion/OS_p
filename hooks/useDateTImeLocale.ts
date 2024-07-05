@@ -4,9 +4,7 @@ import { LOCALE } from "@/utils/constants";
 import type { LocaleDateTime } from "./types";
 
 const useLocaleDateTime = (now: Date): LocaleDateTime => {
-  const {
-    currentTheme: { formats },
-  } = useTheme();
+  const { formats } = useTheme();
   return {
     date: new Intl.DateTimeFormat(LOCALE, formats.date).format(now),
     time: new Intl.DateTimeFormat(LOCALE, formats.time).format(now),

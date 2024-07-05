@@ -2,7 +2,9 @@ import { createContext, useContext } from "react";
 
 import type { ChildrenProp } from "@/components/common/types";
 
-const contextFactory = <T,>(
+import type { ContextFactory } from "./types";
+
+const contextFactory: ContextFactory = <T,>(
   useContextState: () => T,
   ContextComponent?: React.ComponentType,
 ) => {

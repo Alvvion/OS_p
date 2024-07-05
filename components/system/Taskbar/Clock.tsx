@@ -7,7 +7,7 @@ const Clock: React.FC = () => {
   const [now, setNow] = useState<Date>(new Date());
   const { date, time, datetime, tooltip } = useLocaleDateTime(now);
 
-  const updateClock = () => setNow(new Date());
+  const updateClock = (): void => setNow(new Date());
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -21,14 +21,12 @@ const Clock: React.FC = () => {
   }, []);
 
   const {
-    currentTheme: {
-      colors: {
-        taskbar: { text },
-      },
-      sizes: {
-        taskbar: {
-          clock: { fontSize },
-        },
+    colors: {
+      taskbar: { text },
+    },
+    sizes: {
+      taskbar: {
+        clock: { fontSize },
       },
     },
   } = useTheme();

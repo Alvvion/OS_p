@@ -37,3 +37,12 @@ declare global {
     Webamp: typeof Webamp;
   }
 }
+
+export type WebampHook = {
+  loadWebamp: (
+    containerElement: HTMLDivElement | null,
+    url: string,
+    file?: Buffer,
+  ) => void;
+  webampCI?: WebampCI;
+};

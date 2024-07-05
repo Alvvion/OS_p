@@ -31,7 +31,7 @@ export const centerPosition = (
 export const closeWithTransition = (
   close: ProcessContextType["closeProcess"],
   id: string,
-) => {
+): void => {
   close(id, true);
   setTimeout(() => close(id), DEFAULT_WINDOW_TRANSITION_DURATION);
 };

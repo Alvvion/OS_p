@@ -28,3 +28,9 @@ export type Focusable = Events & {
 export type Title = {
   appendFileToTitle: (url: string) => void;
 };
+
+export type WindowActions = {
+  onMaximize: () => void;
+  onMinimize: () => void;
+  onClose: () => void;
+};
