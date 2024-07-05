@@ -9,32 +9,34 @@ const renderFrame = (
   callback: (url: string) => void,
 ): void => {
   import("html-to-image").then(({ toCanvas }) =>
-    toCanvas(previewElement).then((canvas) => {
-      const { height = 0, width = 0 } = canvas;
+    toCanvas(previewElement)
+      .then((canvas) => {
+        const { height = 0, width = 0 } = canvas;
 
-      if (height && width) {
-        const { data: pixelData } =
-          canvas.getContext("2d")?.getImageData(0, 0, width, height) || {};
+        if (height && width) {
+          const { data: pixelData } =
+            canvas.getContext("2d")?.getImageData(0, 0, width, height) || {};
 
-        if (pixelData?.some(Boolean)) {
-          const dataUrl = canvas.toDataURL();
-          const previewImage = new Image();
+          if (pixelData?.some(Boolean)) {
+            const dataUrl = canvas.toDataURL();
+            const previewImage = new Image();
 
-          previewImage.src = dataUrl;
-          previewImage.addEventListener(
-            "load",
-            () => {
-              if (previewTimer.current !== undefined) {
-                callback(dataUrl);
-              }
-            },
-            ONE_TIME_PASSIVE_EVENT,
-          );
-        } else {
-          renderFrame(previewElement, previewTimer, callback);
+            previewImage.src = dataUrl;
+            previewImage.addEventListener(
+              "load",
+              () => {
+                if (previewTimer.current !== undefined) {
+                  callback(dataUrl);
+                }
+              },
+              ONE_TIME_PASSIVE_EVENT,
+            );
+          } else {
+            renderFrame(previewElement, previewTimer, callback);
+          }
         }
-      }
-    }),
+      })
+      .catch((_error) => {}),
   );
 };
 

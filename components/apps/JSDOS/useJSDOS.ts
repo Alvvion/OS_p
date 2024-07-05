@@ -1,3 +1,6 @@
+import type { CommandInterface } from "emulators";
+import type { DosInstance } from "emulators-ui/dist/types/js-dos";
+import { basename, join } from "path";
 import { useEffect, useState } from "react";
 
 import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
@@ -5,11 +8,11 @@ import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
 import useWindowSize from "@/hooks/useWindowSize";
+import { SAVE_PATH } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 
-import { libs, pathPrefix } from "./config";
+import { dosOptions, libs, pathPrefix, saveExtension } from "./config";
 import { addJSDOSConfig, cleanUpLoader } from "./functions";
-import type { DosCI } from "./types";
 
 const useJSDOS = (
   id: string,
@@ -18,65 +21,102 @@ const useJSDOS = (
 ): void => {
   const { appendFileToTitle } = useTitle(id);
   const { updateWindowSize } = useWindowSize(id);
-  const [dos, setDos] = useState<DosCI>();
+  const [dosCI, setDosCI] = useState<CommandInterface>();
+  const [dosInstance, setDosInstance] = useState<DosInstance>();
   const { fs } = useFileSystem();
   const { closeProcess, linkElement } = useProcesses();
 
   useEffect(() => {
-    if (!dos && fs && url) {
-      fs.readFile(url, (_err, contents = Buffer.from("")) =>
-        loadFiles(libs).then(async () => {
-          const objectURL = bufferToUrl(await addJSDOSConfig(contents, fs));
+    if (!dosInstance && containerRef.current) {
+      loadFiles(libs).then(() => {
+        window.emulators.pathPrefix = pathPrefix;
 
-          if (containerRef?.current && window.emulators) {
-            window.emulators.pathPrefix = pathPrefix;
+        setDosInstance(
+          window.Dos(containerRef.current as HTMLDivElement, dosOptions),
+        );
+      });
+    }
+  }, [containerRef, dosInstance]);
 
-            window
-              .Dos(containerRef.current)
-              .run(objectURL)
-              .then((ci) => {
-                const canvas = containerRef.current?.querySelector("canvas");
-                if (canvas) linkElement(id, "peekElement", canvas);
-                setDos(ci);
-                appendFileToTitle(url);
-                cleanUpBufferUrl(objectURL);
-                cleanUpLoader();
-              });
-          }
-        }),
-      );
+  useEffect(() => {
+    if (dosInstance && !dosCI && fs && url) {
+      fs.readFile(url, async (_urlError, urlContents = Buffer.from("")) => {
+        const bundleURL = bufferToUrl(await addJSDOSConfig(urlContents, fs));
+
+        fs.readFile(
+          join(SAVE_PATH, `${basename(url)}${saveExtension}`),
+          (_saveError, saveContents = Buffer.from("")) => {
+            const optionalChangesUrl = bufferToUrl(saveContents);
+
+            // NOTE: js-dos v7 appends `?dt=` (Removed in lib, for now...)
+            dosInstance.run(bundleURL, optionalChangesUrl).then((ci) => {
+              const canvas = containerRef.current?.querySelector("canvas");
+
+              linkElement(id, "peekElement", canvas as HTMLCanvasElement);
+              setDosCI(ci);
+              appendFileToTitle(url);
+              cleanUpBufferUrl(bundleURL);
+              cleanUpBufferUrl(optionalChangesUrl);
+              cleanUpLoader();
+            });
+          },
+        );
+      });
     }
 
     return () => {
-      if (dos) {
-        dos.exit?.();
-        window.SimpleKeyboardInstances?.emulatorKeyboard?.destroy?.();
+      if (dosCI && fs && url) {
+        dosCI.persist().then((saveZip) => {
+          fs.mkdir(SAVE_PATH, () =>
+            fs.writeFile(
+              join(SAVE_PATH, `${basename(url)}${saveExtension}`),
+              Buffer.from(saveZip),
+              () => dosInstance?.stop(),
+            ),
+          );
+        });
       }
     };
-  }, [appendFileToTitle, dos, fs, id, linkElement, containerRef, url]);
+  }, [
+    appendFileToTitle,
+    containerRef,
+    dosCI,
+    dosInstance,
+    fs,
+    id,
+    linkElement,
+    url,
+  ]);
 
   useEffect(() => {
-    if (dos) {
-      updateWindowSize(dos.frameHeight, dos.frameWidth);
+    if (dosCI) {
+      updateWindowSize(dosCI.height(), dosCI.width());
 
-      dos.events().onMessage((_msgType, _eventType, command, message) => {
+      dosCI.events().onMessage((_msgType, _eventType, command, message) => {
         if (command === "LOG_EXEC") {
-          const [dosMessage] = message
+          const [dosCommand] = message
             .replace("Parsing command line: ", "")
             .split(" ");
 
-          if (dosMessage.toUpperCase() === "EXIT")
+          if (dosCommand.toUpperCase() === "EXIT") {
             closeWithTransition(closeProcess, id);
+          }
         }
       });
 
-      dos
+      dosCI
         .events()
         .onFrameSize((width, height) =>
           updateWindowSize(height * 2, width * 2),
         );
+
+      dosCI
+        .events()
+        .onExit(() =>
+          window.SimpleKeyboardInstances?.emulatorKeyboard?.destroy?.(),
+        );
     }
-  }, [closeProcess, dos, id, updateWindowSize]);
+  }, [closeProcess, dosCI, id, updateWindowSize]);
 };
 
 export default useJSDOS;
