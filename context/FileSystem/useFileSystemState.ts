@@ -1,6 +1,9 @@
 import type * as IBrowserFS from "browserfs";
+import type IndexedDBFileSystem from "browserfs/dist/node/backend/IndexedDB";
 import type IsoFS from "browserfs/dist/node/backend/IsoFS";
 import type MountableFileSystem from "browserfs/dist/node/backend/MountableFileSystem";
+import type OverlayFS from "browserfs/dist/node/backend/OverlayFS";
+import type XmlHttpRequest from "browserfs/dist/node/backend/XmlHttpRequest";
 import type ZipFS from "browserfs/dist/node/backend/ZipFS";
 import type { BFSCallback } from "browserfs/dist/node/core/file_system";
 import type { FSModule } from "browserfs/dist/node/core/FS";
@@ -49,13 +52,24 @@ const useFileSystemState = (): FileSystemStateType => {
     }
   };
 
+  const resetFs = (): Promise<void> =>
+    new Promise((resolve, reject) => {
+      const overlayFs = rootFs._getFs("/").fs as OverlayFS;
+      const overlayedFileSystems = overlayFs.getOverlayedFileSystems();
+      const readable = overlayedFileSystems.readable as XmlHttpRequest;
+      const writable = overlayedFileSystems.writable as IndexedDBFileSystem;
+
+      readable.empty();
+      writable.empty((apiError) => (apiError ? reject(apiError) : resolve()));
+    });
+
   useEffect(() => {
     if (!fs) {
       configure(FileSystemConfig, () => setFs(BFSRequire("fs")));
     }
   }, [fs]);
 
-  return { fs, mountFs, unMountFs, setFileInput, addFile };
+  return { addFile, fs, mountFs, resetFs, setFileInput, unMountFs };
 };
 
 export default useFileSystemState;

@@ -1,13 +1,14 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 
 export type FileSystemStateType = {
+  addFile: (callback: (name: string, buffer?: Buffer) => void) => void;
   fs?: FSModule;
   mountFs: (url: string, callback: () => void) => void;
-  unMountFs: (url: string) => void;
+  resetFs: () => Promise<void>;
   setFileInput: React.Dispatch<
     React.SetStateAction<HTMLInputElement | undefined>
   >;
-  addFile: (callback: (name: string, buffer?: Buffer) => void) => void;
+  unMountFs: (url: string) => void;
 };
 
 export type Extensions = {
