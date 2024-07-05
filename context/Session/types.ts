@@ -18,6 +18,7 @@ export type SessionContextType = {
   foregroundId: string;
   prependToStack: (id: string) => void;
   removeFromStack: (id: string) => void;
+  sessionLoaded: boolean;
   setForegroundId: React.Dispatch<React.SetStateAction<string>>;
   setThemeName: React.Dispatch<React.SetStateAction<string>>;
   setWallpaper: (image: string, fit: WallpaperFit) => void;

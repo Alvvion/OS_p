@@ -104,6 +104,7 @@ const useSessionContextState = (): SessionContextType => {
     foregroundId,
     prependToStack,
     removeFromStack,
+    sessionLoaded,
     setForegroundId,
     setThemeName,
     setWallpaper,
