@@ -18,15 +18,15 @@ export type V86Starter = {
   destroy: () => void;
   lock_mouse: () => void;
   remove_listener: EventListener;
+  save_state: (callback: (error: Error, newState: ArrayBuffer) => void) => void;
 };
 
 export type V86ImageConfig = Partial<Record<V86ImageType, V86Image>>;
 
-type V86Config = typeof v86Config &
+export type V86Config = typeof v86Config &
   V86ImageConfig & {
-    memory_size: number;
-    vga_memory_size: number;
     boot_order: number;
+    initial_state?: { url: string };
     screen_container: HTMLDivElement | null;
   };
 

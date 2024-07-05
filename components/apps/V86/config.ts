@@ -22,3 +22,5 @@ export const libs = ["/libs/v86/libv86.js"];
 export const SUPPORTED_FLOPPY_TYPES = new Set([
   160, 180, 200, 320, 360, 400, 720, 1200, 1440, 1722, 2880,
 ]);
+
+export const saveExtension = ".save.bin";
