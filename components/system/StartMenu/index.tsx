@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 
 import { useSession } from "@/context/Session";
 import { animateStartMenu } from "@/utils/animate";
+import { PREVENT_SCROLL } from "@/utils/constants";
 
 import AppBox from "./AppBox";
 import Footer from "./Footer";
@@ -24,12 +25,12 @@ const StartMenu: React.FC = () => {
         menuRef.current?.nextSibling;
 
       if (focusedTaskbar || focusedStartButton) {
-        menuRef.current?.focus();
+        menuRef.current?.focus(PREVENT_SCROLL);
       } else toggleStartMenu(false);
     }
   };
 
-  useEffect(() => menuRef?.current?.focus(), []);
+  useEffect(() => menuRef?.current?.focus(PREVENT_SCROLL), []);
 
   return (
     <motion.nav

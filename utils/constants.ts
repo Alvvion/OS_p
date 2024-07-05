@@ -110,3 +110,5 @@ export const SYSTEM_FILES = new Set(["/.deletedFiles.log"]);
 export const MOUNTABLE_EXTENSIONS = new Set([".iso", ".zip", ".jsdos"]);
 
 export const SAVE_PATH = "/saves";
+
+export const PREVENT_SCROLL = { preventScroll: true };

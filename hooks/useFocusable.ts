@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
+import { PREVENT_SCROLL } from "@/utils/constants";
 
 import type { Events, Focusable } from "./types";
 
@@ -42,7 +43,7 @@ const useFocusable = (
     }
 
     if (isForeground && focusedOnTaskbarPeek) {
-      componentWindow?.focus();
+      componentWindow?.focus(PREVENT_SCROLL);
     }
   };
 
@@ -53,7 +54,7 @@ const useFocusable = (
         prependToStack(id);
         setForegroundId(id);
       } else if (!relatedTarget || document.activeElement === taskbarEntry) {
-        componentWindow?.focus();
+        componentWindow?.focus(PREVENT_SCROLL);
         callbackEvents?.onFocusCapture?.(event);
       }
     },

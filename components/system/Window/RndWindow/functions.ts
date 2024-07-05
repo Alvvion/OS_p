@@ -3,6 +3,7 @@ import type { ProcessContextType, Processes } from "@/context/Process/types";
 import type { WindowState } from "@/context/Session/types";
 import {
   DEFAULT_WINDOW_TRANSITION_DURATION,
+  PREVENT_SCROLL,
   PROCESS_DELIMITER,
 } from "@/utils/constants";
 import { pxToNumber } from "@/utils/functions";
@@ -13,7 +14,7 @@ export const reRouteFoucs =
     element?.setAttribute("tabindex", "-1");
     element?.addEventListener("mousedown", (event) => {
       event.preventDefault();
-      focusElement?.focus();
+      focusElement?.focus(PREVENT_SCROLL);
     });
   };
 

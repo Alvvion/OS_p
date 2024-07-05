@@ -6,6 +6,7 @@ import useFileContextMenu from "@/components/system/Menu/ContextMenu/useFileCont
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useDoubleClick from "@/hooks/useDoubleClick";
+import { PREVENT_SCROLL } from "@/utils/constants";
 
 import { isSelectionIntersecting } from "./functions";
 import RenameBox from "./RenameBox";
@@ -83,7 +84,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
         if (selected && !isFocused) {
           focusEntry(fileName);
-          buttonRef.current.focus();
+          buttonRef.current.focus(PREVENT_SCROLL);
         } else if (!selected && isFocused) {
           blurEntry(fileName);
         }
@@ -91,7 +92,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         isFocused &&
         !buttonRef.current.contains(document.activeElement)
       ) {
-        buttonRef.current.focus();
+        buttonRef.current.focus(PREVENT_SCROLL);
       }
     }
   }, [

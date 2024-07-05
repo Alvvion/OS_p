@@ -2,6 +2,7 @@ import { extname } from "path";
 import { useEffect, useRef } from "react";
 
 import { haltEvent } from "@/context/FileSystem/functions";
+import { PREVENT_SCROLL } from "@/utils/constants";
 
 import type { RenameBoxProps } from "./types";
 
@@ -12,7 +13,7 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
   };
 
   useEffect(() => {
-    inputRef?.current?.focus();
+    inputRef?.current?.focus(PREVENT_SCROLL);
     inputRef?.current?.setSelectionRange(0, name.length - extname(name).length);
   }, [name]);
 
