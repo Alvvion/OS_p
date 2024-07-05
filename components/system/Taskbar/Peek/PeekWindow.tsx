@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
@@ -29,6 +29,8 @@ const PeekWindow: React.FC<PeekWindowProps> = ({ id, isPeekVisible }) => {
       },
     },
   } = useTheme();
+  const [offsetX, setOffsetX] = useState(0);
+  const peekRef = useRef<HTMLDivElement | null>(null);
 
   const {
     minimize,
@@ -47,10 +49,27 @@ const PeekWindow: React.FC<PeekWindowProps> = ({ id, isPeekVisible }) => {
     setForegroundId(id);
   };
 
+  useEffect(() => {
+    if (image) {
+      const { left = 0, right = 0 } =
+        peekRef.current?.getBoundingClientRect() || {};
+
+      if (left < 0) {
+        setOffsetX(Math.abs(left));
+      } else if (right > window.innerWidth) {
+        setOffsetX(window.innerWidth - right);
+      }
+    }
+  }, [image]);
+
   return image && isPeekVisible ? (
     <motion.div
       className="absolute z-50 w-40 bottom-11 -left-1/2 hover:bg-[#292929] rounded-lg bg-peek"
-      style={{ display: closing ? "none" : "block" }}
+      ref={peekRef}
+      style={{
+        display: closing ? "none" : "block",
+        transform: offsetX ? `translateX(${offsetX}px)` : "none",
+      }}
       onClick={onClick}
       tabIndex={-1}
       {...animateWindowPeek}
