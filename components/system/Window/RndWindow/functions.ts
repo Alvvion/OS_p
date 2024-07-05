@@ -49,9 +49,19 @@ export const cascadePosition = (
 
   const { componentWindow } = processes?.[parentPositionProcess] || {};
 
-  const { x = 0, y = 0 } = componentWindow?.getBoundingClientRect() || {};
+  const {
+    x = 0,
+    y = 0,
+    width = 0,
+    height = 0,
+  } = componentWindow?.getBoundingClientRect() || {};
+  const isOffscreen =
+    x + offset + width > window.innerWidth ||
+    y + offset + height > window.innerHeight;
 
-  return x || y ? { x: x + offset, y: y + offset } : undefined;
+  return !isOffscreen && (x || y)
+    ? { x: x + offset, y: y + offset }
+    : undefined;
 };
 
 export const isRectOutsideWindow = (
