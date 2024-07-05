@@ -33,7 +33,7 @@ const StartMenu: React.FC = () => {
 
   return (
     <motion.nav
-      className="md:[--height:660px] lg:[--height:680px] md:[--width:560px] lg:[--width:605px] absolute backdrop-blur-[10px] h-[390px] w-[320px] z-[1000] bg-startmenu left-2 bottom-14 rounded-lg border-[1.5px] border-[#454545] md:h-[660px] md:w-[560px] lg:h-[680px] lg:w-[605px] flex flex-col justify-between overflow-hidden"
+      className="md:[--height:660px] lg:[--height:680px] md:[--width:560px] lg:[--width:605px] absolute backdrop-blur-[10px] h-[390px] w-[320px] z-40 bg-startmenu left-2 bottom-14 rounded-lg border-[1.5px] border-[#454545] md:h-[660px] md:w-[560px] lg:h-[680px] lg:w-[605px] flex flex-col justify-between overflow-hidden outline-none"
       ref={menuRef}
       tabIndex={-1}
       onBlurCapture={maybeCloseMenu}
