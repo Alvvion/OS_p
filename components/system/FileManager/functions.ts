@@ -1,6 +1,6 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import ini from "ini";
-import { basename, dirname, extname, join } from "path";
+import { basename, extname, join } from "path";
 
 import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
 import {
@@ -16,11 +16,11 @@ import { bufferToUrl } from "@/utils/functions";
 
 import type { FileInfo, SelectionRect } from "./types";
 
-export const iterateFileNames = (path: string, iteration: number): string => {
-  const extension = extname(path);
-  const fileName = basename(path, extension);
+export const iterateFileNames = (name: string, iteration: number): string => {
+  const extension = extname(name);
+  const fileName = basename(name, extension);
 
-  return join(dirname(path), `${fileName} (${iteration})${extension}`);
+  return `${fileName} (${iteration})${extension}`;
 };
 
 export const getInfoWithoutExtension = (
