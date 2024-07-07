@@ -82,7 +82,6 @@ const useFolder = (
     });
   };
 
-  // Hello
   const newPath = (
     name: string,
     buffer?: Buffer,
