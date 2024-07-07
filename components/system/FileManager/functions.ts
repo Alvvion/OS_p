@@ -132,3 +132,10 @@ export const isSelectionIntersecting = (
     element.bottom - containerElement.top <= selectionRect.top
   );
 };
+
+export const truncateName = (name: string): string => {
+  const maxLength = 15;
+  const useFullName = name.length <= maxLength;
+
+  return useFullName ? name : `${name.slice(0, maxLength)}...`;
+};

@@ -11,7 +11,8 @@ const Button: React.FC<ButtonProps> = ({
     ref={ref}
     className={`${extraStyles} cursor-context-menu`}
     onKeyDown={(event) => {
-      if (!(event.target instanceof HTMLInputElement)) event?.preventDefault();
+      if (!(event.target instanceof HTMLTextAreaElement))
+        event?.preventDefault();
     }}
     {...restProps}
   >

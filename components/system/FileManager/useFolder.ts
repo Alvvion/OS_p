@@ -126,9 +126,9 @@ const useFolder = (
   );
 
   useEffect(() => {
-    addFsWatcher(directory, updateFiles);
+    addFsWatcher?.(directory, updateFiles);
 
-    return () => removeFsWatcher(directory, updateFiles);
+    return () => removeFsWatcher?.(directory, updateFiles);
   }, [addFsWatcher, directory, removeFsWatcher, updateFiles]);
 
   return {

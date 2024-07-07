@@ -7,7 +7,7 @@ import { PREVENT_SCROLL } from "@/utils/constants";
 import type { RenameBoxProps } from "./types";
 
 const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const saveRename = (): void => {
     renameFile(path, inputRef?.current?.value);
   };
@@ -18,16 +18,17 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
   }, [name]);
 
   return (
-    <input
+    <textarea
       ref={inputRef}
       defaultValue={name}
       onBlurCapture={saveRename}
-      type="text"
-      size={1}
       onClick={haltEvent}
       onKeyDown={({ key }) => key === "Enter" && saveRename()}
       onKeyUp={haltEvent}
-      className="border-rename-box-border border text-[11.5px] mb-0.5 py-px px-[5px] relative text-center top-0.5 w-[60px] rounded-none focus:outline-none"
+      autoComplete="off"
+      rows={1}
+      spellCheck={false}
+      className="border-rename-box-border border text-[11.5px] mb-0.5 py-px px-[5px] relative text-center top-0.5 w-[70px] rounded-none focus:outline-none resize-none"
     />
   );
 };

@@ -8,7 +8,7 @@ import { useTheme } from "@/context/Theme";
 import useDoubleClick from "@/hooks/useDoubleClick";
 import { PREVENT_SCROLL } from "@/utils/constants";
 
-import { isSelectionIntersecting } from "./functions";
+import { isSelectionIntersecting, truncateName } from "./functions";
 import RenameBox from "./RenameBox";
 import type { FileEntryProps } from "./types";
 import useFile from "./useFile";
@@ -46,6 +46,9 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const openFile = useFile(url);
 
   const fileName = basename(path);
+
+  const showFullName =
+    focusedEntries.length === 1 && focusedEntries[0] === fileName;
 
   const {
     sizes: {
@@ -153,9 +156,9 @@ const FileEntry: React.FC<FileEntryProps> = ({
                 letterSpacing,
                 textShadow: view === "default" ? textShadow : "none",
               }}
-              className={`[-webkit-box-orient:vertical] [display:-webkit-box] leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word] ${focusedEntries.length === 1 ? "[-webkit-line-clamp:initial]" : "[-webkit-line-clamp:2]"}`}
+              className="leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word]"
             >
-              {name}
+              {showFullName ? name : truncateName(name)}
             </figcaption>
           )}
         </figure>
