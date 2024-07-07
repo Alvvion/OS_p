@@ -28,7 +28,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const { files, fileActions, folderActions } = useFolder(url, setRenaming);
 
   const focusableEntry = useFocusableEntries(fileManagerRef);
-  const draggableEntry = useDraggableEntries(url);
+  const draggableEntry = useDraggableEntries();
 
   const { isSelecting, selectionRect, selectionStyling, selectionEvents } =
     useSelection(fileManagerRef);

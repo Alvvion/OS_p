@@ -1,14 +1,12 @@
 import { join } from "path";
 import { useState } from "react";
 
-import { useFileSystem } from "@/context/FileSystem";
 import { useSession } from "@/context/Session";
 
 import type { DraggableEntries } from "./types";
 
-const useDraggableEntries = (url: string): DraggableEntries => {
+const useDraggableEntries = (): DraggableEntries => {
   const { blurEntry, focusEntry } = useSession();
-  const { updateFolder } = useFileSystem();
 
   const [dragging, setDragging] = useState(false);
 
@@ -21,10 +19,7 @@ const useDraggableEntries = (url: string): DraggableEntries => {
       event.dataTransfer.setData("text/plain", join(entryUrl, file));
       Object.assign(event.dataTransfer, { effectAllowed: "move" });
     };
-  const onDragEnd = (): void => {
-    setDragging(false);
-    updateFolder(url);
-  };
+  const onDragEnd = (): void => setDragging(false);
 
   return (entryUrl: string, file: string) => ({
     draggable: true,
