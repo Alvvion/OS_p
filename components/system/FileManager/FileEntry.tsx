@@ -13,6 +13,7 @@ import RenameBox from "./RenameBox";
 import type { FileEntryProps } from "./types";
 import useFile from "./useFile";
 import useFileInfo from "./useFileInfo";
+import useFocusChecker from "./useFoucsChecker";
 
 const _tailwind = [
   "hover:bg-file-background",
@@ -47,8 +48,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const fileName = basename(path);
 
-  const isOnlyFocusedEntry =
-    focusedEntries.length === 1 && focusedEntries[0] === fileName;
+  const isFocused = useFocusChecker(fileManagerRef);
+  const isOnlyFocusedEntry = isFocused(fileName) && focusedEntries.length === 1;
 
   const {
     sizes: {
@@ -77,21 +78,20 @@ const FileEntry: React.FC<FileEntryProps> = ({
   useEffect(() => {
     if (buttonRef.current) {
       if (selectionRect && fileManagerRef.current) {
-        const isFocused = focusedEntries.includes(fileName);
         const selected = isSelectionIntersecting(
           buttonRef.current.getBoundingClientRect(),
           fileManagerRef.current.getBoundingClientRect(),
           selectionRect,
         );
 
-        if (selected && !isFocused) {
+        if (selected && !isFocused(fileName)) {
           focusEntry(fileName);
           buttonRef.current.focus(PREVENT_SCROLL);
-        } else if (!selected && isFocused) {
+        } else if (!selected && isFocused(fileName)) {
           blurEntry(fileName);
         }
       } else if (
-        isOnlyFocusedEntry &&
+        isFocused(fileName) &&
         !buttonRef.current.contains(document.activeElement)
       ) {
         buttonRef.current.focus(PREVENT_SCROLL);
@@ -102,8 +102,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
     fileManagerRef,
     fileName,
     focusEntry,
-    focusedEntries,
-    isOnlyFocusedEntry,
+    focusedEntries.length,
+    isFocused,
     selectionRect,
   ]);
 

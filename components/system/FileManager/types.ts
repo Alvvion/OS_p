@@ -86,3 +86,5 @@ export type Selection = {
 };
 
 export type UseFile = (pid: string) => void;
+
+export type FocusChecker = (file: string) => boolean;
