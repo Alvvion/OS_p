@@ -17,7 +17,7 @@ const useFocusableEntries = (
   };
 
   return (file: string) => {
-    const selectedFile = focusedEntries.includes(file);
+    const isFocused = focusedEntries.includes(file);
     const onClick: React.MouseEventHandler = ({ ctrlKey }) => {
       if (ctrlKey) {
         if (focusedEntries.includes(file)) {
@@ -30,7 +30,7 @@ const useFocusableEntries = (
         focusEntry(file);
       }
     };
-    return { isSelected: !!selectedFile, onBlurCapture, onClick };
+    return { isSelected: isFocused, onBlurCapture, onClick };
   };
 };
 
