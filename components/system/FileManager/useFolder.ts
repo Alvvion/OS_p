@@ -16,8 +16,7 @@ const useFolder = (
 ): Folder => {
   const { addFile, addFsWatcher, fs, removeFsWatcher, updateFolder } =
     useFileSystem();
-  const { focusEntry,  } =
-    useSession();
+  const { focusEntry } = useSession();
   const [files, setFiles] = useState<string[]>([]);
   const [downloadLink, setDownloadLink] = useState("");
 
@@ -89,10 +88,15 @@ const useFolder = (
     rename = false,
     iteration = 0,
   ): void => {
-    if (!buffer && ![".", directory].includes(dirname(name))) {
-      fs?.rename(name, join(directory, basename(name)), () =>
-        updateFolder(dirname(name), "", name),
-      );
+    if (!buffer && dirname(name) !== ".") {
+      const renamedPath = join(directory, basename(name));
+
+      if (name !== renamedPath) {
+        fs?.rename(name, renamedPath, () => {
+          updateFolder(directory, name);
+          updateFolder(dirname(name), "", name);
+        });
+      }
     } else {
       const uniqueName = iteration ? iterateFileNames(name, iteration) : name;
       const resolvedPath = join(directory, uniqueName);
