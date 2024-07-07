@@ -2,7 +2,6 @@ import { basename, extname, join } from "path";
 import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
-import { useSession } from "@/context/Session";
 import useTitle from "@/hooks/useTitle";
 import { SAVE_PATH } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
@@ -25,8 +24,7 @@ const useV86 = (
 ): void => {
   const { appendFileToTitle } = useTitle(id);
   const [emulator, setEmulator] = useState<V86Starter>();
-  const { fs } = useFileSystem();
-  const { updateFolder } = useSession();
+  const { fs, updateFolder } = useFileSystem();
 
   useV86ScreenSize(id, containerRef, emulator);
 

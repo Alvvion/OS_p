@@ -14,8 +14,9 @@ const useFolder = (
   directory: string,
   setRenaming: React.Dispatch<React.SetStateAction<string>>,
 ): Folder => {
-  const { addFile, fs } = useFileSystem();
-  const { addFsWatcher, focusEntry, removeFsWatcher, updateFolder } =
+  const { addFile, addFsWatcher, fs, removeFsWatcher, updateFolder } =
+    useFileSystem();
+  const { focusEntry,  } =
     useSession();
   const [files, setFiles] = useState<string[]>([]);
   const [downloadLink, setDownloadLink] = useState("");
