@@ -47,7 +47,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const fileName = basename(path);
 
-  const showFullName =
+  const isOnlyFocusedEntry =
     focusedEntries.length === 1 && focusedEntries[0] === fileName;
 
   const {
@@ -76,9 +76,8 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   useEffect(() => {
     if (buttonRef.current) {
-      const isFocused = focusedEntries.includes(fileName);
-
       if (selectionRect && fileManagerRef.current) {
+        const isFocused = focusedEntries.includes(fileName);
         const selected = isSelectionIntersecting(
           buttonRef.current.getBoundingClientRect(),
           fileManagerRef.current.getBoundingClientRect(),
@@ -92,7 +91,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
           blurEntry(fileName);
         }
       } else if (
-        isFocused &&
+        isOnlyFocusedEntry &&
         !buttonRef.current.contains(document.activeElement)
       ) {
         buttonRef.current.focus(PREVENT_SCROLL);
@@ -104,6 +103,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
     fileName,
     focusEntry,
     focusedEntries,
+    isOnlyFocusedEntry,
     selectionRect,
   ]);
 
@@ -158,7 +158,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
               }}
               className="leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word]"
             >
-              {showFullName ? name : truncateName(name)}
+              {isOnlyFocusedEntry ? name : truncateName(name)}
             </figcaption>
           )}
         </figure>
