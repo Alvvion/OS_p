@@ -1,7 +1,7 @@
 import type { FolderActions } from "@/components/system/FileManager/types";
+import { useFileSystem } from "@/context/FileSystem";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
-import { useSession } from "@/context/Session";
 
 import type { ContextMenu } from "../types";
 
@@ -10,7 +10,7 @@ const useFolderContextMenu = (
   { newPath, addToFolder }: FolderActions,
 ): ContextMenu => {
   const { contextMenu } = useMenu();
-  const { updateFolder } = useSession();
+  const { updateFolder } = useFileSystem();
   const menuItems: MenuItem[] = [
     { label: "Refresh", action: () => updateFolder(url) },
     { separator: true },

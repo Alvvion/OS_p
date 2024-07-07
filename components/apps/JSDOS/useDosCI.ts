@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
-import { useSession } from "@/context/Session";
 import useTitle from "@/hooks/useTitle";
 import { SAVE_PATH } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
@@ -20,9 +19,8 @@ const useDosCI = (
   dosInstance?: DosInstance,
 ): CommandInterface | undefined => {
   const { appendFileToTitle } = useTitle(id);
-  const { fs } = useFileSystem();
+  const { fs, updateFolder } = useFileSystem();
   const { linkElement } = useProcesses();
-  const { updateFolder } = useSession();
   const [dosCI, setDosCI] = useState<CommandInterface>();
 
   useEffect(() => {

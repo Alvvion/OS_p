@@ -7,24 +7,45 @@ import type XmlHttpRequest from "browserfs/dist/node/backend/XmlHttpRequest";
 import type ZipFS from "browserfs/dist/node/backend/ZipFS";
 import type { BFSCallback } from "browserfs/dist/node/core/file_system";
 import type { FSModule } from "browserfs/dist/node/core/FS";
-import { extname } from "path";
-import { useEffect, useState } from "react";
+import { dirname, extname, join } from "path";
+import { useCallback, useEffect, useState } from "react";
 
-import { useSession } from "@/context/Session";
 import * as BrowserFS from "@/public/libs/browserfs/browserfs.min.js";
 
 import FileSystemConfig from "./config";
 import { handleFileInputEvent } from "./functions";
-import type { FileSystemStateType } from "./types";
+import type { FileSystemStateType, UpdateFiles } from "./types";
 
 const { BFSRequire, configure, FileSystem } = BrowserFS as typeof IBrowserFS;
 
 const useFileSystemState = (): FileSystemStateType => {
   const [fs, setFs] = useState<FSModule>();
   const [fileInput, setFileInput] = useState<HTMLInputElement>();
-  const { updateFolder } = useSession();
+
+  const [fsWatchers, setFsWatchers] = useState<Record<string, UpdateFiles[]>>(
+    {},
+  );
 
   const rootFs = fs?.getRootFS() as MountableFileSystem;
+
+  const updateFolder = useCallback(
+    (folder: string, newFile?: string, oldFile?: string): void => {
+      const relevantPaths = Object.keys(fsWatchers).filter(
+        (watchedFolder) =>
+          watchedFolder === folder ||
+          watchedFolder === dirname(folder) ||
+          watchedFolder.startsWith(join(folder, "/")),
+      );
+
+      relevantPaths.forEach((watchedFolder) =>
+        fsWatchers[watchedFolder].forEach((updateFiles) =>
+          updateFiles(newFile, oldFile),
+        ),
+      );
+    },
+
+    [fsWatchers],
+  );
 
   const mountFs = (url: string): void =>
     fs?.readFile(url, (_readErr, fileData = Buffer.from("")) => {
@@ -67,13 +88,42 @@ const useFileSystemState = (): FileSystemStateType => {
       writable.empty((apiError) => (apiError ? reject(apiError) : resolve()));
     });
 
+  const addFsWatcher = useCallback(
+    (folder: string, updateFiles: UpdateFiles): void =>
+      setFsWatchers((currentFsWatcher) => ({
+        ...currentFsWatcher,
+        [folder]: [...(currentFsWatcher?.[folder] || []), updateFiles],
+      })),
+    [],
+  );
+  const removeFsWatcher = useCallback(
+    (folder: string, updateFiles: UpdateFiles): void =>
+      setFsWatchers((currentFsWatcher) => ({
+        ...currentFsWatcher,
+        [folder]: currentFsWatcher?.[folder]?.filter(
+          (updateFilesInstance) => updateFilesInstance !== updateFiles,
+        ),
+      })),
+    [],
+  );
+
   useEffect(() => {
     if (!fs) {
       configure(FileSystemConfig, () => setFs(BFSRequire("fs")));
     }
   }, [fs]);
 
-  return { addFile, fs, mountFs, resetFs, setFileInput, unMountFs };
+  return {
+    addFile,
+    addFsWatcher,
+    fs,
+    mountFs,
+    removeFsWatcher,
+    resetFs,
+    setFileInput,
+    unMountFs,
+    updateFolder,
+  };
 };
 
 export default useFileSystemState;
