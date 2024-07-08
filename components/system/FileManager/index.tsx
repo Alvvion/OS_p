@@ -19,7 +19,13 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const {
     sizes: {
       taskbar: { height },
-      fileManager: { gridEntryWidth, gridEntryHeight, padding, rowGap },
+      fileManager: {
+        gridEntryWidth,
+        gridEntryHeight,
+        padding,
+        rowGap,
+        columnGap,
+      },
     },
   } = useTheme();
   const { mountFs, unMountFs } = useFileSystem();
@@ -54,6 +60,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
         gridTemplateRows: `repeat(auto-fill, ${gridEntryHeight})`,
         padding,
         rowGap,
+        columnGap,
         pointerEvents: isSelecting ? "auto" : undefined,
       }}
       {...selectionEvents}

@@ -45,6 +45,7 @@ const sizes = {
     gridEntryWidth: "74px",
     padding: "5px 0",
     rowGap: "28px",
+    columnGap: "1px",
   },
   startMenu: {
     height: "390px",
