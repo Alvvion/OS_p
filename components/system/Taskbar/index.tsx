@@ -1,5 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
+import { useState } from "react";
 import { AiOutlineWifi } from "react-icons/ai";
 import { GiSpeaker } from "react-icons/gi";
 import { TbBattery4 } from "react-icons/tb";
@@ -7,7 +8,6 @@ import { TbBattery4 } from "react-icons/tb";
 import Button from "@/components/common/Button";
 import useTaskbarContextMenu from "@/components/system/Menu/ContextMenu/useTaskbarContextMenu";
 import { useProcesses } from "@/context/Process";
-import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 
 import Clock from "./Clock";
@@ -20,7 +20,9 @@ const StartMenu = dynamic(() => import("@/components/system/StartMenu"));
 
 const Taskbar: React.FC = () => {
   const { processes } = useProcesses();
-  const { startMenuVisible, toggleStartMenu } = useSession();
+  const [startMenuVisible, setStartMenuVisible] = useState(false);
+  const toggleStartMenu = (showMenu?: boolean): void =>
+    setStartMenuVisible((currentMenuState) => showMenu ?? !currentMenuState);
   const {
     colors: {
       taskbar: { bgColor, text, buttonHover },
@@ -32,7 +34,7 @@ const Taskbar: React.FC = () => {
 
   return (
     <>
-      {startMenuVisible && <StartMenu />}
+      {startMenuVisible && <StartMenu toggleStartMenu={toggleStartMenu} />}
       <nav
         style={{ backgroundColor: bgColor, height }}
         className="absolute z-50 w-[100vw] flex flex-row justify-between items-center bottom-0 left-0 right-0"
@@ -41,11 +43,10 @@ const Taskbar: React.FC = () => {
       >
         <div className="h-full flex place-content-center place-items-center">
           <StartButton
-            src="/assets/windows11.png"
             width={32}
             height={32}
-            alt="Start Button"
-            onClick={() => toggleStartMenu()}
+            toggleStartMenu={toggleStartMenu}
+            startMenuVisible={startMenuVisible}
           />
           <div className="flex flex-row justify-center items-center h-full relative">
             <AnimatePresence>

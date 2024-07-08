@@ -1,11 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "../FileSystem";
-import type {
-  SessionContextType,
-  WallpaperFit,
-  WindowStates,
-} from "./types";
+import type { SessionContextType, WallpaperFit, WindowStates } from "./types";
 
 const SESSION_FILE = "/session.json";
 
@@ -15,15 +11,11 @@ const useSessionContextState = (): SessionContextType => {
   const [sessionLoaded, setSessionLoaded] = useState<boolean>(false);
   const [foregroundId, setForegroundId] = useState("");
   const [stackOrder, setStackOrder] = useState<string[]>([]);
-  const [startMenuVisible, setStartMenuVisible] = useState<boolean>(false);
   const [focusedEntries, setFocusedEntries] = useState<string[]>([]);
   const [wallpaperFit, setWallpaperFit] = useState<WallpaperFit>("fill");
   const [wallpaperImage, setWallpaperImage] = useState("");
 
   const { fs } = useFileSystem();
-
-  const toggleStartMenu = (showMenu?: boolean): void =>
-    setStartMenuVisible((current) => showMenu ?? !current);
 
   const prependToStack = useCallback(
     (id: string) =>
@@ -114,9 +106,7 @@ const useSessionContextState = (): SessionContextType => {
     setWallpaper,
     setWindowStates,
     stackOrder,
-    startMenuVisible,
     themeName,
-    toggleStartMenu,
     wallpaperImage,
     wallpaperFit,
     windowStates,

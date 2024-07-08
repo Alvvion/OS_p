@@ -6,3 +6,7 @@ export type MaybeCloseMenu = (
   buttonTitle?: string,
   closeOnTaskbarEntry?: boolean,
 ) => void;
+
+export type StartMenuProps = {
+  toggleStartMenu: (showMenu?: boolean) => void;
+};

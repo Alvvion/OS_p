@@ -1,16 +1,15 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 
-import { useSession } from "@/context/Session";
 import { animateStartMenu } from "@/utils/animate";
 import { PREVENT_SCROLL } from "@/utils/constants";
 
 import AppBox from "./AppBox";
 import Footer from "./Footer";
 import SearchBar from "./SearchBar";
+import type { StartMenuProps } from "./types";
 
-const StartMenu: React.FC = () => {
-  const { toggleStartMenu } = useSession();
+const StartMenu: React.FC<StartMenuProps> = ({ toggleStartMenu }) => {
   const menuRef = useRef<HTMLElement | null>(null);
 
   const maybeCloseMenu = ({ relatedTarget }: React.FocusEvent): void => {

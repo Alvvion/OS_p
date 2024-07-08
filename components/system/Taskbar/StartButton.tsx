@@ -1,16 +1,14 @@
 import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
-import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 
 import type { StartButtonProps } from "./types";
 
 const StartButton: React.FC<StartButtonProps> = ({
-  src,
-  alt,
   width,
   height,
-  onClick,
+  startMenuVisible,
+  toggleStartMenu,
 }) => {
   const {
     sizes: {
@@ -23,8 +21,6 @@ const StartButton: React.FC<StartButtonProps> = ({
     },
   } = useTheme();
 
-  const { startMenuVisible } = useSession();
-
   return (
     <Button
       style={{
@@ -34,11 +30,11 @@ const StartButton: React.FC<StartButtonProps> = ({
       extraStyles={`m-[5px] p-[5px] rounded-[0.25rem] relative cursor-context-menu hover:${buttonHover} border border-transparent hover:border-[#373737] ${
         startMenuVisible ? buttonHover : ""
       }`}
-      onClick={onClick}
+      onClick={() => toggleStartMenu()}
     >
       <Icon
-        src={src}
-        alt={alt}
+        src="/assets/windows11.png"
+        alt="Start Button"
         width={width}
         height={height}
         className="active:transform active:scale-[0.85]"

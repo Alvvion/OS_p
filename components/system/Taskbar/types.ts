@@ -15,9 +15,8 @@ export type TaskbarEntryProps = TaskbarButtonProps & {
 };
 
 export type StartButtonProps = {
-  src: string;
-  alt: string;
   width: number;
   height: number;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  startMenuVisible: boolean;
+  toggleStartMenu: (showMenu?: boolean) => void;
 };
