@@ -4,6 +4,7 @@ export interface ImageProps extends React.ComponentPropsWithoutRef<"img"> {
   visibility?: boolean;
   size?: number | string;
   src?: string;
+  moving?: boolean;
 }
 export interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
   extraStyles?: string;

@@ -14,8 +14,15 @@ const useFolder = (
   directory: string,
   setRenaming: React.Dispatch<React.SetStateAction<string>>,
 ): Folder => {
-  const { addFile, addFsWatcher, fs, removeFsWatcher, updateFolder } =
-    useFileSystem();
+  const {
+    addFile,
+    addFsWatcher,
+    copyEntries,
+    fs,
+    pasteList,
+    removeFsWatcher,
+    updateFolder,
+  } = useFileSystem();
   const { focusEntry, blurEntry } = useSession();
   const [files, setFiles] = useState<string[]>([]);
   const [downloadLink, setDownloadLink] = useState("");
@@ -132,6 +139,18 @@ const useFolder = (
     }
   };
 
+  const pasteToFolder = (): void =>
+    Object.entries(pasteList).forEach(([fileEntry, operation]) => {
+      if (operation === "move") {
+        newPath(fileEntry);
+        copyEntries([]);
+      } else {
+        fs?.readFile(fileEntry, (_readError, buffer = Buffer.from("")) =>
+          newPath(basename(fileEntry), buffer),
+        );
+      }
+    });
+
   useEffect(updateFiles, [updateFiles]);
 
   useEffect(
@@ -156,8 +175,9 @@ const useFolder = (
       downloadFile,
     },
     folderActions: {
-      newPath,
       addToFolder: () => addFile(newPath),
+      newPath,
+      pasteToFolder,
     },
   };
 };

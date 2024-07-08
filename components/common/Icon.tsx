@@ -12,6 +12,7 @@ const IconComponent: React.FC<ImageProps> = ({
   src,
   visibility,
   className,
+  moving,
   ...restProps
 }) => {
   useEffect(
@@ -29,7 +30,7 @@ const IconComponent: React.FC<ImageProps> = ({
       height={size}
       width={size}
       src={src}
-      className={`${className} ${visibility ? "" : "invisible"} object-contain`}
+      className={`${className} ${visibility ? "" : "invisible"} object-contain ${moving ? "opacity-50" : "opacity-100"}`}
       {...restProps}
     />
   );

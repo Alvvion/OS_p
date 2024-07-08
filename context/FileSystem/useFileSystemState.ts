@@ -14,7 +14,11 @@ import * as BrowserFS from "@/public/libs/browserfs/browserfs.min.js";
 
 import FileSystemConfig from "./config";
 import { handleFileInputEvent } from "./functions";
-import type { FileSystemStateType, UpdateFiles } from "./types";
+import type {
+  FilePasteOperations,
+  FileSystemStateType,
+  UpdateFiles,
+} from "./types";
 
 const { BFSRequire, configure, FileSystem } = BrowserFS as typeof IBrowserFS;
 
@@ -24,6 +28,21 @@ const useFileSystemState = (): FileSystemStateType => {
   const [fsWatchers, setFsWatchers] = useState<Record<string, UpdateFiles[]>>(
     {},
   );
+  const [pasteList, setPasteList] = useState<FilePasteOperations>({});
+
+  const updatePasteEntries = (
+    entries: string[],
+    operation: "copy" | "move",
+  ): void =>
+    setPasteList(
+      Object.fromEntries(entries.map((entry) => [entry, operation])),
+    );
+
+  const copyEntries = (entries: string[]): void =>
+    updatePasteEntries(entries, "copy");
+
+  const moveEntries = (entries: string[]): void =>
+    updatePasteEntries(entries, "move");
 
   const rootFs = fs?.getRootFS() as MountableFileSystem;
 
@@ -121,8 +140,11 @@ const useFileSystemState = (): FileSystemStateType => {
   return {
     addFile,
     addFsWatcher,
+    copyEntries,
     fs,
     mountFs,
+    moveEntries,
+    pasteList,
     resetFs,
     removeFsWatcher,
     setFileInput,

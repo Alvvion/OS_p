@@ -7,14 +7,19 @@ import type { ContextMenu } from "../types";
 
 const useFolderContextMenu = (
   url: string,
-  { newPath, addToFolder }: FolderActions,
+  { addToFolder, newPath, pasteToFolder }: FolderActions,
 ): ContextMenu => {
   const { contextMenu } = useMenu();
-  const { updateFolder } = useFileSystem();
+  const { pasteList, updateFolder } = useFileSystem();
   const menuItems: MenuItem[] = [
     { label: "Refresh", action: () => updateFolder(url) },
     { separator: true },
     { label: "Add file", action: () => addToFolder() },
+    {
+      disabled: Object.keys(pasteList).length === 0,
+      label: "Paste",
+      action: () => pasteToFolder(),
+    },
     { separator: true },
 
     {

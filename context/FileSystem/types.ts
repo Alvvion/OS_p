@@ -2,11 +2,16 @@ import type { FSModule } from "browserfs/dist/node/core/FS";
 
 export type UpdateFiles = (newFile?: string, oldFile?: string) => void;
 
+export type FilePasteOperations = Record<string, "copy" | "move">;
+
 export type FileSystemStateType = {
   addFile: (callback: (name: string, buffer?: Buffer) => void) => void;
   addFsWatcher: (folder: string, updateFiles: UpdateFiles) => void;
+  copyEntries: (entries: string[]) => void;
   fs?: FSModule;
   mountFs: (url: string) => Promise<void>;
+  moveEntries: (entries: string[]) => void;
+  pasteList: FilePasteOperations;
   removeFsWatcher: (folder: string, updateFiles: UpdateFiles) => void;
   resetFs: () => Promise<void>;
   setFileInput: React.Dispatch<

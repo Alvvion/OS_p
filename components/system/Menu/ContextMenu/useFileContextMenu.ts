@@ -1,7 +1,8 @@
-import { basename, dirname, extname } from "path";
+import { basename, dirname, extname, join } from "path";
 
 import type { FileActions } from "@/components/system/FileManager/types";
 import useFile from "@/components/system/FileManager/useFile";
+import { useFileSystem } from "@/context/FileSystem";
 import extensions from "@/context/FileSystem/extensions";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
@@ -18,7 +19,6 @@ const useFileContextMenu = (
   path: string,
   setState: React.Dispatch<React.SetStateAction<string>>,
   { deleteFile, downloadFile }: FileActions,
-  focusEntry: (entry: string) => void,
 ): ContextMenu => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
@@ -29,10 +29,19 @@ const useFileContextMenu = (
   const filterdOpenWith = openWith.filter((id) => id !== pid);
   const { openProcess } = useProcesses();
   const { contextMenu } = useMenu();
-  const { setWallpaper } = useSession();
+  const { focusEntry, focusedEntries, setWallpaper } = useSession();
+  const { copyEntries, moveEntries } = useFileSystem();
+
+  const absoluteEntries = (): string[] => focusedEntries.map((entry) => join(dirname(path), entry));
 
   const menuItems: MenuItem[] = [
-    { label: "Delete", action: () => deleteFile(path) },
+    { label: "Cut", action: () => moveEntries(absoluteEntries()) },
+    { label: "Copy", action: () => copyEntries(absoluteEntries()) },
+    { separator: true },
+    {
+      label: "Delete",
+      action: () => absoluteEntries().forEach((entry) => deleteFile(entry)),
+    },
     { label: "Rename", action: () => setState(basename(path)) },
   ];
 

@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 
 import Icon from "@/components/common/Icon";
 import useFileContextMenu from "@/components/system/Menu/ContextMenu/useFileContextMenu";
+import { useFileSystem } from "@/context/FileSystem";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useDoubleClick from "@/hooks/useDoubleClick";
@@ -37,6 +38,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   ...events
 }) => {
   const { icon, pid, url } = useFileInfo(path);
+  const { pasteList } = useFileSystem();
 
   const { blurEntry, focusEntry, focusedEntries } = useSession();
 
@@ -122,20 +124,14 @@ const FileEntry: React.FC<FileEntryProps> = ({
         ref={buttonRef}
         className="relative cursor-context-menu outline-none"
         onClick={onClick}
-        {...useFileContextMenu(
-          url,
-          pid,
-          path,
-          setRenaming,
-          fileActions,
-          focusEntry,
-        )}
+        {...useFileContextMenu(url, pid, path, setRenaming, fileActions)}
       >
         <figure className="flex flex-col place-items-center mb-[-3px]">
           <Icon
             src={icon}
             alt={name}
             size={view === "default" ? iconSize : "36px"}
+            moving={pasteList[path] === "move"}
           />
           {renaming ? (
             <RenameBox
