@@ -60,8 +60,6 @@ const useSessionContextState = (): SessionContextType => {
       fs?.writeFile(
         SESSION_FILE,
         JSON.stringify({
-          foregroundId,
-          stackOrder,
           themeName,
           wallpaperFit,
           wallpaperImage,
@@ -70,10 +68,8 @@ const useSessionContextState = (): SessionContextType => {
       );
     }
   }, [
-    foregroundId,
     fs,
     sessionLoaded,
-    stackOrder,
     themeName,
     wallpaperFit,
     wallpaperImage,
