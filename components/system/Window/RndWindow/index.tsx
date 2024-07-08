@@ -59,7 +59,7 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
 
   return (
     <Rnd
-      style={{ ...style, pointerEvents: minimized ? "none" : "all" }}
+      style={{ ...style, pointerEvents: minimized ? "none" : undefined }}
       ref={rndRef}
       {...rndProps}
     >

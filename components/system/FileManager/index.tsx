@@ -1,6 +1,7 @@
 import { basename, extname, join } from "path";
 import { useEffect, useRef, useState } from "react";
 
+import NoPointersEvents from "@/components/common/NoPointersEvents";
 import useFolderContextMenu from "@/components/system/Menu/ContextMenu/useFolderContextMenu";
 import { useFileSystem } from "@/context/FileSystem";
 import { useTheme } from "@/context/Theme";
@@ -53,16 +54,20 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
         gridTemplateRows: `repeat(auto-fill, ${gridEntryHeight})`,
         padding,
         rowGap,
+        pointerEvents: isSelecting ? "auto" : undefined,
       }}
       {...selectionEvents}
       {...useFileDrop(folderActions.newPath)}
       {...useFolderContextMenu(url, folderActions)}
     >
       {isSelecting && view === "default" && (
-        <span
-          className="bg-highlightBackground absolute z-[1000] border-highlight"
-          style={selectionStyling}
-        />
+        <>
+          <NoPointersEvents />
+          <span
+            className="bg-highlightBackground absolute z-[1000] border-highlight !pointer-events-auto"
+            style={selectionStyling}
+          />
+        </>
       )}
       {files.map((file) => (
         <FileEntry
@@ -73,7 +78,6 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
           setRenaming={setRenaming}
           fileManagerRef={fileManagerRef}
           fileActions={fileActions}
-          selecting={isSelecting}
           selectionRect={selectionRect}
           view={view}
           {...focusableEntry(file)}

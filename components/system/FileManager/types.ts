@@ -40,7 +40,6 @@ export type FileEntryProps = FocusableEntry &
     fileActions: FileActions;
     fileManagerRef: React.MutableRefObject<HTMLOListElement | null>;
     selectionRect?: SelectionRect;
-    selecting: boolean;
     setRenaming: React.Dispatch<React.SetStateAction<string>>;
     view: "default" | "start";
   };

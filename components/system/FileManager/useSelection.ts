@@ -14,6 +14,11 @@ const useSelection = (
   const { x, y } = position || {};
   const { height: h, width: w } = size || {};
 
+  const hasSize = typeof w === "number" && typeof h === "number";
+  const hasPosition = typeof x === "number" && typeof y === "number";
+
+  const isSelecting = hasSize && hasPosition;
+
   const onMouseMove: React.MouseEventHandler<HTMLElement> = ({
     clientX,
     clientY,
@@ -32,6 +37,7 @@ const useSelection = (
     clientY,
     target,
   }) => {
+    //  document.body.style.pointerEvents = "none";
     if (target === containerRef?.current) {
       const { x: targetX = 0, y: targetY = 0 } =
         containerRef.current.getBoundingClientRect();
@@ -43,15 +49,11 @@ const useSelection = (
     }
   };
 
-  const hasSize = typeof w === "number" && typeof h === "number";
-  const hasPosition = typeof x === "number" && typeof y === "number";
-
   const resetSelection = (): void => {
+    // document.body.style.pointerEvents = "auto";
     setSize({} as Size);
     setPosition({} as Position);
   };
-
-  const isSelecting = hasSize && hasPosition;
 
   const selectionStyling = isSelecting
     ? {

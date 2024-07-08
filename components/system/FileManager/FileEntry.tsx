@@ -31,7 +31,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
   name,
   path,
   renaming,
-  selecting,
   selectionRect,
   setRenaming,
   view,
@@ -116,9 +115,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
           ? `flex justify-center h-min hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px ${isDragging ? "" : `hover:${background} hover:before:${border} hover:before:border`} z-[1] ${isSelected ? extraStyles : "p-0.5"}`
           : "hover:bg-[#313131] flex justify-center rounded-md"
       }
-      style={{
-        pointerEvents: view === "default" && selecting ? "none" : "all",
-      }}
       {...events}
     >
       <button

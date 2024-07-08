@@ -42,8 +42,8 @@ export const handleFileInputEvent = (
       reader.readAsArrayBuffer(file);
     });
   } else {
-    const filePaths = eventTarget?.getData("text").split(",");
+    const filePath = eventTarget?.getData("text");
 
-    filePaths.forEach((path) => callback(path));
+    if (filePath) callback(filePath);
   }
 };
