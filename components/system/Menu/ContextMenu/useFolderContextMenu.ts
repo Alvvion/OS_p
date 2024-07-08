@@ -10,7 +10,7 @@ const useFolderContextMenu = (
   { addToFolder, newPath, pasteToFolder }: FolderActions,
 ): ContextMenu => {
   const { contextMenu } = useMenu();
-  const { pasteList, updateFolder } = useFileSystem();
+  const { pasteList = {}, updateFolder } = useFileSystem();
   const menuItems: MenuItem[] = [
     { label: "Refresh", action: () => updateFolder(url) },
     { separator: true },
