@@ -69,21 +69,23 @@ const useFileSystemState = (): FileSystemStateType => {
     [],
   );
 
-  const mountFs = (url: string): void =>
-    fs?.readFile(url, (_readErr, fileData = Buffer.from("")) => {
-      const isISO = extname(url) === ".iso";
-      const createFs: BFSCallback<IsoFS | ZipFS> = (_createErr, newFs) => {
-        if (newFs) {
-          rootFs?.mount(url, newFs);
-          updateFolder(url);
-        }
-      };
+  const mountFs = (url: string): Promise<void> =>
+    new Promise((resolve) => {
+      fs?.readFile(url, (_readErr, fileData = Buffer.from("")) => {
+        const isISO = extname(url) === ".iso";
+        const createFs: BFSCallback<IsoFS | ZipFS> = (_createErr, newFs) => {
+          if (newFs) {
+            rootFs?.mount(url, newFs);
+            resolve();
+          }
+        };
 
-      if (isISO) {
-        FileSystem.IsoFS.Create({ data: fileData }, createFs);
-      } else {
-        FileSystem.ZipFS.Create({ zipData: fileData }, createFs);
-      }
+        if (isISO) {
+          FileSystem.IsoFS.Create({ data: fileData }, createFs);
+        } else {
+          FileSystem.ZipFS.Create({ zipData: fileData }, createFs);
+        }
+      });
     });
 
   const unMountFs = (url: string): void => rootFs?.umount(url);

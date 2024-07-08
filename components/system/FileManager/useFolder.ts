@@ -149,6 +149,7 @@ const useFolder = (
 
   return {
     files,
+    updateFiles,
     fileActions: {
       deleteFile,
       renameFile,

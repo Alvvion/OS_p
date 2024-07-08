@@ -6,7 +6,7 @@ export type FileSystemStateType = {
   addFile: (callback: (name: string, buffer?: Buffer) => void) => void;
   addFsWatcher: (folder: string, updateFiles: UpdateFiles) => void;
   fs?: FSModule;
-  mountFs: (url: string) => void;
+  mountFs: (url: string) => Promise<void>;
   removeFsWatcher: (folder: string, updateFiles: UpdateFiles) => void;
   resetFs: () => Promise<void>;
   setFileInput: React.Dispatch<

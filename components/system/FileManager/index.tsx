@@ -32,7 +32,10 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const [renaming, setRenaming] = useState("");
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
 
-  const { files, fileActions, folderActions } = useFolder(url, setRenaming);
+  const { files, fileActions, folderActions, updateFiles } = useFolder(
+    url,
+    setRenaming,
+  );
 
   const focusableEntry = useFocusableEntries(fileManagerRef);
   const draggableEntry = useDraggableEntries();
@@ -43,12 +46,14 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   useEffect(() => {
     const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
 
-    if (isMountable && files.length === 0) mountFs(url);
+    if (isMountable && files.length === 0) {
+      mountFs(url).then(() => updateFiles());
+    }
 
     return () => {
       if (isMountable && files.length > 0) unMountFs(url);
     };
-  }, [url, files.length, mountFs, unMountFs]);
+  }, [url, files, mountFs, unMountFs, updateFiles]);
 
   return (
     <ol

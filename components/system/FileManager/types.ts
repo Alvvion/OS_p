@@ -68,8 +68,9 @@ export type FolderActions = {
 
 export type Folder = {
   fileActions: FileActions;
-  folderActions: FolderActions;
   files: string[];
+  folderActions: FolderActions;
+  updateFiles: (newFile?: string, oldFile?: string) => void;
 };
 
 export type Selection = {
