@@ -24,9 +24,9 @@ const useJSDOS = (
       loadFiles(libs).then(() => {
         window.emulators.pathPrefix = pathPrefix;
 
-        setDosInstance(
-          window.Dos(containerRef.current as HTMLDivElement, dosOptions),
-        );
+        if (containerRef.current instanceof HTMLDivElement) {
+          setDosInstance(window.Dos(containerRef.current, dosOptions));
+        }
       });
     }
   }, [containerRef, dosInstance]);
@@ -35,17 +35,19 @@ const useJSDOS = (
     if (dosCI) {
       updateWindowSize(dosCI.height(), dosCI.width());
 
-      dosCI.events().onMessage((_msgType, _eventType, command, message) => {
-        if (command === "LOG_EXEC") {
-          const [dosCommand] = message
-            .replace("Parsing command line: ", "")
-            .split(" ");
+      dosCI
+        .events()
+        .onMessage((_msgType, _eventType, command: string, message: string) => {
+          if (command === "LOG_EXEC") {
+            const [dosCommand] = message
+              .replace("Parsing command line: ", "")
+              .split(" ");
 
-          if (dosCommand.toUpperCase() === "EXIT") {
-            closeWithTransition(closeProcess, id);
+            if (dosCommand.toUpperCase() === "EXIT") {
+              closeWithTransition(closeProcess, id);
+            }
           }
-        }
-      });
+        });
 
       dosCI
         .events()

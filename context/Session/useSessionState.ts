@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "../FileSystem";
-import type { SessionContextType, WallpaperFit, WindowStates } from "./types";
+import type {
+  SessionContextType,
+  SessionData,
+  WallpaperFit,
+  WindowStates,
+} from "./types";
 
 const SESSION_FILE = "/session.json";
 
@@ -77,9 +82,9 @@ const useSessionContextState = (): SessionContextType => {
   ]);
 
   useEffect(() => {
-    fs?.readFile(SESSION_FILE, (_err, content) => {
+    fs?.readFile(SESSION_FILE, (_err, content = Buffer.from("")) => {
       if (content) {
-        const session = JSON.parse(content.toString() || "{}");
+        const session = JSON.parse(content.toString() || "{}") as SessionData;
         setThemeName(session.themeName);
         setWallpaper(session.wallpaperImage, session.wallpaperFit);
         setWindowStates(session.windowStates);

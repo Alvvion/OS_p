@@ -11,6 +11,13 @@ export type WindowStates = {
 
 export type WallpaperFit = "fill" | "fit" | "stretch" | "tile" | "center";
 
+export type SessionData = {
+  themeName: string;
+  wallpaperFit: WallpaperFit;
+  wallpaperImage: string;
+  windowStates: WindowStates;
+};
+
 export type SessionContextType = {
   blurEntry: (entry?: string) => void;
   focusEntry: (entry: string) => void;

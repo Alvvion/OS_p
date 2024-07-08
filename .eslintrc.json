@@ -74,6 +74,7 @@
     "jsx-a11y/no-static-element-interactions": "off",
     "linebreak-style": ["error", "windows"],
     "no-underscore-dangle": "off",
+    "no-unsafe-optional-chaining": "error",
     "quotes": ["error", "double"],
     "react/function-component-definition": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],

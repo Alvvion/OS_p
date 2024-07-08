@@ -42,7 +42,7 @@ const addFileToZip = (
         zip(
           { ...zipData, ...addFileToZippable(zipFilePath, contents) },
           (_zipError, newZipData) => {
-            resolve(newZipData as Buffer);
+            resolve(Buffer.from(newZipData));
           },
         );
       });

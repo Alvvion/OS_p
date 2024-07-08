@@ -87,3 +87,11 @@ export type Selection = {
 };
 
 export type UseFile = (pid: string) => void;
+
+export type InternetShortcut = {
+  InternetShortcut: {
+    BaseURL: string;
+    IconFile: string;
+    URL: string;
+  };
+};

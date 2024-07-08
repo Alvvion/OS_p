@@ -14,7 +14,7 @@ import {
 } from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
-import type { FileInfo, SelectionRect } from "./types";
+import type { FileInfo, InternetShortcut, SelectionRect } from "./types";
 
 export const iterateFileNames = (name: string, iteration: number): string => {
   const extension = extname(name);
@@ -63,7 +63,7 @@ export const getInfoWithExtension = (
             IconFile: icon = "",
             URL: url = "",
           },
-        } = ini.parse(contents.toString());
+        } = ini.parse(contents.toString()) as InternetShortcut;
         callback({ icon, pid, url });
       }
     });
