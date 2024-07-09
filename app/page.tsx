@@ -9,8 +9,10 @@ import { MenuProvider } from "@/context/Menu";
 import { ProcessProvider } from "@/context/Process";
 import { SessionProvider } from "@/context/Session";
 import { ThemeProvider } from "@/context/Theme";
+import useUrlLoader from "@/hooks/useUrlLoader";
 
 export default function Home(): JSX.Element {
+  useUrlLoader();
   return (
     <FileSystemProvider>
       <SessionProvider>

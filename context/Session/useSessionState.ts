@@ -82,7 +82,7 @@ const useSessionContextState = (): SessionContextType => {
   ]);
 
   useEffect(() => {
-    fs?.readFile(SESSION_FILE, (_err, content = Buffer.from("")) => {
+    fs?.readFile(SESSION_FILE, (_err, content) => {
       if (content) {
         const session = JSON.parse(content.toString() || "{}") as SessionData;
         setThemeName(session.themeName);
