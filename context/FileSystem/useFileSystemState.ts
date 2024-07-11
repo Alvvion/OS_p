@@ -59,7 +59,7 @@ const useFileSystemState = (): FileSystemStateType => {
             );
 
       relevantPaths.forEach((watchedFolder) =>
-        fsWatchers[watchedFolder].forEach((updateFiles) =>
+        fsWatchers[watchedFolder]?.forEach((updateFiles) =>
           watchedFolder === folder
             ? updateFiles(newFile, oldFile)
             : updateFiles(),
