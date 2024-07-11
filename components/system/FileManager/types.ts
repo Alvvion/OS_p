@@ -10,7 +10,7 @@ export type FileManagerProps = {
 export type FileActions = {
   deleteFile: (path: string) => void;
   renameFile: (path: string, name?: string) => void;
-  downloadFile: (path: string) => void;
+  downloadFiles: (paths: string[]) => void;
 };
 
 export type FocusableEntry = {

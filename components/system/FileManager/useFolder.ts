@@ -1,13 +1,21 @@
 import type { BFSOneArgCallback } from "browserfs/dist/node/core/file_system";
+import type { AsyncZippable } from "fflate";
+import { zip } from "fflate";
 import { basename, dirname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import { useSession } from "@/context/Session";
 import { SHORTCUT } from "@/utils/constants";
-import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
+import { cleanUpBufferUrl } from "@/utils/functions";
 
-import { filterSystemFiles, iterateFileNames, sortContents } from "./functions";
+import {
+  createLink,
+  filterSystemFiles,
+  getFile,
+  iterateFileNames,
+  sortContents,
+} from "./functions";
 import type { Folder } from "./types";
 
 const useFolder = (
@@ -76,17 +84,24 @@ const useFolder = (
     }
   };
 
-  const downloadFile = (path: string): void => {
-    fs?.readFile(path, (_e, contents = Buffer.from("")) => {
-      const link = document.createElement("a");
+  const downloadFiles = (paths: string[]): void => {
+    if (paths.length === 1) {
+      const [path] = paths;
 
-      link.href = bufferToUrl(contents);
-      link.download = basename(path);
-
-      link.click();
-
-      setDownloadLink(link.href);
-    });
+      fs?.readFile(path, (_error, contents = Buffer.from("")) =>
+        createLink(contents, setDownloadLink, basename(path)),
+      );
+    } else {
+      Promise.all(paths.map((path) => getFile(path, fs))).then(
+        (zipContents) => {
+          zip(
+            Object.fromEntries(zipContents) as AsyncZippable,
+            (_zipError, newZipFile) =>
+              createLink(Buffer.from(newZipFile), setDownloadLink),
+          );
+        },
+      );
+    }
   };
 
   const newPath = (
@@ -172,7 +187,7 @@ const useFolder = (
     fileActions: {
       deleteFile,
       renameFile,
-      downloadFile,
+      downloadFiles,
     },
     folderActions: {
       addToFolder: () => addFile(newPath),

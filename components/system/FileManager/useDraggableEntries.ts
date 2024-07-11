@@ -6,7 +6,7 @@ import { useSession } from "@/context/Session";
 import type { DraggableEntries, DraggableEntry } from "./types";
 
 const useDraggableEntries = (): DraggableEntries => {
-  const { blurEntry, focusEntry } = useSession();
+  const { blurEntry, focusEntry, focusedEntries } = useSession();
 
   const [dragging, setDragging] = useState(false);
 
@@ -16,7 +16,14 @@ const useDraggableEntries = (): DraggableEntries => {
       setDragging(true);
       blurEntry();
       focusEntry(file);
-      event.dataTransfer.setData("text/plain", join(entryUrl, file));
+      event.dataTransfer.setData(
+        "text/plain",
+        focusedEntries.length === 0
+          ? join(entryUrl, file)
+          : focusedEntries
+              .map((entryFile) => join(entryUrl, entryFile))
+              .toString(),
+      );
       Object.assign(event.dataTransfer, { effectAllowed: "move" });
     };
   const onDragEnd = (): void => setDragging(false);

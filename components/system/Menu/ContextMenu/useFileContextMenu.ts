@@ -18,7 +18,7 @@ const useFileContextMenu = (
   pid: string,
   path: string,
   setState: React.Dispatch<React.SetStateAction<string>>,
-  { deleteFile, downloadFile }: FileActions,
+  { deleteFile, downloadFiles }: FileActions,
 ): ContextMenu => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
@@ -32,7 +32,8 @@ const useFileContextMenu = (
   const { focusEntry, focusedEntries, setWallpaper } = useSession();
   const { copyEntries, moveEntries } = useFileSystem();
 
-  const absoluteEntries = (): string[] => focusedEntries.map((entry) => join(dirname(path), entry));
+  const absoluteEntries = (): string[] =>
+    focusedEntries.map((entry) => join(dirname(path), entry));
 
   const menuItems: MenuItem[] = [
     { label: "Cut", action: () => moveEntries(absoluteEntries()) },
@@ -51,7 +52,10 @@ const useFileContextMenu = (
   if (!isShortcut && url && (extension || pid !== "FileExplorer")) {
     menuItems.unshift({ separator: true });
 
-    menuItems.unshift({ label: "Download", action: () => downloadFile(path) });
+    menuItems.unshift({
+      label: "Download",
+      action: () => downloadFiles(absoluteEntries()),
+    });
   }
 
   if (IMAGE_FILE_EXTENSION.has(extension)) {

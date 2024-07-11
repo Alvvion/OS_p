@@ -139,3 +139,31 @@ export const truncateName = (name: string): string => {
 
   return useFullName ? name : `${name.slice(0, maxLength)}...`;
 };
+
+export const createLink = (
+  contents: Buffer,
+  setState: React.Dispatch<React.SetStateAction<string>>,
+  fileName?: string,
+): void => {
+  const link = document.createElement("a");
+
+  link.href = bufferToUrl(contents);
+  link.download = fileName || "download.zip";
+
+  link.click();
+
+  setState(link.href);
+};
+
+export const getFile = (
+  path: string,
+  fs?: FSModule,
+): Promise<[string, Buffer]> =>
+  new Promise((resolve, reject) => {
+    fs?.readFile(path, (error, contents = Buffer.from("")) => {
+      if (error) {
+        reject(error);
+      }
+      resolve([basename(path), contents]);
+    });
+  });
