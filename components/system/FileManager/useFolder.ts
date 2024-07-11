@@ -110,18 +110,19 @@ const useFolder = (
     rename = false,
     iteration = 0,
   ): void => {
-    if (!buffer && dirname(name) !== ".") {
-      const uniqueName = iteration
-        ? iterateFileNames(basename(name), iteration)
-        : basename(name);
-      const renamedPath = join(directory, uniqueName);
-
-      if (name !== renamedPath) {
-        fs?.exists(renamedPath, (exists) => {
+    const isInternal = !buffer && dirname(name) !== ".";
+    const baseName = isInternal ? basename(name) : name;
+    const uniqueName = iteration
+      ? iterateFileNames(baseName, iteration)
+      : baseName;
+    const fullNewPath = join(directory, uniqueName);
+    if (isInternal) {
+      if (name !== fullNewPath) {
+        fs?.exists(fullNewPath, (exists) => {
           if (exists) {
             newPath(name, buffer, rename, iteration + 1);
           } else {
-            fs?.rename(name, renamedPath, () => {
+            fs?.rename(name, fullNewPath, () => {
               updateFolder(directory, uniqueName);
               updateFolder(dirname(name), "", name);
               blurEntry();
@@ -131,8 +132,6 @@ const useFolder = (
         });
       }
     } else {
-      const uniqueName = iteration ? iterateFileNames(name, iteration) : name;
-      const resolvedPath = join(directory, uniqueName);
       const checkWrite: BFSOneArgCallback = (error) => {
         if (!error) {
           updateFolder(directory, uniqueName);
@@ -147,9 +146,9 @@ const useFolder = (
       };
 
       if (buffer) {
-        fs?.writeFile(resolvedPath, buffer, { flag: "wx" }, checkWrite);
+        fs?.writeFile(fullNewPath, buffer, { flag: "wx" }, checkWrite);
       } else {
-        fs?.mkdir(resolvedPath, { flag: "wx" }, checkWrite);
+        fs?.mkdir(fullNewPath, { flag: "wx" }, checkWrite);
       }
     }
   };
