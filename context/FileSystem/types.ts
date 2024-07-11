@@ -9,6 +9,7 @@ export type FileSystemStateType = {
   addFsWatcher: (folder: string, updateFiles: UpdateFiles) => void;
   copyEntries: (entries: string[]) => void;
   fs?: FSModule;
+  mkdirRecursive: (path: string, callback: () => void) => void;
   mountFs: (url: string) => Promise<void>;
   moveEntries: (entries: string[]) => void;
   pasteList: FilePasteOperations;

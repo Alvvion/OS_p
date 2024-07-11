@@ -7,7 +7,7 @@ import type XmlHttpRequest from "browserfs/dist/node/backend/XmlHttpRequest";
 import type ZipFS from "browserfs/dist/node/backend/ZipFS";
 import type { BFSCallback } from "browserfs/dist/node/core/file_system";
 import type { FSModule } from "browserfs/dist/node/core/FS";
-import { dirname, extname, join } from "path";
+import { basename, dirname, extname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import * as BrowserFS from "@/public/libs/browserfs/browserfs.min.js";
@@ -131,6 +131,29 @@ const useFileSystemState = (): FileSystemStateType => {
       writable.empty((apiError) => (apiError ? reject(apiError) : resolve()));
     });
 
+  const mkdirRecursive = (path: string, callback: () => void): void => {
+    const pathParts = path.split("/").filter(Boolean);
+    const recursePath = (position = 1): void => {
+      const makePath = join("/", pathParts.slice(0, position).join("/"));
+      const nextPart = (): void =>
+        position === pathParts.length ? callback() : recursePath(position + 1);
+
+      fs?.exists(makePath, (exists) => {
+        if (exists) nextPart();
+        else {
+          fs.mkdir(makePath, { flag: "w" }, (error) => {
+            if (!error) {
+              updateFolder(dirname(makePath), basename(makePath));
+              nextPart();
+            }
+          });
+        }
+      });
+    };
+
+    recursePath();
+  };
+
   useEffect(() => {
     if (!fs) {
       configure(FileSystemConfig, () => setFs(BFSRequire("fs")));
@@ -142,6 +165,7 @@ const useFileSystemState = (): FileSystemStateType => {
     addFsWatcher,
     copyEntries,
     fs,
+    mkdirRecursive,
     mountFs,
     moveEntries,
     pasteList,
