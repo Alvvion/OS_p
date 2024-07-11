@@ -112,3 +112,5 @@ export const MOUNTABLE_EXTENSIONS = new Set([".iso", ".zip", ".jsdos"]);
 export const SAVE_PATH = "/saves";
 
 export const PREVENT_SCROLL = { preventScroll: true };
+
+export const MAX_MOVES = 5;
