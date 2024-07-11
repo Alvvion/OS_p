@@ -14,7 +14,12 @@ import {
 } from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
-import type { FileInfo, InternetShortcut, SelectionRect } from "./types";
+import type {
+  FileInfo,
+  FileType,
+  InternetShortcut,
+  SelectionRect,
+} from "./types";
 
 export const iterateFileNames = (name: string, iteration: number): string => {
   const extension = extname(name);
@@ -158,12 +163,15 @@ export const createLink = (
 export const getFile = (
   path: string,
   fs?: FSModule,
-): Promise<[string, Buffer]> =>
-  new Promise((resolve, reject) => {
-    fs?.readFile(path, (error, contents = Buffer.from("")) => {
-      if (error) {
-        reject(error);
-      }
-      resolve([basename(path), contents]);
-    });
+): Promise<FileType | void> =>
+  new Promise((resolve) => {
+    if (extname(path) === SHORTCUT) resolve();
+    else
+      fs?.stat(path, (_statError, stats) => {
+        if (stats?.isDirectory()) resolve();
+        else
+          fs?.readFile(path, (_error, contents = Buffer.from("")) => {
+            resolve([basename(path), contents]);
+          });
+      });
   });

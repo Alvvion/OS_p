@@ -16,7 +16,7 @@ import {
   iterateFileNames,
   sortContents,
 } from "./functions";
-import type { Folder } from "./types";
+import type { FileType, Folder } from "./types";
 
 const useFolder = (
   directory: string,
@@ -95,7 +95,9 @@ const useFolder = (
       Promise.all(paths.map((path) => getFile(path, fs))).then(
         (zipContents) => {
           zip(
-            Object.fromEntries(zipContents) as AsyncZippable,
+            Object.fromEntries(
+              zipContents.filter(Boolean) as FileType[],
+            ) as AsyncZippable,
             (_zipError, newZipFile) =>
               createLink(Buffer.from(newZipFile), setDownloadLink),
           );

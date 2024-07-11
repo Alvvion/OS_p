@@ -95,3 +95,5 @@ export type InternetShortcut = {
     URL: string;
   };
 };
+
+export type FileType = [string, Buffer];
