@@ -170,7 +170,7 @@ export const getFile = (
       fs?.stat(path, (_statError, stats) => {
         if (stats?.isDirectory()) resolve();
         else
-          fs?.readFile(path, (_error, contents = Buffer.from("")) => {
+          fs.readFile(path, (_error, contents = Buffer.from("")) => {
             resolve([basename(path), contents]);
           });
       });

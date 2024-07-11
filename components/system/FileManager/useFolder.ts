@@ -76,7 +76,7 @@ const useFolder = (
 
       fs?.exists(newPath, (exists) => {
         if (!exists) {
-          fs?.rename(path, newPath, () =>
+          fs.rename(path, newPath, () =>
             updateFolder(directory, newPath, path),
           );
         }
@@ -124,7 +124,7 @@ const useFolder = (
           if (exists) {
             newPath(name, buffer, rename, iteration + 1);
           } else {
-            fs?.rename(name, fullNewPath, () => {
+            fs.rename(name, fullNewPath, () => {
               updateFolder(directory, uniqueName);
               updateFolder(dirname(name), "", name);
               blurEntry();

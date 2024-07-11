@@ -58,7 +58,7 @@ const useJSDOS = (
       dosCI
         .events()
         .onExit(() =>
-          window.SimpleKeyboardInstances?.emulatorKeyboard?.destroy?.(),
+          window.SimpleKeyboardInstances?.emulatorKeyboard?.destroy(),
         );
     }
   }, [closeProcess, dosCI, id, updateWindowSize]);

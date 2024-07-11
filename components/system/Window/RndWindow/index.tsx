@@ -41,8 +41,8 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
         setWindowStates((currentState) => ({
           ...currentState,
           [id]: {
-            position: current?.props?.position,
-            size: current?.props?.size,
+            position: current?.props.position,
+            size: current?.props.size,
           },
         }));
       }

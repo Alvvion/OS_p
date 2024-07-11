@@ -28,12 +28,12 @@ const useV86ScreenSize = (
       }
     };
 
-    emulator?.add_listener?.(SET_SCREEN_GFX, setScreenGfx);
-    emulator?.add_listener?.(SET_SCREEN_TXT, setScreenText);
+    emulator?.add_listener(SET_SCREEN_GFX, setScreenGfx);
+    emulator?.add_listener(SET_SCREEN_TXT, setScreenText);
 
     return () => {
-      emulator?.remove_listener?.(SET_SCREEN_GFX, setScreenGfx);
-      emulator?.remove_listener?.(SET_SCREEN_TXT, setScreenText);
+      emulator?.remove_listener(SET_SCREEN_GFX, setScreenGfx);
+      emulator?.remove_listener(SET_SCREEN_TXT, setScreenText);
     };
   }, [emulator, screenContainer, updateWindowSize]);
 };
