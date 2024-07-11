@@ -30,7 +30,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
   const [currentUrl, setCurrentUrl] = useState(url);
 
   useEffect(() => {
-    fs?.readFile(url, (_error, contents = Buffer.from("")) => {
+    fs?.readFile(url, (_error, contents) => {
       loadFiles([
         "/libs/webamp/webamp.bundle.min.js",
         "/libs/webamp/butterchurn.min.js",
