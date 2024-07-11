@@ -4,6 +4,7 @@ import type { FileActions } from "@/components/system/FileManager/types";
 import useFile from "@/components/system/FileManager/useFile";
 import { useFileSystem } from "@/context/FileSystem";
 import extensions from "@/context/FileSystem/extensions";
+import type { ExtensionType } from "@/context/FileSystem/types";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
 import { useProcesses } from "@/context/Process";
@@ -22,9 +23,9 @@ const useFileContextMenu = (
 ): ContextMenu => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
-
+  const urlExtension = extname(url);
   const { process: [, ...openWith] = [] } =
-    extensions[extname(url || "")] || {};
+    urlExtension in extensions ? extensions[urlExtension as ExtensionType] : {};
 
   const filterdOpenWith = openWith.filter((id) => id !== pid);
   const { openProcess } = useProcesses();
@@ -50,10 +51,10 @@ const useFileContextMenu = (
     { label: "Rename", action: () => setState(basename(path)) },
   ];
 
-  const extension = extname(path);
-  const isShortcut = extension === SHORTCUT;
+  const pathExtension = extname(path);
+  const isShortcut = pathExtension === SHORTCUT;
 
-  if (!isShortcut && url && (extension || pid !== "FileExplorer")) {
+  if (!isShortcut && url && (pathExtension || pid !== "FileExplorer")) {
     menuItems.unshift({ separator: true });
 
     menuItems.unshift({
@@ -62,7 +63,7 @@ const useFileContextMenu = (
     });
   }
 
-  if (IMAGE_FILE_EXTENSION.has(extension)) {
+  if (IMAGE_FILE_EXTENSION.has(pathExtension)) {
     menuItems.unshift({
       label: "Set as desktop background",
       menu: [

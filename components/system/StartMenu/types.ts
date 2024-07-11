@@ -7,6 +7,10 @@ export type MaybeCloseMenu = (
   closeOnTaskbarEntry?: boolean,
 ) => void;
 
-export type StartMenuProps = {
+export type SearchBarProps = {
+  startMenuVisible: boolean;
+};
+
+export type StartMenuProps = SearchBarProps & {
   toggleStartMenu: (showMenu?: boolean) => void;
 };

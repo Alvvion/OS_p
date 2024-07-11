@@ -1,12 +1,24 @@
 import { ONE_TIME_PASSIVE_EVENT } from "@/utils/constants";
 
 import extensions from "./extensions";
+import type { ExtensionType } from "./types";
 
-export const getIconByFileExtension = (extention: string): string =>
-  extensions[extention]?.icon || "/assets/ICON2_1.ico";
+export const getIconByFileExtension = (extension: string): string => {
+  const { icon: extensionIcon = "" } =
+    extension in extensions ? extensions[extension as ExtensionType] : {};
 
-export const getProcessByFileExtension = (extention: string): string =>
-  extensions[extention]?.process[0] || "";
+  if (extensionIcon) return extensionIcon;
+  return "/assets/ICON2_1.ico";
+};
+
+export const getProcessByFileExtension = (extension: string): string => {
+  const [defaultProcess = ""] =
+    extension in extensions
+      ? extensions[extension as ExtensionType].process
+      : [];
+
+  return defaultProcess;
+};
 
 export const haltEvent = (
   event: Event | React.DragEvent | React.KeyboardEvent | React.MouseEvent,

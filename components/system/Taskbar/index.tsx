@@ -34,7 +34,12 @@ const Taskbar: React.FC = () => {
 
   return (
     <>
-      {startMenuVisible && <StartMenu toggleStartMenu={toggleStartMenu} />}
+      {startMenuVisible && (
+        <StartMenu
+          toggleStartMenu={toggleStartMenu}
+          startMenuVisible={startMenuVisible}
+        />
+      )}
       <nav
         style={{ backgroundColor: bgColor, height }}
         className="absolute z-50 w-[100vw] flex flex-row justify-between items-center bottom-0 left-0 right-0"

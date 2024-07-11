@@ -1,11 +1,10 @@
 import { useEffect, useRef } from "react";
 import { IoMdSearch } from "react-icons/io";
 
-import { useSession } from "@/context/Session";
+import type { SearchBarProps } from "./types";
 
-const SearchBar: React.FC = () => {
+const SearchBar: React.FC<SearchBarProps> = ({ startMenuVisible }) => {
   const searchRef = useRef<HTMLInputElement | null>(null);
-  const { startMenuVisible } = useSession();
 
   useEffect(() => searchRef?.current?.focus(), [startMenuVisible]);
 

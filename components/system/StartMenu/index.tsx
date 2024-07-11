@@ -9,7 +9,10 @@ import Footer from "./Footer";
 import SearchBar from "./SearchBar";
 import type { StartMenuProps } from "./types";
 
-const StartMenu: React.FC<StartMenuProps> = ({ toggleStartMenu }) => {
+const StartMenu: React.FC<StartMenuProps> = ({
+  startMenuVisible,
+  toggleStartMenu,
+}) => {
   const menuRef = useRef<HTMLElement | null>(null);
 
   const maybeCloseMenu = ({ relatedTarget }: React.FocusEvent): void => {
@@ -40,7 +43,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ toggleStartMenu }) => {
       {...animateStartMenu}
     >
       <div className="flex flex-col items-center">
-        <SearchBar />
+        <SearchBar startMenuVisible={startMenuVisible} />
         <AppBox />
       </div>
       <Footer />

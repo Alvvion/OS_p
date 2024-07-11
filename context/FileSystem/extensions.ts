@@ -1,6 +1,4 @@
-import type { Extensions } from "./types";
-
-const extensions: Extensions = {
+const extensions = {
   ".img": {
     icon: "/assets/imageres_5205.ico",
     process: ["V86"],

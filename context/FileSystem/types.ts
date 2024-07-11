@@ -1,5 +1,7 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 
+import type extensions from "./extensions";
+
 export type UpdateFiles = (newFile?: string, oldFile?: string) => void;
 
 export type FilePasteOperations = Record<string, "copy" | "move">;
@@ -22,9 +24,9 @@ export type FileSystemStateType = {
   updateFolder: (folder: string, newFile?: string, oldFile?: string) => void;
 };
 
-export type Extensions = {
-  [extention: string]: {
-    icon: string;
-    process: string[];
-  };
+export type Extension = {
+  icon?: string;
+  process: string[];
 };
+
+export type ExtensionType = keyof typeof extensions;
