@@ -6,7 +6,6 @@ import { useMenu } from "@/context/Menu";
 import { useTheme } from "@/context/Theme";
 import { animateContextMenu } from "@/utils/animate";
 import { ONE_TIME_PASSIVE_EVENT, PREVENT_SCROLL } from "@/utils/constants";
-import { pxToNumber } from "@/utils/functions";
 
 import MenuItemEntry from "./MenuItemEntry";
 import type { MenuProps } from "./types";
@@ -20,7 +19,6 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
     colors: {
       contextMenu: { boxShadow },
     },
-    sizes: { taskbar },
   } = useTheme();
 
   const resetMenu = useCallback(
@@ -73,17 +71,26 @@ const Menu: React.FC<MenuProps> = ({ subMenu }) => {
   }, [items, resetMenu, subMenu]);
 
   useEffect(() => {
-    const { height = 0, width = 0 } =
-      menuRef.current?.getBoundingClientRect() || {};
+    const {
+      height = 0,
+      width = 0,
+      x: menuX = 0,
+      y: menuY = 0,
+    } = menuRef.current?.getBoundingClientRect() || {};
     const { innerHeight, innerWidth } = window;
+    const bottomOffset = y + height > innerHeight ? innerHeight - y : 0;
+    const subMenuOffscreenX = Boolean(subMenu) && menuX + width > innerWidth;
+    const subMenuOffscreenY = Boolean(subMenu) && menuY + height > innerHeight;
 
     setOffset({
-      x: Math.round(Math.max(0, x + width - innerWidth)),
-      y: Math.round(
-        Math.max(0, y + height - (innerHeight - pxToNumber(taskbar.height))),
-      ),
+      x:
+        Math.round(Math.max(0, x + width - innerWidth)) +
+        (subMenuOffscreenX ? Math.round(width + (subMenu?.x || 0)) : 0),
+      y:
+        Math.round(Math.max(0, y + height - (innerHeight - bottomOffset))) +
+        (subMenuOffscreenY ? Math.round(height + (subMenu?.y || 0)) : 0),
     });
-  }, [taskbar.height, x, y]);
+  }, [subMenu, x, y]);
 
   return items ? (
     <motion.nav
