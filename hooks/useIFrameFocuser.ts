@@ -5,7 +5,7 @@ import { useSession } from "@/context/Session";
 import { ONE_TIME_PASSIVE_EVENT } from "@/utils/constants";
 
 const useIFrameFocuser = (): void => {
-  const { processes } = useProcesses();
+  const { processes = {} } = useProcesses();
   const { setForegroundId } = useSession();
   const focusIframeWindow = useCallback((): void => {
     if (document.activeElement instanceof HTMLIFrameElement) {

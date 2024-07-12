@@ -1,34 +1,23 @@
 "use client";
 
-import Desktop from "@/components/system/Desktop";
-import FileManager from "@/components/system/FileManager";
-import Taskbar from "@/components/system/Taskbar";
-import ProcessLoader from "@/components/system/Window/ProcessLoader";
+import DesktopComponent from "@/components/common/DesktopComponent";
 import { FileSystemProvider } from "@/context/FileSystem";
 import { MenuProvider } from "@/context/Menu";
 import { ProcessProvider } from "@/context/Process";
 import { SessionProvider } from "@/context/Session";
 import { ThemeProvider } from "@/context/Theme";
-import useIFrameFocuser from "@/hooks/useIFrameFocuser";
-import useUrlLoader from "@/hooks/useUrlLoader";
 
 export default function Home(): JSX.Element {
-  useIFrameFocuser();
-  useUrlLoader();
   return (
     <FileSystemProvider>
       <SessionProvider>
-        <ThemeProvider>
-          <MenuProvider>
-            <Desktop>
-              <ProcessProvider>
-                <FileManager url="/desktop" />
-                <Taskbar />
-                <ProcessLoader />
-              </ProcessProvider>
-            </Desktop>
-          </MenuProvider>
-        </ThemeProvider>
+        <ProcessProvider>
+          <ThemeProvider>
+            <MenuProvider>
+              <DesktopComponent />
+            </MenuProvider>
+          </ThemeProvider>
+        </ProcessProvider>
       </SessionProvider>
     </FileSystemProvider>
   );
