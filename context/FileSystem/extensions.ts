@@ -19,6 +19,10 @@ const extensions = {
     icon: "/assets/ruffle.png",
     process: ["Ruffle"],
   },
+  ".whtml": {
+    icon: "/assets/tinymce.png",
+    process: ["TinyMCE"],
+  },
   ".wsz": {
     icon: "/assets/music_48.png",
     process: ["Webamp"],

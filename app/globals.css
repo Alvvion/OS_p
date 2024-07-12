@@ -23,3 +23,19 @@ ol,
 ul {
   list-style: none;
 }
+
+@layer components {
+  .tinymce {
+    [role="application"] {
+      height: 100% !important;
+    }
+
+    [role="application"] button:disabled {
+      pointer-events: none;
+    }
+
+    [role="application"][aria-disabled="true"] .tox-editor-header {
+      cursor: not-allowed;
+    }
+  }
+}

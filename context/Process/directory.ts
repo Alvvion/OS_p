@@ -28,6 +28,16 @@ export const processDir: Processes = {
     icon: "/assets/ruffle.png",
     title: "Ruffle",
   },
+  TinyMCE: {
+    backgroundColor: "#fff",
+    Component: dynamic(() => import("@/components/apps/TinyMCE")),
+    defaultSize: {
+      height: 400,
+      width: 400,
+    },
+    icon: "/assets/tinymce.png",
+    title: "TinyMCE",
+  },
   V86: {
     Component: dynamic(() => import("@/components/apps/V86")),
     icon: "/assets/V86.ico",
