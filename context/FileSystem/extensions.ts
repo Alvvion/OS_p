@@ -27,7 +27,7 @@ const extensions = {
   },
   ".wsz": {
     icon: "/assets/music_48.png",
-    process: ["Webamp"],
+    process: ["Webamp", "FileExplorer"],
   },
   ".zip": {
     icon: "/assets/compressed.png",

@@ -107,7 +107,7 @@ export const TRANSITIONS_IN_MILLISECONDS = {
 
 export const SYSTEM_FILES = new Set(["/.deletedFiles.log"]);
 
-export const MOUNTABLE_EXTENSIONS = new Set([".iso", ".zip", ".jsdos"]);
+export const MOUNTABLE_EXTENSIONS = new Set([".iso", ".zip", ".wsz", ".jsdos"]);
 
 export const SAVE_PATH = "/saves";
 
