@@ -7,10 +7,14 @@ import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
 import { SAVE_PATH } from "@/utils/constants";
-import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
+import {
+  bufferToUrl,
+  cleanUpBufferUrl,
+  cleanUpGlobals,
+} from "@/utils/functions";
 
-import { saveExtension } from "./config";
-import { addJSDOSConfig, cleanUpLoader } from "./functions";
+import { globals, saveExtension } from "./config";
+import { addJSDOSConfig } from "./functions";
 
 const useDosCI = (
   id: string,
@@ -47,7 +51,7 @@ const useDosCI = (
                 appendFileToTitle(url);
                 cleanUpBufferUrl(bundleURL);
                 if (optionalChangesUrl) cleanUpBufferUrl(optionalChangesUrl);
-                cleanUpLoader();
+                cleanUpGlobals(globals);
               }
             });
           },

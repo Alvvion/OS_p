@@ -16,7 +16,7 @@ const MonacoEditor: React.FC<ComponentProps> = ({ id }) => {
   } = useProcesses();
   const { fs } = useFileSystem();
   const { appendFileToTitle } = useTitle(id);
-  const { sizes, colors } = useTheme();
+  const { sizes } = useTheme();
 
   const [value, setValue] = useState("");
 
@@ -34,7 +34,7 @@ const MonacoEditor: React.FC<ComponentProps> = ({ id }) => {
   return (
     <div
       onBlur={overrideSubMenuStyling}
-      className="w-full"
+      className="w-full text-white"
       style={{ height: `calc(100% - ${sizes.taskbar.height})` }}
     >
       <Editor path={url} theme="vs-dark" value={value} />

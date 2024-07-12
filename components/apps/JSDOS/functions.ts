@@ -3,7 +3,7 @@ import { unzip, zip } from "fflate";
 import type { AsyncZippable } from "fflate/node";
 import { join } from "path";
 
-import { defaultConfig, globals, zipConfigPath } from "./config";
+import { defaultConfig, zipConfigPath } from "./config";
 
 const isFileInZip = (buffer: Buffer, zipFilePath: string): Promise<boolean> =>
   new Promise((resolve) => {
@@ -56,6 +56,3 @@ export const addJSDOSConfig = async (
   (await isFileInZip(buffer, zipConfigPath))
     ? buffer
     : addFileToZip(buffer, defaultConfig, zipConfigPath, fs);
-
-export const cleanUpLoader = (): void =>
-  globals.forEach((global) => delete (window as never)[global]);

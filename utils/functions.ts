@@ -41,3 +41,6 @@ export const bufferToUrl = (buffer: Buffer): string =>
 
 export const pxToNumber = (value: string | number = 0): number =>
   Number(stripUnit(value));
+
+export const cleanUpGlobals = (globals: string[]): void =>
+  globals.forEach((global) => delete (window as never)[global]);
