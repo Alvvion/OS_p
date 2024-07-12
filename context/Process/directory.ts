@@ -18,6 +18,16 @@ export const processDir: Processes = {
     title: "JSDOS",
     lockAspectRatio: true,
   },
+  MonacoEditor: {
+    backgroundColor: "#1E1E1E",
+    Component: dynamic(() => import("@/components/apps/MonacoEditor")),
+    defaultSize: {
+      height: 400,
+      width: 400,
+    },
+    icon: "/assets/monaco.png",
+    title: "Monaco Editor",
+  },
   Ruffle: {
     backgroundColor: "#000",
     Component: dynamic(() => import("@/components/apps/Ruffle")),

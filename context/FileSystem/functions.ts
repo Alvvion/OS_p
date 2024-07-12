@@ -1,21 +1,25 @@
-import { ONE_TIME_PASSIVE_EVENT } from "@/utils/constants";
+import { DEFAULT_FILE_VIEWER, ONE_TIME_PASSIVE_EVENT } from "@/utils/constants";
 
+import { processDir } from "../Process/directory";
 import extensions from "./extensions";
 import type { ExtensionType } from "./types";
 
 export const getIconByFileExtension = (extension: string): string => {
-  const { icon: extensionIcon = "" } =
+  const { icon: extensionIcon = "", process: [defaultProcess = ""] = [] } =
     extension in extensions ? extensions[extension as ExtensionType] : {};
 
   if (extensionIcon) return extensionIcon;
-  return "/assets/ICON2_1.ico";
+  return (
+    processDir[defaultProcess || DEFAULT_FILE_VIEWER]?.icon ||
+    "/assets/ICON2_1.ico"
+  );
 };
 
 export const getProcessByFileExtension = (extension: string): string => {
   const [defaultProcess = ""] =
     extension in extensions
       ? extensions[extension as ExtensionType].process
-      : [];
+      : [DEFAULT_FILE_VIEWER];
 
   return defaultProcess;
 };
