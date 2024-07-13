@@ -10,7 +10,7 @@ const DesktopComponent: React.FC = () => {
   useUrlLoader();
   return (
     <Desktop>
-      <FileManager url="/desktop" />
+      <FileManager url="/desktop" hideLoading />
       <Taskbar />
       <ProcessLoader />
     </Desktop>
