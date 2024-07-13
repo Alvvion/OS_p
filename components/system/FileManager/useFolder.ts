@@ -34,6 +34,7 @@ const useFolder = (
   const { focusEntry, blurEntry } = useSession();
   const [files, setFiles] = useState<string[]>([]);
   const [downloadLink, setDownloadLink] = useState("");
+  const [isLoading, setLoading] = useState(true);
 
   const updateFiles = useCallback(
     (newFile = "", oldFile = "") => {
@@ -49,10 +50,12 @@ const useFolder = (
         );
       } else if (newFile) {
         setFiles((currentFiles) => [...currentFiles, basename(newFile)]);
-      } else {
-        fs?.readdir(directory, (_error, contents = []) =>
-          setFiles(sortContents(contents).filter(filterSystemFiles(directory))),
-        );
+      } else if (fs) {
+        setLoading(true);
+        fs.readdir(directory, (_error, contents = []) => {
+          setLoading(false);
+          setFiles(sortContents(contents).filter(filterSystemFiles(directory)));
+        });
       }
     },
     [directory, fs],
@@ -184,6 +187,7 @@ const useFolder = (
 
   return {
     files,
+    isLoading,
     updateFiles,
     fileActions: {
       deleteFile,

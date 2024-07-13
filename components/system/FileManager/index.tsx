@@ -15,7 +15,11 @@ import useFocusableEntries from "./useFocusableEntries";
 import useFolder from "./useFolder";
 import useSelection from "./useSelection";
 
-const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
+const FileManager: React.FC<FileManagerProps> = ({
+  hideLoading,
+  url,
+  view = "default",
+}) => {
   const {
     sizes: {
       taskbar: { height },
@@ -32,16 +36,16 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   const [renaming, setRenaming] = useState("");
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
 
-  const { files, fileActions, folderActions, updateFiles } = useFolder(
-    url,
-    setRenaming,
-  );
+  const { files, fileActions, folderActions, isLoading, updateFiles } =
+    useFolder(url, setRenaming);
 
   const focusableEntry = useFocusableEntries(fileManagerRef);
   const draggableEntry = useDraggableEntries();
 
   const { isSelecting, selectionRect, selectionStyling, selectionEvents } =
     useSelection(fileManagerRef);
+  const fileDrop = useFileDrop(folderActions.newPath);
+  const folderContextMenu = useFolderContextMenu(url, folderActions);
 
   useEffect(() => {
     const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
@@ -55,7 +59,11 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
     };
   }, [url, files, mountFs, unMountFs, updateFiles]);
 
-  return (
+  return !hideLoading && isLoading ? (
+    <div className="cursor-progress w-full flex flex-col items-center justify-center text-xs pt-5 h-screen">
+      <div className="text-white">Working on it...</div>
+    </div>
+  ) : (
     <ol
       ref={fileManagerRef}
       className={`grid grid-flow-col [main>&]:pb-5 [section_&]:grid-flow-row ${view === "default" ? "custom-scrollbar" : ""}`}
@@ -69,8 +77,8 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
         pointerEvents: isSelecting ? "auto" : undefined,
       }}
       {...selectionEvents}
-      {...useFileDrop(folderActions.newPath)}
-      {...useFolderContextMenu(url, folderActions)}
+      {...fileDrop}
+      {...folderContextMenu}
     >
       {isSelecting && view === "default" && (
         <>

@@ -3,6 +3,7 @@ import type { Position } from "react-rnd";
 import type { Size } from "@/components/common/types";
 
 export type FileManagerProps = {
+  hideLoading?: boolean;
   url: string;
   view?: "default" | "start";
 };
@@ -71,6 +72,7 @@ export type Folder = {
   fileActions: FileActions;
   files: string[];
   folderActions: FolderActions;
+  isLoading: boolean;
   updateFiles: (newFile?: string, oldFile?: string) => void;
 };
 
