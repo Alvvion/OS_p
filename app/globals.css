@@ -38,4 +38,32 @@ ul {
       cursor: not-allowed;
     }
   }
+  .custom-scrollbar {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 #1f2937;
+    scrollbar-gutter: stable;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 5px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #1f2937;
+  }
+  .custom-scrollbar::-webkit-scrollbar-button {
+    display: none;
+  }
+  .custom-scrollbar:hover::-webkit-scrollbar-button {
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #4b5563; /* Custom scrollbar button color */
+  }
+  .custom-scrollbar:hover::-webkit-scrollbar-button:increment {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEyIDE1LjVsLTUtNSAxLjQxMS0xLjQxMUwxMiAxMi42MTUgMTUuNTg5IDkuMDg5IDE3IDEwLjV6Ii8+PC9zdmc+"); /* Custom SVG for down arrow */
+  }
 }

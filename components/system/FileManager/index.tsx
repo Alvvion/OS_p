@@ -58,7 +58,7 @@ const FileManager: React.FC<FileManagerProps> = ({ url, view = "default" }) => {
   return (
     <ol
       ref={fileManagerRef}
-      className="grid grid-flow-col [main>&]:pb-5 [section_&]:grid-flow-row"
+      className={`grid grid-flow-col [main>&]:pb-5 [section_&]:grid-flow-row ${view === "default" ? "custom-scrollbar" : ""}`}
       style={{
         height: `calc(100% - ${height})`,
         gridTemplateColumns: `repeat(auto-fill, ${gridEntryWidth})`,
