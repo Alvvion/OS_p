@@ -31,6 +31,11 @@ const useFolderContextMenu = (
         },
         { separator: true },
         {
+          label: "Rich Text Document",
+          action: () =>
+            newPath("New Rich Text Document.whtml", Buffer.from(""), true),
+        },
+        {
           label: "Text Document",
           action: () => newPath("New Text Document.txt", Buffer.from(""), true),
         },

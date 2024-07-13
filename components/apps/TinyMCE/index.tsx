@@ -35,7 +35,7 @@ const TinyMCE: React.FC<ComponentProps> = ({ id }) => {
     if (url && editor) {
       fs?.readFile(url, (error, contents = Buffer.from("")) => {
         if (!error) {
-          setReadOnlyMode(editor);
+          if (contents.length > 0) setReadOnlyMode(editor);
           editor.setContent(contents.toString());
           appendFileToTitle(basename(url, extname(url)));
         }
