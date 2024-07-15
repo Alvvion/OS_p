@@ -60,7 +60,7 @@ const FileManager: React.FC<FileManagerProps> = ({
   }, [url, files, mountFs, unMountFs, updateFiles]);
 
   return !hideLoading && isLoading ? (
-    <div className="cursor-progress w-full flex flex-col items-center justify-center text-xs pt-5 h-screen">
+    <div className="cursor-wait w-full flex flex-col items-center justify-center text-xs pt-5 h-screen">
       <div className="text-white">Working on it...</div>
     </div>
   ) : (

@@ -2,6 +2,7 @@ import { basename, extname, join } from "path";
 import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
+import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
 import { SAVE_PATH } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
@@ -25,6 +26,9 @@ const useV86 = (
   const { appendFileToTitle } = useTitle(id);
   const [emulator, setEmulator] = useState<V86Starter>();
   const { fs, mkdirRecursive, updateFolder } = useFileSystem();
+  const {
+    processes: { [id]: { closing = false } = {} },
+  } = useProcesses();
 
   useV86ScreenSize(id, containerRef, emulator);
 
@@ -80,7 +84,7 @@ const useV86 = (
     }
 
     return () => {
-      if (emulator && fs && url) {
+      if (closing && emulator && fs && url) {
         emulator.save_state((_error, newState) =>
           mkdirRecursive(SAVE_PATH, () => {
             const saveName = `${basename(url)}${saveExtension}`;
@@ -98,6 +102,7 @@ const useV86 = (
     };
   }, [
     appendFileToTitle,
+    closing,
     containerRef,
     emulator,
     fs,
