@@ -1,5 +1,3 @@
-import { DEFAULT_FILE_VIEWER } from "@/utils/constants";
-
 const extensions = {
   ".img": {
     icon: "/assets/imageres_5205.ico",
@@ -23,7 +21,7 @@ const extensions = {
   },
   ".whtml": {
     icon: "/assets/tinymce.png",
-    process: ["TinyMCE", DEFAULT_FILE_VIEWER],
+    process: ["TinyMCE", "MonacoEditor"],
   },
   ".wsz": {
     icon: "/assets/music_48.png",

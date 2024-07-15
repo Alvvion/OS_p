@@ -36,9 +36,7 @@ export const getInfoWithoutExtension = (
   fs.stat(path, (_err, stats) => {
     const isDirectory = stats ? stats.isDirectory() : false;
     callback({
-      icon: `/assets/${
-        isDirectory ? "ICON16772_1.ico" : "/assets/ICON2_1.ico"
-      }`,
+      icon: `/assets/${isDirectory ? "ICON16772_1.ico" : "ICON2_1.ico"}`,
       pid: isDirectory ? "FileExplorer" : "",
       url: path,
     });
@@ -73,28 +71,25 @@ export const getInfoWithExtension = (
       }
     });
   } else if (IMAGE_FILE_EXTENSION.has(extension)) {
-    fs.readFile(path, (error, contents = Buffer.from("")) =>
-      getInfoByFileExtension(
-        error ? "/assets/ICON132_1.ico" : bufferToUrl(contents),
-      ),
-    );
-  } else if (extension === ".mp3") {
+    getInfoByFileExtension("/assets/ICON132_1.ico");
     fs.readFile(path, (error, contents = Buffer.from("")) => {
-      import("music-metadata-browser").then(({ parseBuffer, selectCover }) =>
-        parseBuffer(
-          contents,
-          { mimeType: MP3_MIME_TYPE, size: contents.length },
-          { skipPostHeaders: true },
-        ).then(({ common: { picture } = {} }) => {
-          const { data: coverPicture } = selectCover(picture) || {};
-
-          getInfoByFileExtension(
-            !error && coverPicture
-              ? bufferToUrl(coverPicture)
-              : "/assets/music_48.png",
-          );
-        }),
-      );
+      if (!error) getInfoByFileExtension(bufferToUrl(contents));
+    });
+  } else if (extension === ".mp3") {
+    getInfoByFileExtension("/assets/music_48.png");
+    fs.readFile(path, (error, contents = Buffer.from("")) => {
+      if (!error) {
+        import("music-metadata-browser").then(({ parseBuffer, selectCover }) =>
+          parseBuffer(
+            contents,
+            { mimeType: MP3_MIME_TYPE, size: contents.length },
+            { skipPostHeaders: true },
+          ).then(({ common: { picture } = {} }) => {
+            const { data: coverPicture } = selectCover(picture) || {};
+            if (coverPicture) getInfoByFileExtension(bufferToUrl(coverPicture));
+          }),
+        );
+      }
     });
   } else getInfoByFileExtension();
 };
