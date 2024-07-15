@@ -1,4 +1,12 @@
-// eslint-disable-next-line import/prefer-default-export
+import { monacoExtensions } from "./config";
+
+const customExtensionLanguages: Record<string, string> = {
+  ".whtml": "html",
+};
+
+export const detectLanguage = (ext: string): string | undefined =>
+  monacoExtensions.has(ext) ? undefined : customExtensionLanguages[ext];
+
 export const overrideSubMenuStyling: React.FocusEventHandler = ({
   relatedTarget,
 }): void => {

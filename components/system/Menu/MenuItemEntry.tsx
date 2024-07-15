@@ -70,7 +70,7 @@ const MenuItemEntry: React.FC<MenuItemProps> = ({
             <Icon className="-mr-6 ml-2" src={icon} alt={label} size={16} />
           )}
           <figcaption
-            className={`relative ml-8 mr-16 -top-px w-max ${
+            className={`relative ml-8 mr-16 -top-px w-max text-nowrap ${
               primary ? "font-semibold" : ""
             }`}
           >

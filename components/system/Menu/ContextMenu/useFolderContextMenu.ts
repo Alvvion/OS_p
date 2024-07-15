@@ -1,5 +1,6 @@
 import type { FolderActions } from "@/components/system/FileManager/types";
 import { useFileSystem } from "@/context/FileSystem";
+import { getIconByFileExtension } from "@/context/FileSystem/functions";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
 
@@ -28,16 +29,19 @@ const useFolderContextMenu = (
         {
           label: "New Folder",
           action: () => newPath("New Folder", undefined, true),
+          icon: "/assets/ICON16772_1.ico",
         },
         { separator: true },
         {
           label: "Rich Text Document",
           action: () =>
             newPath("New Rich Text Document.whtml", Buffer.from(""), true),
+          icon: getIconByFileExtension(".whtml"),
         },
         {
           label: "Text Document",
           action: () => newPath("New Text Document.txt", Buffer.from(""), true),
+          icon: getIconByFileExtension(".txt"),
         },
       ],
     },
