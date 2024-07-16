@@ -44,6 +44,7 @@ export type ProcessContextType = {
     element: HTMLElement,
   ) => void;
   title: (id: string, newTitle: string) => void;
+  url: (id: string, newUrl: string) => void;
 };
 
 export type ProcessProviderProps = {

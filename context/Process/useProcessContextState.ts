@@ -8,6 +8,7 @@ import {
   openingProcess,
   setProcessElement,
   setTitle,
+  setUrl,
 } from "./functions";
 import type { ProcessContextType, ProcessElement, Processes } from "./types";
 
@@ -53,6 +54,11 @@ const useProcessContextState = (): ProcessContextType => {
     [],
   );
 
+  const url = useCallback(
+    (id: string, newUrl: string) => setProcesses(setUrl(id, newUrl)),
+    [],
+  );
+
   return {
     closeProcess,
     openProcess,
@@ -61,6 +67,7 @@ const useProcessContextState = (): ProcessContextType => {
     minimize,
     linkElement,
     title,
+    url,
   };
 };
 
