@@ -1,5 +1,5 @@
 import type { RefObject } from "react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import { useSession } from "@/context/Session";
@@ -13,11 +13,18 @@ const useWallpaper = (refElement: RefObject<HTMLElement>): void => {
   const { fs } = useFileSystem();
   const { sessionLoaded, wallpaperImage, wallpaperFit } = useSession();
 
+  const loadThemeWallpaper = useCallback(() => {
+    refElement.current?.setAttribute("style", "");
+    wallpaper?.(refElement.current);
+  }, [refElement, wallpaper]);
+
   useEffect(() => {
     if (sessionLoaded) {
       if (wallpaperImage) {
         fs?.readFile(wallpaperImage, (error, contents = Buffer.from("")) => {
-          if (!error) {
+          if (error) {
+            loadThemeWallpaper();
+          } else {
             const [, currentWallpaperUrl] =
               refElement.current?.style.backgroundImage.match(/"(.*?)"/) || [];
 
@@ -34,11 +41,18 @@ const useWallpaper = (refElement: RefObject<HTMLElement>): void => {
           }
         });
       } else {
-        refElement.current?.setAttribute("style", "");
-        wallpaper?.(refElement.current);
+        loadThemeWallpaper();
       }
     }
-  }, [refElement, fs, wallpaper, wallpaperFit, wallpaperImage, sessionLoaded]);
+  }, [
+    refElement,
+    fs,
+    wallpaper,
+    wallpaperFit,
+    wallpaperImage,
+    sessionLoaded,
+    loadThemeWallpaper,
+  ]);
 };
 
 export default useWallpaper;
