@@ -14,7 +14,7 @@ const _tailwind = ["hover:bg-titlebar-backgroundHover"];
 
 const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
   const {
-    processes: { [id]: { url = "" } = {} },
+    processes: { [id]: { closing = false, url = "" } = {} },
     title,
   } = useProcesses();
 
@@ -68,7 +68,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
           </Button>
         ))}
       </header>
-      <FileManager url={url} />
+      <FileManager url={url} closing={closing} />
     </div>
   ) : undefined;
 };

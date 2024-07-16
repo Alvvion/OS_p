@@ -16,6 +16,7 @@ import useFolder from "./useFolder";
 import useSelection from "./useSelection";
 
 const FileManager: React.FC<FileManagerProps> = ({
+  closing,
   hideLoading,
   url,
   view = "default",
@@ -55,9 +56,9 @@ const FileManager: React.FC<FileManagerProps> = ({
     }
 
     return () => {
-      if (isMountable && files.length > 0) unMountFs(url);
+      if (isMountable && files.length > 0 && closing) unMountFs(url);
     };
-  }, [url, files, mountFs, unMountFs, updateFiles]);
+  }, [url, files, mountFs, unMountFs, updateFiles, closing]);
 
   return !hideLoading && isLoading ? (
     <div className="cursor-wait w-full flex flex-col items-center justify-center text-xs pt-5 h-screen">

@@ -3,6 +3,7 @@ import type { Position } from "react-rnd";
 import type { Size } from "@/components/common/types";
 
 export type FileManagerProps = {
+  closing?: boolean;
   hideLoading?: boolean;
   url: string;
   view?: "default" | "start";
