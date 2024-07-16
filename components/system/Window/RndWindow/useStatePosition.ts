@@ -27,8 +27,8 @@ const useStatePosition = (id: string, size: Size): StatePosition => {
   } = useSession();
   const { position: sessionPosition, size: sessionSize } = windowState || {};
   const isOffscreen = isRectOutsideWindow(windowState, {
-    x: window?.innerWidth || 0,
-    y: (window?.innerHeight || 0) - pxToNumber(taskbarHeight),
+    x: window.innerWidth,
+    y: window.innerHeight - pxToNumber(taskbarHeight),
   });
 
   const { processes } = useProcesses();

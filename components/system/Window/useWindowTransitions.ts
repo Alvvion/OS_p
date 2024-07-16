@@ -62,8 +62,8 @@ const useWindowTransitions = (id: string): MotionProps => {
 
   return {
     animate:
-      (minimized && "minimize") ||
-      (!closing && maximized && "maximize") ||
+      (minimized ? "minimize" : "") ||
+      (!closing && maximized ? "maximize" : "") ||
       "active",
     exit: "initial",
     initial: "initial",
