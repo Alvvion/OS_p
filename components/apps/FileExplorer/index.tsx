@@ -50,7 +50,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
 
   useEffect(() => {
     if (url) {
-      title(id, basename(url) || "My PC");
+      title(id, basename(url) || "File Explorer");
     }
   }, [id, title, url]);
 
