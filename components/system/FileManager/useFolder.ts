@@ -1,6 +1,6 @@
 import type { BFSOneArgCallback } from "browserfs/dist/node/core/file_system";
 import type { AsyncZippable } from "fflate";
-import { zip } from "fflate";
+import { unzip, zip } from "fflate";
 import ini from "ini";
 import { basename, dirname, extname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
@@ -95,27 +95,22 @@ const useFolder = (
     }
   };
 
-  const downloadFiles = (paths: string[]): void => {
-    if (paths.length === 1) {
-      const [path] = paths;
+  const downloadFiles = (paths: string[]): Promise<void> =>
+    Promise.all(paths.map((path) => getFile(path, fs))).then((filePaths) => {
+      const zipFiles = filePaths.filter(Boolean) as FileType[];
 
-      fs?.readFile(path, (_error, contents = Buffer.from("")) =>
-        createLink(contents, setDownloadLink, basename(path)),
-      );
-    } else {
-      Promise.all(paths.map((path) => getFile(path, fs))).then(
-        (zipContents) => {
-          zip(
-            Object.fromEntries(
-              zipContents.filter(Boolean) as FileType[],
-            ) as AsyncZippable,
-            (_zipError, newZipFile) =>
-              createLink(Buffer.from(newZipFile), setDownloadLink),
-          );
-        },
-      );
-    }
-  };
+      if (zipFiles.length === 1) {
+        const [[path, contents]] = zipFiles;
+
+        createLink(contents, setDownloadLink, basename(path));
+      } else {
+        zip(
+          Object.fromEntries(zipFiles) as AsyncZippable,
+          (_zipError, newZipFile) =>
+            createLink(Buffer.from(newZipFile), setDownloadLink),
+        );
+      }
+    });
 
   const newPath = (
     name: string,
@@ -166,14 +161,52 @@ const useFolder = (
     }
   };
 
+  const archiveFiles = (paths: string[]): Promise<void> =>
+    Promise.all(paths.map((path) => getFile(path, fs))).then((filePaths) => {
+      const zipFiles = filePaths.filter(Boolean) as FileType[];
+
+      zip(
+        Object.fromEntries(zipFiles) as AsyncZippable,
+        (_zipError, newZipFile) => {
+          newPath(`${basename(directory)}.zip`, Buffer.from(newZipFile));
+        },
+      );
+    });
+
+  const extractFiles = (path: string): void => {
+    fs?.readFile(path, (readError, zipContents = Buffer.from("")) => {
+      if (!readError) {
+        unzip(zipContents, (_unzipError, unzippedFiles) => {
+          const zipFolderName = basename(path, extname(path));
+
+          fs.mkdir(join(directory, zipFolderName), { flag: "w" }, () => {
+            Object.entries(unzippedFiles).forEach(
+              ([extactedPath, fileContents]) => {
+                if (extactedPath.endsWith("/")) {
+                  fs.mkdir(join(directory, zipFolderName, extactedPath));
+                } else {
+                  fs.writeFile(
+                    join(directory, zipFolderName, extactedPath),
+                    Buffer.from(fileContents),
+                  );
+                }
+              },
+            );
+            updateFolder(directory, zipFolderName);
+          });
+        });
+      }
+    });
+  };
+
   const pasteToFolder = (): void =>
     Object.entries(pasteList).forEach(([fileEntry, operation]) => {
       if (operation === "move") {
         newPath(fileEntry);
         copyEntries([]);
       } else {
-        fs?.readFile(fileEntry, (_readError, buffer = Buffer.from("")) =>
-          newPath(basename(fileEntry), buffer),
+        fs?.readFile(fileEntry, (_readError, contents) =>
+          newPath(basename(fileEntry), contents),
         );
       }
     });
@@ -219,8 +252,10 @@ const useFolder = (
     isLoading,
     updateFiles,
     fileActions: {
+      archiveFiles,
       deleteFile,
       downloadFiles,
+      extractFiles,
       newShortcut,
       renameFile,
     },

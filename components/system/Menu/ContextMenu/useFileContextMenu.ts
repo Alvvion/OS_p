@@ -11,7 +11,11 @@ import type { MenuItem } from "@/context/Menu/types";
 import { useProcesses } from "@/context/Process";
 import { processDir } from "@/context/Process/directory";
 import { useSession } from "@/context/Session";
-import { IMAGE_FILE_EXTENSION, SHORTCUT } from "@/utils/constants";
+import {
+  IMAGE_FILE_EXTENSION,
+  MOUNTABLE_EXTENSIONS,
+  SHORTCUT,
+} from "@/utils/constants";
 
 import type { ContextMenu } from "../types";
 
@@ -20,7 +24,13 @@ const useFileContextMenu = (
   pid: string,
   path: string,
   setState: React.Dispatch<React.SetStateAction<string>>,
-  { deleteFile, downloadFiles, newShortcut }: FileActions,
+  {
+    archiveFiles,
+    deleteFile,
+    downloadFiles,
+    extractFiles,
+    newShortcut,
+  }: FileActions,
 ): ContextMenu => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
@@ -73,10 +83,23 @@ const useFileContextMenu = (
   if (!isShortcut && url && (pathExtension || pid !== "FileExplorer")) {
     menuItems.unshift({ separator: true });
 
-    menuItems.unshift({
-      label: "Download",
-      action: () => downloadFiles(absoluteEntries()),
-    });
+    if (MOUNTABLE_EXTENSIONS.has(pathExtension)) {
+      menuItems.unshift({
+        label: "Extract Here",
+        action: () => extractFiles(path),
+      });
+    }
+
+    menuItems.unshift(
+      {
+        label: "Add to archive...",
+        action: () => archiveFiles(absoluteEntries()),
+      },
+      {
+        label: "Download",
+        action: () => downloadFiles(absoluteEntries()),
+      },
+    );
   }
 
   if (IMAGE_FILE_EXTENSION.has(pathExtension)) {

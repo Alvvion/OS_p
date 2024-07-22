@@ -10,8 +10,10 @@ export type FileManagerProps = {
 };
 
 export type FileActions = {
+  archiveFiles: (paths: string[]) => Promise<void>;
   deleteFile: (path: string) => void;
-  downloadFiles: (paths: string[]) => void;
+  downloadFiles: (paths: string[]) => Promise<void>;
+  extractFiles: (path: string) => void;
   newShortcut: (path: string, process: string) => void;
   renameFile: (path: string, name?: string) => void;
 };
