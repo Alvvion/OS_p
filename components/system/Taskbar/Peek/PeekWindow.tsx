@@ -9,6 +9,7 @@ import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
 import { animateWindowPeek } from "@/utils/animate";
+import { viewWidth } from "@/utils/functions";
 
 import type { PeekWindowProps } from "./types";
 import useWindowPeek from "./useWindowPeek";
@@ -51,11 +52,12 @@ const PeekWindow: React.FC<PeekWindowProps> = ({ id, isPeekVisible }) => {
     if (image) {
       const { left = 0, right = 0 } =
         peekRef.current?.getBoundingClientRect() || {};
+      const vw = viewWidth();
 
       if (left < 0) {
         setOffsetX(Math.abs(left));
-      } else if (right > window.screen.width) {
-        setOffsetX(window.screen.width - right);
+      } else if (right > vw) {
+        setOffsetX(vw - right);
       }
     }
   }, [image]);

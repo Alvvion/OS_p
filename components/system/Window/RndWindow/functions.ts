@@ -6,7 +6,7 @@ import {
   PREVENT_SCROLL,
   PROCESS_DELIMITER,
 } from "@/utils/constants";
-import { pxToNumber } from "@/utils/functions";
+import { pxToNumber, viewHeight, viewWidth } from "@/utils/functions";
 
 export const reRouteFoucs =
   (focusElement: HTMLElement) =>
@@ -22,12 +22,9 @@ export const centerPosition = (
   size: Size,
   taskbarHeight: string,
 ): Position => ({
-  x: Math.floor((window.screen.width - pxToNumber(size.width)) / 2),
+  x: Math.floor((viewWidth() - pxToNumber(size.width)) / 2),
   y: Math.floor(
-    (window.screen.height -
-      pxToNumber(taskbarHeight) -
-      pxToNumber(size.height)) /
-      2,
+    (viewHeight() - pxToNumber(taskbarHeight) - pxToNumber(size.height)) / 2,
   ),
 });
 
@@ -59,8 +56,7 @@ export const cascadePosition = (
     height = 0,
   } = componentWindow?.getBoundingClientRect() || {};
   const isOffscreen =
-    x + offset + width > window.screen.width ||
-    y + offset + height > window.screen.height;
+    x + offset + width > viewWidth() || y + offset + height > viewHeight();
 
   return !isOffscreen && (x || y)
     ? { x: x + offset, y: y + offset }

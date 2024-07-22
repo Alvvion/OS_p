@@ -4,7 +4,7 @@ import type { Position, Size } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
-import { pxToNumber } from "@/utils/functions";
+import { pxToNumber, viewHeight, viewWidth } from "@/utils/functions";
 
 import {
   cascadePosition,
@@ -27,8 +27,8 @@ const useStatePosition = (id: string, size: Size): StatePosition => {
   } = useSession();
   const { position: sessionPosition, size: sessionSize } = windowState || {};
   const isOffscreen = isRectOutsideWindow(windowState, {
-    x: window.screen.width,
-    y: window.screen.height - pxToNumber(taskbarHeight),
+    x: viewWidth(),
+    y: viewHeight() - pxToNumber(taskbarHeight),
   });
 
   const { processes } = useProcesses();
