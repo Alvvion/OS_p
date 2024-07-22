@@ -17,6 +17,7 @@ export type Process = ProcessElement & {
   lockAspectRatio?: boolean;
   maximized?: boolean;
   minimized?: boolean;
+  prependTaskbarTitle?: boolean;
   singleton?: boolean;
   title: string;
   titlebarStyle?: "File Explorer" | "Default";

@@ -64,7 +64,7 @@ const Taskbar: React.FC = () => {
                     width={32}
                     height={32}
                     name={id}
-                    pid={id}
+                    id={id}
                   />
                 ))}
             </AnimatePresence>

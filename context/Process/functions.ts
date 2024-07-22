@@ -40,15 +40,24 @@ export const openingProcess =
       return setProcessSetting(processId, { url })(currentProcesses);
 
     const id = singleton ? processId : createPid(processId, url);
-    return currentProcesses[id] || !processDir[processId]
-      ? currentProcesses
-      : {
+
+    if (currentProcesses[id]) {
+      const { componentWindow } = currentProcesses[id];
+
+      componentWindow?.focus();
+
+      return currentProcesses;
+    }
+
+    return processDir[processId]
+      ? {
           ...currentProcesses,
           [id]: {
             ...processDir[processId],
             url,
           },
-        };
+        }
+      : currentProcesses;
   };
 
 export const maximizeProcess =

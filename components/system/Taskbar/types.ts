@@ -11,7 +11,7 @@ export interface TaskbarButtonProps
 }
 
 export type TaskbarEntryProps = TaskbarButtonProps & {
-  pid: string;
+  id: string;
 };
 
 export type StartButtonProps = {

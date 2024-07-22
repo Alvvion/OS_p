@@ -16,16 +16,16 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   width,
   height,
   name,
-  pid,
+  id,
 }) => {
   const {
     minimize,
-    processes: { [pid]: { minimized = false } = {} },
+    processes: { [id]: { minimized = false } = {} },
     linkElement,
   } = useProcesses();
   const { foregroundId, setForegroundId } = useSession();
-  const nextFocusableId = useNextFocusable(pid);
-  const isForeground = foregroundId === pid;
+  const nextFocusableId = useNextFocusable(id);
+  const isForeground = foregroundId === id;
   const [isPeekVisible, setPeekVisible] = useState(false);
   const hidePeek = (): void => setPeekVisible(false);
   const showPeek = (): void => setPeekVisible(true);
@@ -33,16 +33,16 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   const isBottomNotch = !!(minimized || !isForeground);
 
   const onClick: React.MouseEventHandler = () => {
-    if (minimized || isForeground) minimize(pid);
-    setForegroundId(isForeground ? nextFocusableId : pid);
+    if (minimized || isForeground) minimize(id);
+    setForegroundId(isForeground ? nextFocusableId : id);
   };
 
   const linkTaskbarEntry = useCallback(
     (taskbarEntry: HTMLButtonElement | null) => {
       if (taskbarEntry instanceof HTMLElement)
-        linkElement(pid, "taskbarEntry", taskbarEntry);
+        linkElement(id, "taskbarEntry", taskbarEntry);
     },
-    [pid, linkElement],
+    [id, linkElement],
   );
 
   const {
@@ -59,7 +59,7 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   return (
     <div onClick={hidePeek} onMouseEnter={showPeek} onMouseLeave={hidePeek}>
       <AnimatePresence>
-        {PeekWindow && <PeekWindow id={pid} isPeekVisible={isPeekVisible} />}
+        {PeekWindow && <PeekWindow id={id} isPeekVisible={isPeekVisible} />}
       </AnimatePresence>
       <motion.button
         type="button"
