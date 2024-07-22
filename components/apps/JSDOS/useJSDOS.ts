@@ -49,11 +49,15 @@ const useJSDOS = (
           }
         });
 
-      dosCI
-        .events()
-        .onFrameSize((width, height) =>
-          updateWindowSize(height * 2, width * 2),
-        );
+      dosCI.events().onFrameSize((width, height) => {
+        const { height: currentHeight = 0, width: currentWidth = 0 } =
+          containerRef.current?.getBoundingClientRect() || {};
+        const [frameHeight, frameWidth] = [height * 2, width * 2];
+
+        if (frameHeight !== currentHeight || frameWidth !== currentWidth) {
+          updateWindowSize(frameHeight, frameWidth);
+        }
+      });
 
       dosCI
         .events()
@@ -61,7 +65,7 @@ const useJSDOS = (
           window.SimpleKeyboardInstances?.emulatorKeyboard?.destroy(),
         );
     }
-  }, [closeProcess, dosCI, id, updateWindowSize]);
+  }, [closeProcess, containerRef, dosCI, id, updateWindowSize]);
 };
 
 export default useJSDOS;
