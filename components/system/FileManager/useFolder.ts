@@ -1,12 +1,14 @@
 import type { BFSOneArgCallback } from "browserfs/dist/node/core/file_system";
 import type { AsyncZippable } from "fflate";
 import { zip } from "fflate";
-import { basename, dirname, join } from "path";
+import ini from "ini";
+import { basename, dirname, extname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
+import { getIconByFileExtension } from "@/context/FileSystem/functions";
 import { useSession } from "@/context/Session";
-import { SHORTCUT } from "@/utils/constants";
+import { SHORTCUT, SHORTCUT_APPEND } from "@/utils/constants";
 import { cleanUpBufferUrl } from "@/utils/functions";
 
 import {
@@ -176,6 +178,27 @@ const useFolder = (
       }
     });
 
+  const newShortcut = (path: string, process: string): void => {
+    const baseName = basename(path);
+    const shortcutPath = `${baseName}${SHORTCUT_APPEND}${SHORTCUT}`;
+    const pathExtension = extname(path);
+    const shortcutData = ini.encode(
+      {
+        BaseURL: process,
+        IconFile: pathExtension
+          ? getIconByFileExtension(pathExtension)
+          : "/assets/ICON16772_1.ico",
+        URL: path,
+      },
+      {
+        section: "InternetShortcut",
+        whitespace: false,
+      },
+    );
+
+    newPath(shortcutPath, Buffer.from(shortcutData));
+  };
+
   useEffect(updateFiles, [updateFiles]);
 
   useEffect(
@@ -197,8 +220,9 @@ const useFolder = (
     updateFiles,
     fileActions: {
       deleteFile,
-      renameFile,
       downloadFiles,
+      newShortcut,
+      renameFile,
     },
     folderActions: {
       addToFolder: () => addFile(newPath),

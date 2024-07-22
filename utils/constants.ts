@@ -114,3 +114,5 @@ export const SAVE_PATH = "/saves";
 export const PREVENT_SCROLL = { preventScroll: true };
 
 export const MAX_MOVES = 5;
+
+export const SHORTCUT_APPEND = " - Shortcut";

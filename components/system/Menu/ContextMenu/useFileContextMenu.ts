@@ -4,6 +4,7 @@ import type { FileActions } from "@/components/system/FileManager/types";
 import useFile from "@/components/system/FileManager/useFile";
 import { useFileSystem } from "@/context/FileSystem";
 import extensions from "@/context/FileSystem/extensions";
+import { getProcessByFileExtension } from "@/context/FileSystem/functions";
 import type { ExtensionType } from "@/context/FileSystem/types";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
@@ -19,12 +20,12 @@ const useFileContextMenu = (
   pid: string,
   path: string,
   setState: React.Dispatch<React.SetStateAction<string>>,
-  { deleteFile, downloadFiles }: FileActions,
+  { deleteFile, downloadFiles, newShortcut }: FileActions,
 ): ContextMenu => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
   const urlExtension = extname(url);
-  const { process: [, ...openWith] = [] } =
+  const { process: [extensionProcess, ...openWith] = [] } =
     urlExtension in extensions ? extensions[urlExtension as ExtensionType] : {};
 
   const filterdOpenWith = openWith.filter((id) => id !== pid);
@@ -44,15 +45,30 @@ const useFileContextMenu = (
     { label: "Cut", action: () => moveEntries(absoluteEntries()) },
     { label: "Copy", action: () => copyEntries(absoluteEntries()) },
     { separator: true },
+  ];
+
+  const pathExtension = extname(path);
+  const isShortcut = pathExtension === SHORTCUT;
+
+  if (!isShortcut) {
+    const defaultProcess =
+      extensionProcess || getProcessByFileExtension(urlExtension);
+
+    if (defaultProcess || (!pathExtension && !urlExtension)) {
+      menuItems.push({
+        label: "Create shortcut",
+        action: () => newShortcut(path, defaultProcess || "FileExplorer"),
+      });
+    }
+  }
+
+  menuItems.push(
     {
       label: "Delete",
       action: () => absoluteEntries().forEach((entry) => deleteFile(entry)),
     },
     { label: "Rename", action: () => setState(basename(path)) },
-  ];
-
-  const pathExtension = extname(path);
-  const isShortcut = pathExtension === SHORTCUT;
+  );
 
   if (!isShortcut && url && (pathExtension || pid !== "FileExplorer")) {
     menuItems.unshift({ separator: true });

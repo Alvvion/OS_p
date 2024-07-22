@@ -11,8 +11,9 @@ export type FileManagerProps = {
 
 export type FileActions = {
   deleteFile: (path: string) => void;
-  renameFile: (path: string, name?: string) => void;
   downloadFiles: (paths: string[]) => void;
+  newShortcut: (path: string, process: string) => void;
+  renameFile: (path: string, name?: string) => void;
 };
 
 export type FocusableEntry = {

@@ -1,3 +1,4 @@
+import { basename } from "path";
 import { useEffect } from "react";
 import { FaArrowLeft, FaArrowRight, FaArrowUp } from "react-icons/fa6";
 import { IoMdRefresh } from "react-icons/io";
@@ -49,7 +50,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
 
   useEffect(() => {
     if (url) {
-      title(id, url);
+      title(id, basename(url) || "My PC");
     }
   }, [id, title, url]);
 
