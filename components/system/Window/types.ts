@@ -1,6 +1,4 @@
-export type ComponentProps = {
-  id: string;
-};
+import type { ComponentProps } from "@/components/common/types";
 
 export type WindowComponentProps = ComponentProps & {
   titlebarStyle: "File Explorer" | "Default";

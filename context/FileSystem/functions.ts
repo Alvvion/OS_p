@@ -1,12 +1,19 @@
 import { monacoExtensions } from "@/components/apps/MonacoEditor/config";
-import { ONE_TIME_PASSIVE_EVENT } from "@/utils/constants";
+import {
+  IMAGE_FILE_EXTENSION,
+  ONE_TIME_PASSIVE_EVENT,
+} from "@/utils/constants";
 
 import { processDir } from "../Process/directory";
 import extensions from "./extensions";
 import type { ExtensionType } from "./types";
 
-const getDefaultFileViewer = (extension: string): string =>
-  monacoExtensions.has(extension) ? "MonacoEditor" : "";
+const getDefaultFileViewer = (extension: string): string => {
+  if (monacoExtensions.has(extension)) return "MonacoEditor";
+  if (IMAGE_FILE_EXTENSION.has(extension)) return "Photos";
+
+  return "";
+};
 
 export const getIconByFileExtension = (extension: string): string => {
   const { icon: extensionIcon = "", process: [defaultProcess = ""] = [] } =
