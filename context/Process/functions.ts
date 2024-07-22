@@ -1,4 +1,4 @@
-import { PROCESS_DELIMITER } from "@/utils/constants";
+import { PREVENT_SCROLL, PROCESS_DELIMITER } from "@/utils/constants";
 
 import { processDir } from "./directory";
 import type { Process, ProcessElement, Processes } from "./types";
@@ -44,7 +44,7 @@ export const openingProcess =
     if (currentProcesses[id]) {
       const { componentWindow } = currentProcesses[id];
 
-      componentWindow?.focus();
+      componentWindow?.focus(PREVENT_SCROLL);
 
       return currentProcesses;
     }

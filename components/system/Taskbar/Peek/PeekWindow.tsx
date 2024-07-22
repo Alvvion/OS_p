@@ -54,8 +54,8 @@ const PeekWindow: React.FC<PeekWindowProps> = ({ id, isPeekVisible }) => {
 
       if (left < 0) {
         setOffsetX(Math.abs(left));
-      } else if (right > window.innerWidth) {
-        setOffsetX(window.innerWidth - right);
+      } else if (right > window.screen.width) {
+        setOffsetX(window.screen.width - right);
       }
     }
   }, [image]);

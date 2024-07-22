@@ -2,14 +2,17 @@ import Icon from "@/components/common/Icon";
 import type { ComponentProps } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
+import { PREVENT_SCROLL } from "@/utils/constants";
 
 import useTitlebarContextMenu from "../../Menu/ContextMenu/useTitlebarContextMenu";
 import WindowActionButton from "./WindowActionButton";
 
 const DefaultBar: React.FC<ComponentProps> = ({ id }) => {
   const {
-    processes: { [id]: { icon = "", title = "" } = {} },
+    processes: { [id]: process },
   } = useProcesses();
+
+  const { componentWindow, icon, title } = process || {};
 
   const {
     colors: {
@@ -24,6 +27,10 @@ const DefaultBar: React.FC<ComponentProps> = ({ id }) => {
     <header
       className="handle flex justify-between"
       style={{ backgroundColor: bgColor }}
+      onTouchStartCapture={({ target }) => {
+        if (target instanceof HTMLElement) target.click();
+        componentWindow?.focus(PREVENT_SCROLL);
+      }}
       {...useTitlebarContextMenu(id)}
     >
       <h1 style={{ color: text, fontSize, height }} className="font-normal">
