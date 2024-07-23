@@ -6,7 +6,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import { getInfoWithExtension, getInfoWithoutExtension } from "./functions";
 import type { FileInfo } from "./types";
 
-const useFileInfo = (path: string): FileInfo => {
+const useFileInfo = (path: string, isDirectory: boolean): FileInfo => {
   const { fs } = useFileSystem();
   const [info, setInfo] = useState<FileInfo>({
     icon: "",
@@ -18,13 +18,13 @@ const useFileInfo = (path: string): FileInfo => {
     if (fs) {
       const extension = extname(path).toLowerCase();
 
-      if (extension) {
-        getInfoWithExtension(fs, path, extension, setInfo);
+      if (!extension || isDirectory) {
+        setInfo(getInfoWithoutExtension(path, isDirectory));
       } else {
-        getInfoWithoutExtension(fs, path, setInfo);
+        getInfoWithExtension(fs, path, extension, setInfo);
       }
     }
-  }, [path, fs]);
+  }, [path, fs, isDirectory]);
   return info;
 };
 

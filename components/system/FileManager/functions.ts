@@ -15,13 +15,7 @@ import {
 } from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
-import type {
-  FileInfo,
-  Files,
-  FileType,
-  InternetShortcut,
-  SelectionRect,
-} from "./types";
+import type { FileInfo, Files, InternetShortcut, SelectionRect } from "./types";
 
 export const iterateFileNames = (name: string, iteration: number): string => {
   const extension = extname(name);
@@ -31,19 +25,13 @@ export const iterateFileNames = (name: string, iteration: number): string => {
 };
 
 export const getInfoWithoutExtension = (
-  fs: FSModule,
   path: string,
-  callback: React.Dispatch<React.SetStateAction<FileInfo>>,
-): void => {
-  fs.stat(path, (_err, stats) => {
-    const isDirectory = stats ? stats.isDirectory() : false;
-    callback({
-      icon: `/System/Icons/${isDirectory ? "ICON16772_1.ico" : "ICON2_1.ico"}`,
-      pid: isDirectory ? "FileExplorer" : "",
-      url: path,
-    });
-  });
-};
+  isDirectory: boolean,
+): FileInfo => ({
+  icon: `/System/Icons/${isDirectory ? "ICON16772_1.ico" : "ICON2_1.ico"}`,
+  pid: isDirectory ? "FileExplorer" : "",
+  url: path,
+});
 
 export const getInfoWithExtension = (
   fs: FSModule,
@@ -173,19 +161,3 @@ export const createLink = (
 
   setState(link.href);
 };
-
-export const getFile = (
-  path: string,
-  fs?: FSModule,
-): Promise<FileType | void> =>
-  new Promise((resolve) => {
-    if (extname(path) === SHORTCUT) resolve();
-    else
-      fs?.stat(path, (_statError, stats) => {
-        if (stats?.isDirectory()) resolve();
-        else
-          fs.readFile(path, (_error, contents = Buffer.from("")) => {
-            resolve([basename(path), contents]);
-          });
-      });
-  });

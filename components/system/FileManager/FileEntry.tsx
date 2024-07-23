@@ -42,7 +42,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   view,
   ...events
 }) => {
-  const { icon, pid, url } = useFileInfo(path);
+  const { icon, pid, url } = useFileInfo(path, stats.isDirectory());
   const { pasteList = {} } = useFileSystem();
 
   const { blurEntry, focusEntry, focusedEntries } = useSession();

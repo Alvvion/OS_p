@@ -15,7 +15,6 @@ import { cleanUpBufferUrl } from "@/utils/functions";
 import {
   createLink,
   filterSystemFiles,
-  getFile,
   iterateFileNames,
   sortContents,
 } from "./functions";
@@ -108,12 +107,14 @@ const useFolder = (
     [directory, fs, getFiles],
   );
 
-  const deleteFile = (path: string): void =>
-    fs?.stat(path, (_error, stats) => {
-      const fsDelete = stats?.isDirectory() ? fs.rmdir : fs.unlink;
-
+  const deleteFile = (path: string): void => {
+    if (fs) {
+      const fsDelete = files?.[basename(path)]?.isDirectory()
+        ? fs.rmdir
+        : fs.unlink;
       fsDelete(path, () => updateFolder(directory, "", path));
-    });
+    }
+  };
 
   const renameFile = (path: string, name?: string): void => {
     const newName = name?.trim();
@@ -134,8 +135,18 @@ const useFolder = (
     }
   };
 
+  const getFile = (path: string): Promise<FileType | void> =>
+    new Promise((resolve) => {
+      if (extname(path) === SHORTCUT) resolve();
+      else if (files?.[basename(path)]?.isDirectory()) resolve();
+      else
+        fs?.readFile(path, (_readError, contents = Buffer.from("")) =>
+          resolve([basename(path), contents]),
+        );
+    });
+
   const downloadFiles = (paths: string[]): Promise<void> =>
-    Promise.all(paths.map((path) => getFile(path, fs))).then((filePaths) => {
+    Promise.all(paths.map((path) => getFile(path))).then((filePaths) => {
       const zipFiles = filePaths.filter(Boolean) as FileType[];
 
       if (zipFiles.length === 1) {
@@ -201,7 +212,7 @@ const useFolder = (
   };
 
   const archiveFiles = (paths: string[]): Promise<void> =>
-    Promise.all(paths.map((path) => getFile(path, fs))).then((filePaths) => {
+    Promise.all(paths.map((path) => getFile(path))).then((filePaths) => {
       const zipFiles = filePaths.filter(Boolean) as FileType[];
 
       zip(
