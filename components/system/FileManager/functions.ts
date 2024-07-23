@@ -1,4 +1,5 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
+import type { Stats } from "fs";
 import ini from "ini";
 import { basename, extname, join } from "path";
 
@@ -16,6 +17,7 @@ import { bufferToUrl } from "@/utils/functions";
 
 import type {
   FileInfo,
+  Files,
   FileType,
   InternetShortcut,
   SelectionRect,
@@ -99,22 +101,28 @@ export const filterSystemFiles =
   (file: string): boolean =>
     !SYSTEM_FILES.has(join(directory, file));
 
-const sortCaseInsensitive = (a: string, b: string): number =>
-  a.localeCompare(b, "en", { sensitivity: "base" });
+const sortCaseInsensitive = (
+  [a]: [string, Stats],
+  [b]: [string, Stats],
+): number => a.localeCompare(b, "en", { sensitivity: "base" });
 
-export const sortContents = (contents: string[]): string[] => {
-  const files: string[] = [];
-  const folders: string[] = [];
+export const sortContents = (contents: Files): Files => {
+  const files: [string, Stats][] = [];
+  const folders: [string, Stats][] = [];
 
-  contents.forEach((entry) => {
-    if (extname(entry)) files.push(entry);
-    else folders.push(entry);
+  Object.entries(contents).forEach((entry) => {
+    const [, stat] = entry;
+    if (stat.isDirectory()) {
+      folders.push(entry);
+    } else {
+      files.push(entry);
+    }
   });
 
-  return [
+  return Object.fromEntries([
     ...folders.sort(sortCaseInsensitive),
     ...files.sort(sortCaseInsensitive),
-  ];
+  ]);
 };
 
 export const isSelectionIntersecting = (

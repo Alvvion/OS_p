@@ -8,7 +8,6 @@ const useLocaleDateTime = (now: Date): LocaleDateTime => {
   return {
     date: new Intl.DateTimeFormat(LOCALE, formats.date).format(now),
     time: new Intl.DateTimeFormat(LOCALE, formats.time).format(now),
-    tooltip: new Intl.DateTimeFormat(LOCALE, formats.tooltip).format(now),
     datetime: now.toISOString(),
   };
 };

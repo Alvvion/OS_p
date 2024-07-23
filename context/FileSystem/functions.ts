@@ -5,8 +5,8 @@ import {
 } from "@/utils/constants";
 
 import { processDir } from "../Process/directory";
+import type { ExtensionType } from "./extensions";
 import extensions from "./extensions";
-import type { ExtensionType } from "./types";
 
 const getDefaultFileViewer = (extension: string): string => {
   if (monacoExtensions.has(extension)) return "MonacoEditor";

@@ -1,13 +1,17 @@
-import { basename } from "path";
+import { basename, extname } from "path";
 import { useEffect, useRef } from "react";
 
 import Icon from "@/components/common/Icon";
 import useFileContextMenu from "@/components/system/Menu/ContextMenu/useFileContextMenu";
 import { useFileSystem } from "@/context/FileSystem";
+import type { ExtensionType } from "@/context/FileSystem/extensions";
+import extensions from "@/context/FileSystem/extensions";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
+import formats from "@/context/Theme/default/formats";
 import useDoubleClick from "@/hooks/useDoubleClick";
-import { PREVENT_SCROLL } from "@/utils/constants";
+import { PREVENT_SCROLL, SHORTCUT } from "@/utils/constants";
+import { getFormattedSize } from "@/utils/functions";
 
 import { isSelectionIntersecting, truncateName } from "./functions";
 import RenameBox from "./RenameBox";
@@ -34,6 +38,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   renaming,
   selectionRect,
   setRenaming,
+  stats,
   view,
   ...events
 }) => {
@@ -111,6 +116,31 @@ const FileEntry: React.FC<FileEntryProps> = ({
     selectionRect,
   ]);
 
+  const createTooltip = (): string | undefined => {
+    const extension = extname(path);
+    const isShortcut = extension === SHORTCUT;
+
+    if (isShortcut || stats.isDirectory()) return undefined;
+
+    const type =
+      extensions[extension as ExtensionType]?.type ||
+      `${extension.toUpperCase().replace(".", "")} File`;
+    const { atimeMs, ctimeMs, mtimeMs, size: sizeInBytes } = stats;
+    const unknownTime = atimeMs === ctimeMs && ctimeMs === mtimeMs;
+    const size = getFormattedSize(sizeInBytes);
+    const toolTip = `Type: ${type}\nSize: ${size}`;
+
+    if (unknownTime) return toolTip;
+
+    const date = new Date(mtimeMs).toISOString().slice(0, 10);
+    const time = new Intl.DateTimeFormat("en", formats.dateModified).format(
+      mtimeMs,
+    );
+    const dateModified = `${date} ${time}`;
+
+    return `${toolTip}\nDate modified: ${dateModified}`;
+  };
+
   return (
     <li
       className={
@@ -125,6 +155,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         ref={buttonRef}
         className="relative cursor-context-menu outline-none"
         onClick={onClick}
+        title={createTooltip()}
         {...useFileContextMenu(url, pid, path, setRenaming, fileActions)}
       >
         <figure className="flex flex-col place-items-center mb-[-3px]">

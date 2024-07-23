@@ -51,12 +51,13 @@ const FileManager: React.FC<FileManagerProps> = ({
   useEffect(() => {
     const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
 
-    if (isMountable && files.length === 0) {
+    if (isMountable && Object.keys(files).length === 0) {
       mountFs(url).then(() => updateFiles());
     }
 
     return () => {
-      if (isMountable && files.length > 0 && closing) unMountFs(url);
+      if (isMountable && Object.keys(files).length > 0 && closing)
+        unMountFs(url);
     };
   }, [url, files, mountFs, unMountFs, updateFiles, closing]);
 
@@ -90,7 +91,7 @@ const FileManager: React.FC<FileManagerProps> = ({
           />
         </>
       )}
-      {files.map((file) => (
+      {Object.keys(files).map((file) => (
         <FileEntry
           key={file}
           name={basename(file, SHORTCUT)}
@@ -100,6 +101,7 @@ const FileManager: React.FC<FileManagerProps> = ({
           fileManagerRef={fileManagerRef}
           fileActions={fileActions}
           selectionRect={selectionRect}
+          stats={files[file]}
           view={view}
           {...focusableEntry(file)}
           {...draggableEntry(url, file)}

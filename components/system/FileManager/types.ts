@@ -1,3 +1,4 @@
+import type { Stats } from "fs";
 import type { Position } from "react-rnd";
 
 import type { Size } from "@/components/common/types";
@@ -8,6 +9,8 @@ export type FileManagerProps = {
   url: string;
   view?: "default" | "start";
 };
+
+export type Files = Record<string, Stats>;
 
 export type FileActions = {
   archiveFiles: (paths: string[]) => Promise<void>;
@@ -46,6 +49,7 @@ export type FileEntryProps = FocusableEntry &
     fileManagerRef: React.MutableRefObject<HTMLOListElement | null>;
     selectionRect?: SelectionRect;
     setRenaming: React.Dispatch<React.SetStateAction<string>>;
+    stats: Stats;
     view: "default" | "start";
   };
 
@@ -74,7 +78,7 @@ export type FolderActions = {
 
 export type Folder = {
   fileActions: FileActions;
-  files: string[];
+  files: Files;
   folderActions: FolderActions;
   isLoading: boolean;
   updateFiles: (newFile?: string, oldFile?: string) => void;

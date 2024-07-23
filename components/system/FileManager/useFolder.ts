@@ -1,6 +1,7 @@
 import type { BFSOneArgCallback } from "browserfs/dist/node/core/file_system";
 import type { AsyncZippable } from "fflate";
 import { unzip, zip } from "fflate";
+import type { Stats } from "fs";
 import ini from "ini";
 import { basename, dirname, extname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
@@ -18,7 +19,7 @@ import {
   iterateFileNames,
   sortContents,
 } from "./functions";
-import type { FileType, Folder } from "./types";
+import type { Files, FileType, Folder } from "./types";
 
 const useFolder = (
   directory: string,
@@ -34,39 +35,62 @@ const useFolder = (
     updateFolder,
   } = useFileSystem();
   const { focusEntry, blurEntry } = useSession();
-  const [files, setFiles] = useState<string[]>([]);
+  const [files, setFiles] = useState<Files>({});
   const [downloadLink, setDownloadLink] = useState("");
   const [isLoading, setLoading] = useState(true);
+
+  const getFiles = useCallback(
+    (fileNames: string[]): Promise<Files> =>
+      Promise.all(
+        fileNames.map(
+          (file): Promise<[string, Stats]> =>
+            new Promise((resolve, reject) => {
+              fs?.stat(join(directory, file), (error, stats) =>
+                error
+                  ? reject(error)
+                  : resolve([file, stats as unknown as Stats]),
+              );
+            }),
+        ),
+      ).then(Object.fromEntries),
+    [directory, fs],
+  );
 
   const updateFiles = useCallback(
     (newFile = "", oldFile = "") => {
       if (oldFile && newFile) {
-        setFiles((currentFiles) =>
-          currentFiles.map((file) =>
-            file === basename(oldFile) ? basename(newFile) : file,
-          ),
-        );
+        setFiles(({ [basename(oldFile)]: fileStats, ...currentFiles }) => ({
+          ...currentFiles,
+          [basename(newFile)]: fileStats,
+        }));
       } else if (oldFile) {
-        setFiles((currentFiles) =>
-          currentFiles.filter((file) => file !== basename(oldFile)),
+        setFiles(
+          ({ [basename(oldFile)]: _fileStats, ...currentFiles }) =>
+            currentFiles,
         );
       } else if (newFile) {
-        setFiles((currentFiles) => {
-          const newName = basename(newFile);
-
-          return currentFiles.includes(newName)
-            ? currentFiles
-            : [...currentFiles, newName];
+        fs?.stat(join(directory, newFile), (error, stats) => {
+          if (!error && stats) {
+            setFiles((currentFiles) => ({
+              ...currentFiles,
+              [basename(newFile)]: stats as unknown as Stats,
+            }));
+          }
         });
-      } else if (fs) {
+      } else {
         setLoading(true);
-        fs.readdir(directory, (_error, contents = []) => {
+        fs?.readdir(directory, async (error, contents = []) => {
           setLoading(false);
-          setFiles(sortContents(contents).filter(filterSystemFiles(directory)));
+          if (!error) {
+            const filtersFiles = contents.filter(filterSystemFiles(directory));
+            const sortedFiles = sortContents(await getFiles(filtersFiles));
+
+            setFiles(sortedFiles);
+          }
         });
       }
     },
-    [directory, fs],
+    [directory, fs, getFiles],
   );
 
   const deleteFile = (path: string): void =>

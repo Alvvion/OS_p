@@ -1,6 +1,7 @@
 import vantaWaves from "@/components/system/Desktop/vanta";
 
 import colors from "./default/colors";
+import formats from "./default/formats";
 import sizes from "./default/sizes";
 import type { DefaultTheme } from "./types";
 
@@ -12,24 +13,7 @@ const themes: Themes = {
   default: {
     colors,
     sizes,
-    formats: {
-      date: {
-        day: "numeric",
-        month: "numeric",
-        year: "numeric",
-      },
-      time: {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: false,
-      },
-      tooltip: {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      },
-    },
+    formats,
     wallpaper: vantaWaves({
       color: 0x192b34,
       shininess: 35,

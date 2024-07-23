@@ -5,7 +5,7 @@ import useLocaleDateTime from "@/hooks/useDateTImeLocale";
 
 const Clock: React.FC = () => {
   const [now, setNow] = useState<Date>(new Date());
-  const { date, time, datetime, tooltip } = useLocaleDateTime(now);
+  const { date, time, datetime } = useLocaleDateTime(now);
 
   const updateClock = (): void => setNow(new Date());
 
@@ -35,7 +35,6 @@ const Clock: React.FC = () => {
     <time
       className="mr-[10px] flex flex-col justify-end items-end p-[0.3rem] rounded-[0.25rem] place-content-center place-items-center"
       dateTime={datetime}
-      data-tooltip={tooltip}
       suppressHydrationWarning
       style={{ color: text, fontSize }}
     >
