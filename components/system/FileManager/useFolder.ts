@@ -34,8 +34,14 @@ const useFolder = (
     removeFsWatcher,
     updateFolder,
   } = useFileSystem();
-  const { focusEntry, blurEntry } = useSession();
-  const [files, setFiles] = useState<Files>({});
+  const {
+    focusEntry,
+    blurEntry,
+    sessionLoaded,
+    setSortOrders,
+    sortOrders: { [directory]: sortOrder } = {},
+  } = useSession();
+  const [files, setFiles] = useState<Files>();
   const [downloadLink, setDownloadLink] = useState("");
   const [isLoading, setLoading] = useState(true);
 
@@ -57,21 +63,23 @@ const useFolder = (
   );
 
   const updateFiles = useCallback(
-    (newFile = "", oldFile = "") => {
+    (newFile?: string, oldFile?: string, initialOrder?: string[]) => {
       if (oldFile && newFile) {
-        setFiles(({ [basename(oldFile)]: fileStats, ...currentFiles }) => ({
-          ...currentFiles,
-          [basename(newFile)]: fileStats,
-        }));
+        setFiles(
+          ({ [basename(oldFile)]: fileStats, ...currentFiles } = {}) => ({
+            ...currentFiles,
+            [basename(newFile)]: fileStats,
+          }),
+        );
       } else if (oldFile) {
         setFiles(
-          ({ [basename(oldFile)]: _fileStats, ...currentFiles }) =>
+          ({ [basename(oldFile)]: _fileStats, ...currentFiles } = {}) =>
             currentFiles,
         );
       } else if (newFile) {
         fs?.stat(join(directory, newFile), (error, stats) => {
           if (!error && stats) {
-            setFiles((currentFiles) => ({
+            setFiles((currentFiles = {}) => ({
               ...currentFiles,
               [basename(newFile)]: stats as unknown as Stats,
             }));
@@ -81,11 +89,18 @@ const useFolder = (
         setLoading(true);
         fs?.readdir(directory, async (error, contents = []) => {
           setLoading(false);
-          if (!error) {
-            const filtersFiles = contents.filter(filterSystemFiles(directory));
-            const sortedFiles = sortContents(await getFiles(filtersFiles));
+          if (error) {
+            setFiles({});
+          } else {
+            const filteredFiles = contents.filter(filterSystemFiles(directory));
+            const updatedFiles = await getFiles(filteredFiles);
 
-            setFiles(sortedFiles);
+            setFiles((currentFiles = {}) =>
+              sortContents(
+                updatedFiles,
+                initialOrder || Object.keys(currentFiles),
+              ),
+            );
           }
         });
       }
@@ -259,7 +274,20 @@ const useFolder = (
     newPath(shortcutPath, Buffer.from(shortcutData));
   };
 
-  useEffect(updateFiles, [updateFiles]);
+  useEffect(() => {
+    if (sessionLoaded) {
+      if (!files) {
+        updateFiles(undefined, undefined, sortOrder);
+      } else if (
+        !Object.keys(files).every((file, index) => file === sortOrder?.[index])
+      ) {
+        setSortOrders((currentSortOrder) => ({
+          ...currentSortOrder,
+          [directory]: Object.keys(files),
+        }));
+      }
+    }
+  }, [directory, files, sessionLoaded, setSortOrders, sortOrder, updateFiles]);
 
   useEffect(
     () => () => {
@@ -275,7 +303,7 @@ const useFolder = (
   }, [addFsWatcher, directory, removeFsWatcher, updateFiles]);
 
   return {
-    files,
+    files: files || {},
     isLoading,
     updateFiles,
     fileActions: {

@@ -11,14 +11,17 @@ export type WindowStates = {
 
 export type WallpaperFit = "fill" | "fit" | "stretch" | "tile" | "center";
 
+export type SortOrders = Record<string, string[]>;
+
 export type SessionData = {
+  sortOrders: SortOrders;
   themeName: string;
   wallpaperFit: WallpaperFit;
   wallpaperImage: string;
   windowStates: WindowStates;
 };
 
-export type SessionContextType = {
+export type SessionContextType = SessionData & {
   blurEntry: (entry?: string) => void;
   focusEntry: (entry: string) => void;
   focusedEntries: string[];
@@ -27,12 +30,9 @@ export type SessionContextType = {
   removeFromStack: (id: string) => void;
   sessionLoaded: boolean;
   setForegroundId: React.Dispatch<React.SetStateAction<string>>;
+  setSortOrders: React.Dispatch<React.SetStateAction<SortOrders>>;
   setThemeName: React.Dispatch<React.SetStateAction<string>>;
   setWallpaper: (image: string, fit: WallpaperFit) => void;
   setWindowStates: React.Dispatch<React.SetStateAction<WindowStates>>;
   stackOrder: string[];
-  themeName: string;
-  wallpaperFit: WallpaperFit;
-  wallpaperImage: string;
-  windowStates: WindowStates;
 };

@@ -4,6 +4,7 @@ import { useFileSystem } from "../FileSystem";
 import type {
   SessionContextType,
   SessionData,
+  SortOrders,
   WallpaperFit,
   WindowStates,
 } from "./types";
@@ -19,6 +20,7 @@ const useSessionContextState = (): SessionContextType => {
   const [focusedEntries, setFocusedEntries] = useState<string[]>([]);
   const [wallpaperFit, setWallpaperFit] = useState<WallpaperFit>("fill");
   const [wallpaperImage, setWallpaperImage] = useState("");
+  const [sortOrders, setSortOrders] = useState<SortOrders>({});
 
   const { fs } = useFileSystem();
 
@@ -65,6 +67,7 @@ const useSessionContextState = (): SessionContextType => {
       fs?.writeFile(
         SESSION_FILE,
         JSON.stringify({
+          sortOrders,
           themeName,
           wallpaperFit,
           wallpaperImage,
@@ -75,6 +78,7 @@ const useSessionContextState = (): SessionContextType => {
   }, [
     fs,
     sessionLoaded,
+    sortOrders,
     themeName,
     wallpaperFit,
     wallpaperImage,
@@ -85,6 +89,7 @@ const useSessionContextState = (): SessionContextType => {
     fs?.readFile(SESSION_FILE, (_err, content) => {
       if (content) {
         const session = JSON.parse(content.toString() || "{}") as SessionData;
+        setSortOrders(session.sortOrders);
         setThemeName(session.themeName);
         setWallpaper(session.wallpaperImage, session.wallpaperFit);
         setWindowStates(session.windowStates);
@@ -103,9 +108,11 @@ const useSessionContextState = (): SessionContextType => {
     removeFromStack,
     sessionLoaded,
     setForegroundId,
+    setSortOrders,
     setThemeName,
     setWallpaper,
     setWindowStates,
+    sortOrders,
     stackOrder,
     themeName,
     wallpaperImage,
