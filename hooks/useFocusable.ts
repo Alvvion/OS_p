@@ -73,8 +73,8 @@ const useFocusable = (
   }, [isForeground, moveToFront]);
 
   useEffect(() => {
-    if (process && !closing) setForegroundId(id);
-  }, [closing, id, process, setForegroundId, url]);
+    if (process && !closing && !minimized) setForegroundId(id);
+  }, [closing, id, minimized, process, setForegroundId, url]);
 
   return { zIndex, tabIndex: -1, onFocusCapture: moveToFront, onBlurCapture };
 };
