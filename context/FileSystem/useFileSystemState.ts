@@ -7,7 +7,7 @@ import type XmlHttpRequest from "browserfs/dist/node/backend/XmlHttpRequest";
 import type ZipFS from "browserfs/dist/node/backend/ZipFS";
 import type { BFSCallback } from "browserfs/dist/node/core/file_system";
 import type { FSModule } from "browserfs/dist/node/core/FS";
-import { basename, dirname, extname, join } from "path";
+import { dirname, extname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import * as BrowserFS from "@/public/System/BrowserFS/browserfs.min.js";
@@ -143,7 +143,6 @@ const useFileSystemState = (): FileSystemStateType => {
         else {
           fs.mkdir(makePath, { flag: "w" }, (error) => {
             if (!error) {
-              updateFolder(dirname(makePath), basename(makePath));
               nextPart();
             }
           });

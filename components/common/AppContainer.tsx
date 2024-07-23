@@ -22,14 +22,17 @@ const AppContianer: React.FC<ContainerProps> = ({
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const { fs, mkdirRecursive } = useFileSystem();
+  const { fs, mkdirRecursive, updateFolder } = useFileSystem();
 
   const fileDrop = useFileDrop((filePath: string, fileData?: Buffer) => {
     if (fileData) {
       const tempPath = join(TEMP_PATH, filePath);
       mkdirRecursive(TEMP_PATH, () => {
         fs?.writeFile(tempPath, fileData, (error) => {
-          if (!error) url(id, tempPath);
+          if (!error) {
+            url(id, tempPath);
+            updateFolder(TEMP_PATH, filePath);
+          }
         });
       });
     } else {
