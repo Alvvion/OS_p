@@ -1,5 +1,4 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
-import type { Stats } from "fs";
 import ini from "ini";
 import { basename, extname, join } from "path";
 
@@ -15,7 +14,15 @@ import {
 } from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
-import type { FileInfo, Files, InternetShortcut, SelectionRect } from "./types";
+import type {
+  FileInfo,
+  Files,
+  FileStats,
+  InternetShortcut,
+  SelectionRect,
+  SortBy,
+  SortFunction,
+} from "./types";
 
 export const iterateFileNames = (name: string, iteration: number): string => {
   const extension = extname(name);
@@ -89,12 +96,34 @@ export const filterSystemFiles =
   (file: string): boolean =>
     !SYSTEM_FILES.has(join(directory, file));
 
-const sortCaseInsensitive = (
-  [a]: [string, Stats],
-  [b]: [string, Stats],
-): number => a.localeCompare(b, "en", { sensitivity: "base" });
+const sortByName = ([a]: FileStats, [b]: FileStats): number =>
+  a.localeCompare(b, "en", { sensitivity: "base" });
 
-export const sortContents = (contents: Files, sortOrder: string[]): Files => {
+const sortBySize = (
+  [, { size: aSize }]: FileStats,
+  [, { size: bSize }]: FileStats,
+): number => aSize - bSize;
+
+const sortByType = ([a]: FileStats, [b]: FileStats): number =>
+  extname(a).localeCompare(extname(b), "en", { sensitivity: "base" });
+
+const sortByDate = (
+  [, { mtimeMs: aTime }]: FileStats,
+  [, { mtimeMs: bTime }]: FileStats,
+): number => aTime - bTime;
+
+const sortFunctionMap: Record<string, SortFunction> = {
+  name: sortByName,
+  size: sortBySize,
+  type: sortByType,
+  date: sortByDate,
+};
+
+export const sortContents = (
+  contents: Files,
+  sortOrder: string[],
+  sortFunction?: SortFunction,
+): Files => {
   if (sortOrder.length > 0) {
     const contentOrder = Object.keys(contents);
 
@@ -106,8 +135,9 @@ export const sortContents = (contents: Files, sortOrder: string[]): Files => {
     );
   }
 
-  const files: [string, Stats][] = [];
-  const folders: [string, Stats][] = [];
+  const files: FileStats[] = [];
+  const folders: FileStats[] = [];
+  const preSort = sortFunction && sortFunction !== sortByName;
 
   Object.entries(contents).forEach((entry) => {
     const [, stat] = entry;
@@ -118,11 +148,22 @@ export const sortContents = (contents: Files, sortOrder: string[]): Files => {
     }
   });
 
-  return Object.fromEntries([
-    ...folders.sort(sortCaseInsensitive),
-    ...files.sort(sortCaseInsensitive),
-  ]);
+  const sortedContents = [
+    ...(preSort
+      ? folders.sort(sortByName).sort(sortFunction)
+      : folders.sort(sortByName)),
+    ...(preSort
+      ? files.sort(sortByName).sort(sortFunction)
+      : files.sort(sortByName)),
+  ];
+
+  return Object.fromEntries(sortedContents);
 };
+
+export const sortFiles = (files: Files, sortBy: SortBy): Files =>
+  sortBy in sortFunctionMap
+    ? sortContents(files, [], sortFunctionMap[sortBy])
+    : files;
 
 export const isSelectionIntersecting = (
   element: DOMRect,

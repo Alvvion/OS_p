@@ -18,7 +18,8 @@ import {
   iterateFileNames,
   sortContents,
 } from "./functions";
-import type { Files, FileType, Folder } from "./types";
+import type { Files, FileStats, FileType, Folder } from "./types";
+import useSortBy from "./useSortBy";
 
 const useFolder = (
   directory: string,
@@ -48,7 +49,7 @@ const useFolder = (
     (fileNames: string[]): Promise<Files> =>
       Promise.all(
         fileNames.map(
-          (file): Promise<[string, Stats]> =>
+          (file): Promise<FileStats> =>
             new Promise((resolve, reject) => {
               fs?.stat(join(directory, file), (error, stats) =>
                 error
@@ -329,6 +330,7 @@ const useFolder = (
       addToFolder: () => addFile(newPath),
       newPath,
       pasteToFolder,
+      setSortBy: useSortBy(setFiles),
     },
   };
 };

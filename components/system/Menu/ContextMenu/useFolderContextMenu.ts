@@ -8,11 +8,32 @@ import type { ContextMenu } from "../types";
 
 const useFolderContextMenu = (
   url: string,
-  { addToFolder, newPath, pasteToFolder }: FolderActions,
+  { addToFolder, newPath, pasteToFolder, setSortBy }: FolderActions,
 ): ContextMenu => {
   const { contextMenu } = useMenu();
   const { pasteList = {}, updateFolder } = useFileSystem();
   const menuItems: MenuItem[] = [
+    {
+      label: "Sort by",
+      menu: [
+        {
+          label: "Name",
+          action: () => setSortBy("name"),
+        },
+        {
+          label: "Size",
+          action: () => setSortBy("size"),
+        },
+        {
+          label: "Item type",
+          action: () => setSortBy("type"),
+        },
+        {
+          label: "Date modified",
+          action: () => setSortBy("date"),
+        },
+      ],
+    },
     { label: "Refresh", action: () => updateFolder(url) },
     { separator: true },
     { label: "Add file", action: () => addToFolder() },
