@@ -5,12 +5,17 @@ export const BASE_WINDOW_SIZE = {
   width: 275,
 };
 
+const WEBAMP_SKINS_PATH = "/Users/Public/Documents/Winamp Skins";
+
 export const BASE_WEBAMP_SKINS = {
   availableSkins: [
-    { url: "/skins/Aqua_X.wsz", name: "Aqua X" },
-    { url: "/skins/Nucleo_NLog_v102.wsz", name: "Nucleo NLog v2G" },
+    { url: `${WEBAMP_SKINS_PATH}/Aqua_X.wsz`, name: "Aqua X" },
     {
-      url: "/skins/SpyAMP_Professional_Edition_v5.wsz",
+      url: `${WEBAMP_SKINS_PATH}/Nucleo_NLog_v102.wsz`,
+      name: "Nucleo NLog v2G",
+    },
+    {
+      url: `${WEBAMP_SKINS_PATH}/SpyAMP_Professional_Edition_v5.wsz`,
       name: "SpyAMP Professional Edition v5",
     },
   ],

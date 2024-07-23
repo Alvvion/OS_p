@@ -22,7 +22,7 @@ export const getIconByFileExtension = (extension: string): string => {
   if (extensionIcon) return extensionIcon;
   return (
     processDir[defaultProcess || getDefaultFileViewer(extension)]?.icon ||
-    "/assets/ICON2_1.ico"
+    "/System/Icons/ICON2_1.ico"
   );
 };
 

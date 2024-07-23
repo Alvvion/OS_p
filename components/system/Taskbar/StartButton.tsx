@@ -33,7 +33,7 @@ const StartButton: React.FC<StartButtonProps> = ({
       onClick={() => toggleStartMenu()}
     >
       <Icon
-        src="/assets/windows11.png"
+        src="/System/Icons/windows11.png"
         alt="Start Button"
         width={width}
         height={height}

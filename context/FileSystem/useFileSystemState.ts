@@ -10,7 +10,7 @@ import type { FSModule } from "browserfs/dist/node/core/FS";
 import { basename, dirname, extname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
-import * as BrowserFS from "@/public/libs/browserfs/browserfs.min.js";
+import * as BrowserFS from "@/public/System/BrowserFS/browserfs.min.js";
 
 import FileSystemConfig from "./config";
 import { handleFileInputEvent } from "./functions";

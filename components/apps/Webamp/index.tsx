@@ -17,6 +17,14 @@ import {
 } from "./functions";
 import useWebamp from "./useWebamp";
 
+const WEBAMP_PATH = "/Program Files/Webamp";
+
+const libs = [
+  `${WEBAMP_PATH}/webamp.bundle.min.js`,
+  `${WEBAMP_PATH}/butterchurn.min.js`,
+  `${WEBAMP_PATH}/butterchurnPresets.min.js`,
+];
+
 const Webamp: React.FC<ComponentProps> = ({ id }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -31,11 +39,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
 
   useEffect(() => {
     fs?.readFile(url, (_error, contents) => {
-      loadFiles([
-        "/libs/webamp/webamp.bundle.min.js",
-        "/libs/webamp/butterchurn.min.js",
-        "/libs/webamp/butterchurnPresets.min.js",
-      ]).then(() => {
+      loadFiles(libs).then(() => {
         loadWebamp(containerRef?.current, url, contents);
       });
     });

@@ -36,7 +36,7 @@ export const getInfoWithoutExtension = (
   fs.stat(path, (_err, stats) => {
     const isDirectory = stats ? stats.isDirectory() : false;
     callback({
-      icon: `/assets/${isDirectory ? "ICON16772_1.ico" : "ICON2_1.ico"}`,
+      icon: `/System/Icons/${isDirectory ? "ICON16772_1.ico" : "ICON2_1.ico"}`,
       pid: isDirectory ? "FileExplorer" : "",
       url: path,
     });
@@ -71,12 +71,12 @@ export const getInfoWithExtension = (
       }
     });
   } else if (IMAGE_FILE_EXTENSION.has(extension)) {
-    getInfoByFileExtension("/assets/ICON132_1.ico");
+    getInfoByFileExtension("/System/Icons/ICON132_1.ico");
     fs.readFile(path, (error, contents = Buffer.from("")) => {
       if (!error) getInfoByFileExtension(bufferToUrl(contents));
     });
   } else if (extension === ".mp3") {
-    getInfoByFileExtension("/assets/music_48.png");
+    getInfoByFileExtension("/System/Icons/music_48.png");
     fs.readFile(path, (error, contents = Buffer.from("")) => {
       if (!error) {
         import("music-metadata-browser").then(({ parseBuffer, selectCover }) =>

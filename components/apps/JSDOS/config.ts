@@ -3,7 +3,7 @@ import type {
   EmulatorFunction,
 } from "emulators-ui/dist/types/js-dos";
 
-export const defaultConfig = "/libs/jsdos/dosbox.conf";
+export const defaultConfig = "/Program Files/js-dos/dosbox.conf";
 
 export const dosOptions: DosOptions = {
   emulatorFunction: "dosWorker" as EmulatorFunction,
@@ -21,8 +21,8 @@ export const globals = [
 
 export const saveExtension = ".save.zip";
 
-export const libs = ["/libs/jsdos/js-dos.js"];
+export const libs = ["/Program Files/js-dos/js-dos.js"];
 
-export const pathPrefix = "/libs/jsdos/";
+export const pathPrefix = "/Program Files/js-dos/";
 
 export const zipConfigPath = ".jsdos/dosbox.conf";

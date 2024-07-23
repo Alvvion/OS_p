@@ -5,7 +5,7 @@ import type { Processes } from "./types";
 export const processDir: Processes = {
   FileExplorer: {
     Component: dynamic(() => import("@/components/apps/FileExplorer")),
-    icon: "/assets/win-file-explorer.ico",
+    icon: "/System/Icons/win-file-explorer.ico",
     title: "File Explorer",
     backgroundColor: "#191919",
     titlebarStyle: "File Explorer",
@@ -14,7 +14,7 @@ export const processDir: Processes = {
     autoSizing: true,
     backgroundColor: "#000",
     Component: dynamic(() => import("@/components/apps/JSDOS")),
-    icon: "/assets/jsdos.png",
+    icon: "/System/Icons/jsdos.png",
     title: "JSDOS",
     lockAspectRatio: true,
   },
@@ -25,7 +25,7 @@ export const processDir: Processes = {
       height: 400,
       width: 400,
     },
-    icon: "/assets/monaco.png",
+    icon: "/System/Icons/monaco.png",
     title: "Monaco Editor",
   },
   Photos: {
@@ -35,7 +35,7 @@ export const processDir: Processes = {
       height: 400,
       width: 500,
     },
-    icon: "/assets/photos.png",
+    icon: "/System/Icons/photos.png",
     prependTaskbarTitle: true,
     title: "Photos",
   },
@@ -46,7 +46,7 @@ export const processDir: Processes = {
       height: 400,
       width: 550,
     },
-    icon: "/assets/ruffle.png",
+    icon: "/System/Icons/ruffle.png",
     title: "Ruffle",
   },
   TinyMCE: {
@@ -56,12 +56,12 @@ export const processDir: Processes = {
       height: 400,
       width: 400,
     },
-    icon: "/assets/tinymce.png",
+    icon: "/System/Icons/tinymce.png",
     title: "TinyMCE",
   },
   V86: {
     Component: dynamic(() => import("@/components/apps/V86")),
-    icon: "/assets/V86.ico",
+    icon: "/System/Icons/V86.ico",
     title: "V86",
     autoSizing: true,
     backgroundColor: "#000",
@@ -69,7 +69,7 @@ export const processDir: Processes = {
   Webamp: {
     Component: dynamic(() => import("@/components/apps/Webamp")),
     hasWindow: false,
-    icon: "/assets/webamp_48.png",
+    icon: "/System/Icons/webamp_48.png",
     title: "Webamp",
     singleton: true,
   },

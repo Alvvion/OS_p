@@ -7,7 +7,7 @@ import { loadFiles } from "@/utils/functions";
 
 import type { RufflePlayer } from "./types";
 
-const libs = ["/libs/ruffle/ruffle.js"];
+const libs = ["/Program Files/Ruffle/ruffle.js"];
 
 const useRuffle = (
   id: string,

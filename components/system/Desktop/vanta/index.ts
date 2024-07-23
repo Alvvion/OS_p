@@ -3,7 +3,10 @@ import { loadFiles } from "@/utils/functions";
 import colorCycle from "../colorCylce";
 import type { VantaWavesConfig } from "../types";
 
-const libs = ["/libs/vanta/three.min.js", "/libs/vanta/vanta.waves.min.js"];
+const libs = [
+  "/System/Vanta.js/three.min.js",
+  "/System/Vanta.js/vanta.waves.min.js",
+];
 const isWebGLAvailable = typeof WebGLRenderingContext !== "undefined";
 
 const disableControls = {
