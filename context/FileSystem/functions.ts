@@ -1,4 +1,10 @@
+import ini from "ini";
+
 import { monacoExtensions } from "@/components/apps/MonacoEditor/config";
+import type {
+  FileInfo,
+  InternetShortcut,
+} from "@/components/system/FileManager/types";
 import {
   IMAGE_FILE_EXTENSION,
   ONE_TIME_PASSIVE_EVENT,
@@ -33,6 +39,17 @@ export const getProcessByFileExtension = (extension: string): string => {
       : [getDefaultFileViewer(extension)];
 
   return defaultProcess;
+};
+
+export const getShortcutInfo = (contents: Buffer): FileInfo => {
+  const {
+    InternetShortcut: { BaseURL: pid = "", IconFile: icon = "", URL: url = "" },
+  } = ini.parse(contents.toString()) as InternetShortcut;
+  if (!icon && pid) {
+    return { icon: processDir[pid]?.icon, pid, url };
+  }
+
+  return { icon, pid, url };
 };
 
 export const haltEvent = (

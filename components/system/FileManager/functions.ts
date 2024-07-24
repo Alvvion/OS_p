@@ -1,11 +1,11 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
-import ini from "ini";
 import { basename, extname, join } from "path";
 
 import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
 import {
   getIconByFileExtension,
   getProcessByFileExtension,
+  getShortcutInfo,
 } from "@/context/FileSystem/functions";
 import {
   IMAGE_FILE_EXTENSION,
@@ -18,7 +18,6 @@ import type {
   FileInfo,
   Files,
   FileStats,
-  InternetShortcut,
   SelectionRect,
   SortBy,
   SortFunction,
@@ -57,14 +56,7 @@ export const getInfoWithExtension = (
     fs.readFile(path, (err, contents = Buffer.from("")) => {
       if (err) getInfoByFileExtension();
       else {
-        const {
-          InternetShortcut: {
-            BaseURL: pid = "",
-            IconFile: icon = "",
-            URL: url = "",
-          },
-        } = ini.parse(contents.toString()) as InternetShortcut;
-        callback({ icon, pid, url });
+        callback(getShortcutInfo(contents));
       }
     });
   } else if (IMAGE_FILE_EXTENSION.has(extension)) {

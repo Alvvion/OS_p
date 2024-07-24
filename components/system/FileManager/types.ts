@@ -70,13 +70,17 @@ export type RenameBoxProps = {
   renameFile: (path: string, name?: string) => void;
 };
 
-export type SortBy = "" | "name" | "size" | "type" | "date";
+export type SortTypes = "name" | "size" | "type" | "date";
+
+export type SortBy = SortTypes | `!${SortTypes}`;
+
+export type SetSortBy = (value: SortTypes) => void;
 
 export type FolderActions = {
   addToFolder: () => void;
   newPath: (path: string, fileBuffer?: Buffer, isRenaming?: boolean) => void;
   pasteToFolder: () => void;
-  setSortBy: React.Dispatch<React.SetStateAction<SortBy>>;
+  setSortBy: SetSortBy;
 };
 
 export type Folder = {
