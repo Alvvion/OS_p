@@ -78,4 +78,12 @@ ul {
   .custom-scrollbar:hover::-webkit-scrollbar-button:increment {
     background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEyIDE1LjVsLTUtNSAxLjQxMS0xLjQxMUwxMiAxMi42MTUgMTUuNTg5IDkuMDg5IDE3IDEwLjV6Ii8+PC9zdmc+"); /* Custom SVG for down arrow */
   }
+  .video-player .video-js {
+    height: 100%;
+    width: 100%;
+  }
+
+  .video-player .video-js .vjs-poster {
+    background-size: contain;
+  }
 }
