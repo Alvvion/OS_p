@@ -2,8 +2,11 @@ import { extname } from "path";
 import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
+import {
+  getInfoWithExtension,
+  getInfoWithoutExtension,
+} from "@/context/FileSystem/functions";
 
-import { getInfoWithExtension, getInfoWithoutExtension } from "./functions";
 import type { FileInfo } from "./types";
 
 const useFileInfo = (path: string, isDirectory: boolean): FileInfo => {

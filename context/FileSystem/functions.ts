@@ -1,6 +1,9 @@
+import type { FSModule } from "browserfs/dist/node/core/FS";
 import ini from "ini";
+import { extname } from "path";
 
 import { monacoExtensions } from "@/components/apps/MonacoEditor/config";
+import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
 import type {
   FileInfo,
   InternetShortcut,
@@ -8,7 +11,9 @@ import type {
 import {
   IMAGE_FILE_EXTENSION,
   ONE_TIME_PASSIVE_EVENT,
+  SHORTCUT,
 } from "@/utils/constants";
+import { bufferToUrl } from "@/utils/functions";
 
 import { processDir } from "../Process/directory";
 import type { ExtensionType } from "./extensions";
@@ -50,6 +55,70 @@ export const getShortcutInfo = (contents: Buffer): FileInfo => {
   }
 
   return { icon, pid, url };
+};
+
+export const getInfoWithoutExtension = (
+  path: string,
+  isDirectory: boolean,
+): FileInfo => ({
+  icon: `/System/Icons/${isDirectory ? "ICON16772_1.ico" : "ICON2_1.ico"}`,
+  pid: isDirectory ? "FileExplorer" : "",
+  url: path,
+});
+
+export const getInfoWithExtension = (
+  fs: FSModule,
+  path: string,
+  extension: string,
+  callback: (value: FileInfo) => void,
+): void => {
+  const getInfoByFileExtension = (icon?: string): void =>
+    callback({
+      icon: icon || getIconByFileExtension(extension),
+      pid: getProcessByFileExtension(extension),
+      url: path,
+    });
+
+  if (extension === SHORTCUT) {
+    fs.readFile(path, (err, contents = Buffer.from("")) => {
+      if (err) getInfoByFileExtension();
+      else {
+        const { icon, pid, url } = getShortcutInfo(contents);
+        const urlExt = extname(url);
+
+        callback({ icon, pid, url });
+
+        if (IMAGE_FILE_EXTENSION.has(urlExt) || urlExt === ".mp3") {
+          getInfoWithExtension(fs, url, urlExt, ({ icon: urlIcon }) => {
+            if (urlIcon && urlIcon !== icon) {
+              callback({ icon: urlIcon, pid, url });
+            }
+          });
+        }
+      }
+    });
+  } else if (IMAGE_FILE_EXTENSION.has(extension)) {
+    getInfoByFileExtension("/System/Icons/ICON132_1.ico");
+    fs.readFile(path, (error, contents = Buffer.from("")) => {
+      if (!error) getInfoByFileExtension(bufferToUrl(contents));
+    });
+  } else if (extension === ".mp3") {
+    getInfoByFileExtension("/System/Icons/music_48.png");
+    fs.readFile(path, (error, contents = Buffer.from("")) => {
+      if (!error) {
+        import("music-metadata-browser").then(({ parseBuffer, selectCover }) =>
+          parseBuffer(
+            contents,
+            { mimeType: MP3_MIME_TYPE, size: contents.length },
+            { skipPostHeaders: true },
+          ).then(({ common: { picture } = {} }) => {
+            const { data: coverPicture } = selectCover(picture) || {};
+            if (coverPicture) getInfoByFileExtension(bufferToUrl(coverPicture));
+          }),
+        );
+      }
+    });
+  } else getInfoByFileExtension();
 };
 
 export const haltEvent = (
