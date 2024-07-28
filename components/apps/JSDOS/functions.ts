@@ -3,7 +3,7 @@ import { unzip, zip } from "fflate";
 import type { AsyncZippable } from "fflate/node";
 import { join } from "path";
 
-import { defaultConfig, zipConfigPath } from "./config";
+import { zipConfigFiles } from "./config";
 
 const isFileInZip = (buffer: Buffer, zipFilePath: string): Promise<boolean> =>
   new Promise((resolve) => {
@@ -53,6 +53,10 @@ export const addJSDOSConfig = async (
   buffer: Buffer,
   fs: FSModule,
 ): Promise<Buffer> =>
-  (await isFileInZip(buffer, zipConfigPath))
-    ? buffer
-    : addFileToZip(buffer, defaultConfig, zipConfigPath, fs);
+  Object.entries(zipConfigFiles).reduce(
+    async (newBuffer, [zipPath, fsPath]) =>
+      (await isFileInZip(await newBuffer, zipPath))
+        ? newBuffer
+        : addFileToZip(await newBuffer, fsPath, zipPath, fs),
+    Promise.resolve(buffer),
+  );
