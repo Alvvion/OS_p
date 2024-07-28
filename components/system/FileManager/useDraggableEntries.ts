@@ -6,9 +6,40 @@ import { useSession } from "@/context/Session";
 import type { DraggableEntries, DraggableEntry } from "./types";
 
 const useDraggableEntries = (): DraggableEntries => {
-  const { blurEntry, focusEntry, focusedEntries } = useSession();
-
   const [dragging, setDragging] = useState(false);
+  const [dropIndex, setDropIndex] = useState(-1);
+  const { blurEntry, focusEntry, focusedEntries, setSortOrders } = useSession();
+
+  const onDragEnd =
+    (entryUrl: string): React.DragEventHandler =>
+    () => {
+      setDragging(false);
+
+      if (dropIndex !== -1) {
+        setSortOrders((currentSortOrders) => {
+          const sortedEntries = currentSortOrders[entryUrl].filter(
+            (entry) => !focusedEntries.includes(entry),
+          );
+
+          sortedEntries.splice(dropIndex, 0, ...focusedEntries);
+
+          return {
+            ...currentSortOrders,
+            [entryUrl]: sortedEntries,
+          };
+        });
+      }
+    };
+  const onDragOver =
+    (file: string): React.DragEventHandler =>
+    ({ target }) => {
+      if (target instanceof HTMLLIElement) {
+        const { children = [] } = target.parentElement || {};
+        const dragOverFocused = focusedEntries.includes(file);
+
+        setDropIndex(dragOverFocused ? -1 : [...children].indexOf(target));
+      }
+    };
 
   const onDragStart =
     (entryUrl: string, file: string): React.DragEventHandler =>
@@ -26,13 +57,13 @@ const useDraggableEntries = (): DraggableEntries => {
       );
       Object.assign(event.dataTransfer, { effectAllowed: "move" });
     };
-  const onDragEnd = (): void => setDragging(false);
 
   return (entryUrl: string, file: string): DraggableEntry => ({
     draggable: true,
     isDragging: dragging,
     onDragStart: onDragStart(entryUrl, file),
-    onDragEnd,
+    onDragEnd: onDragEnd(entryUrl),
+    onDragOver: onDragOver(file),
   });
 };
 

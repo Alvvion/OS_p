@@ -5,3 +5,7 @@
 
 ### Dated 23rd June 2024
 - Maximize animation issues
+
+
+### Dated 28th July 2024
+- Update System/Folder Icons (26 Sept Commit)

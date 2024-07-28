@@ -34,6 +34,7 @@ export type DraggableEntry = {
   isDragging: boolean;
   onDragStart: React.DragEventHandler;
   onDragEnd: React.DragEventHandler;
+  onDragOver: React.DragEventHandler;
 };
 
 export type DraggableEntries = (url: string, file: string) => DraggableEntry;

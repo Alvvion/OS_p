@@ -288,15 +288,33 @@ const useFolder = (
 
   useEffect(() => {
     if (sessionLoaded) {
-      if (!files) {
+      if (files) {
+        const fileNames = Object.keys(files);
+
+        if (!sortOrder || fileNames.length !== sortOrder.length) {
+          setSortOrders((currentSortOrder) => ({
+            ...currentSortOrder,
+            [directory]: fileNames,
+          }));
+        } else if (fileNames.some((file) => !sortOrder.includes(file))) {
+          const oldName = sortOrder.find((entry) => !fileNames.includes(entry));
+          const newName = fileNames.find((entry) => !sortOrder.includes(entry));
+
+          if (oldName && newName) {
+            setSortOrders((currentSortOrder) => ({
+              ...currentSortOrder,
+              [directory]: sortOrder.map((entry) =>
+                entry === oldName ? newName : entry,
+              ),
+            }));
+          }
+        } else if (fileNames.some((file, index) => file !== sortOrder[index])) {
+          setFiles((currentFiles) =>
+            sortContents(currentFiles || files, sortOrder),
+          );
+        }
+      } else {
         updateFiles(undefined, undefined, sortOrder);
-      } else if (
-        !Object.keys(files).every((file, index) => file === sortOrder?.[index])
-      ) {
-        setSortOrders((currentSortOrder) => ({
-          ...currentSortOrder,
-          [directory]: Object.keys(files),
-        }));
       }
     }
   }, [directory, files, sessionLoaded, setSortOrders, sortOrder, updateFiles]);
@@ -330,7 +348,7 @@ const useFolder = (
       addToFolder: () => addFile(newPath),
       newPath,
       pasteToFolder,
-      setSortBy: useSortBy(setFiles),
+      setSortBy: useSortBy(directory, files),
     },
   };
 };
