@@ -41,15 +41,18 @@ const useFileContextMenu = (
   const filterdOpenWith = openWith.filter((id) => id !== pid);
   const { openProcess } = useProcesses();
   const { contextMenu } = useMenu();
-  const { focusEntry, focusedEntries, setWallpaper } = useSession();
+  const { blurEntry, focusEntry, focusedEntries, setWallpaper } = useSession();
   const { copyEntries, moveEntries } = useFileSystem();
 
-  const absoluteEntries = (): string[] => [
-    ...new Set([
-      path,
-      ...focusedEntries.map((entry) => join(dirname(path), entry)),
-    ]),
-  ];
+  const absoluteEntries = (): string[] =>
+    focusedEntries.length === 1
+      ? [path]
+      : [
+          ...new Set([
+            path,
+            ...focusedEntries.map((entry) => join(dirname(path), entry)),
+          ]),
+        ];
 
   const menuItems: MenuItem[] = [
     { label: "Cut", action: () => moveEntries(absoluteEntries()) },
@@ -163,6 +166,7 @@ const useFileContextMenu = (
 
   return {
     onContextMenuCapture: (event) => {
+      blurEntry();
       focusEntry(basename(path));
       contextMenu?.(menuItems)(event);
     },
