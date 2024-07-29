@@ -35,7 +35,7 @@ export type ProcessMap = (
 
 export type ProcessContextType = {
   processes: Processes | Record<string, never>;
-  openProcess: (processId: string, url?: string) => void;
+  openProcess: (processId: string, url: string, icon?: string) => void;
   closeProcess: (processId: string, closing?: boolean) => void;
   maximize: (id: string) => void;
   minimize: (id: string) => void;

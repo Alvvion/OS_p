@@ -10,7 +10,11 @@ import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import formats from "@/context/Theme/default/formats";
 import useDoubleClick from "@/hooks/useDoubleClick";
-import { PREVENT_SCROLL, SHORTCUT } from "@/utils/constants";
+import {
+  IMAGE_FILE_EXTENSION,
+  PREVENT_SCROLL,
+  SHORTCUT,
+} from "@/utils/constants";
 import { getFormattedSize } from "@/utils/functions";
 
 import { isSelectionIntersecting, truncateName } from "./functions";
@@ -52,6 +56,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const openFile = useFile(url);
 
   const fileName = basename(path);
+  const isImageExtension = IMAGE_FILE_EXTENSION.has(extname(url));
 
   const showFullName =
     focusedEntries.length === 1 && focusedEntries[0] === fileName;
@@ -76,7 +81,10 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const singleClick = view === "start";
 
-  const { onClick } = useDoubleClick(() => openFile(pid), singleClick);
+  const { onClick } = useDoubleClick(
+    () => openFile(pid, isImageExtension ? undefined : icon),
+    singleClick,
+  );
 
   const extraStyles = `border-2 border-transparent p-0 relative before:-bottom-px before:-left-px before:absolute before:-right-px before:-top-px ${isDragging ? "" : `${backgroundFocused} before:border before:${borderFocused} hover:${backgroundFocusedHover} hover:before:border hover:before:${borderFocusedHover}`}`;
 

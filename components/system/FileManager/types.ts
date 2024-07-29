@@ -104,7 +104,7 @@ export type Selection = {
   };
 };
 
-export type UseFile = (pid: string) => void;
+export type UseFile = (pid: string, icon?: string) => void;
 
 export type InternetShortcut = {
   InternetShortcut: {

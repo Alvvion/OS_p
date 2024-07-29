@@ -8,13 +8,13 @@ const useFile = (url: string): UseFile => {
   const { openProcess, processes, minimize } = useProcesses();
   const { setForegroundId } = useSession();
 
-  return (pid: string): void => {
+  return (pid: string, icon?: string): void => {
     const id = createPid(pid, url);
     if (processes[id]) {
       if (processes[id].minimized) minimize(id);
       setForegroundId(id);
     } else {
-      openProcess(pid, url);
+      openProcess(pid, url, icon);
     }
   };
 };

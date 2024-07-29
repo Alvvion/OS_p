@@ -141,7 +141,7 @@ const useFileContextMenu = (
         label: "Open with",
         menu: filterdOpenWith.map((id): MenuItem => {
           const { icon, title: label } = processDir[id] || {};
-          const action = (): void => openFile(id);
+          const action = (): void => openFile(id, icon);
 
           return { icon, label, action };
         }),
