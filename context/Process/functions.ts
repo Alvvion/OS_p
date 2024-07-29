@@ -54,7 +54,7 @@ export const openingProcess =
           ...currentProcesses,
           [id]: {
             ...processDir[processId],
-            ...(icon && { icon }),
+            ...(typeof icon === "string" && { icon }),
             url,
           },
         }
@@ -89,3 +89,8 @@ export const setUrl =
   (processId: string, url: string) =>
   (currentProcesses: Processes): Processes =>
     setProcessSetting(processId, { url })(currentProcesses);
+
+export const setIcon =
+  (processId: string, icon: string) =>
+  (currentProcesses: Processes): Processes =>
+    setProcessSetting(processId, { icon })(currentProcesses);

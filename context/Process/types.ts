@@ -34,16 +34,17 @@ export type ProcessMap = (
 ) => React.FC[];
 
 export type ProcessContextType = {
-  processes: Processes | Record<string, never>;
-  openProcess: (processId: string, url: string, icon?: string) => void;
   closeProcess: (processId: string, closing?: boolean) => void;
-  maximize: (id: string) => void;
-  minimize: (id: string) => void;
+  icon: (id: string, newIcon: string) => void;
   linkElement: (
     id: string,
     name: keyof ProcessElement,
     element: HTMLElement,
   ) => void;
+  maximize: (id: string) => void;
+  minimize: (id: string) => void;
+  openProcess: (processId: string, url: string, icon?: string) => void;
+  processes: Processes | Record<string, never>;
   title: (id: string, newTitle: string) => void;
   url: (id: string, newUrl: string) => void;
 };

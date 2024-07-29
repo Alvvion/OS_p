@@ -6,6 +6,7 @@ import {
   maximizeProcess,
   minimizeProcess,
   openingProcess,
+  setIcon,
   setProcessElement,
   setTitle,
   setUrl,
@@ -17,6 +18,11 @@ const useProcessContextState = (): ProcessContextType => {
     getProcess(STARTUP_PROCESSES),
   );
 
+  const icon = useCallback(
+    (id: string, newIcon: string) => setProcesses(setIcon(id, newIcon)),
+    [],
+  );
+
   const closeProcess = useCallback(
     (processId: string, closing?: boolean) =>
       setProcesses(closingProcess(processId, closing)),
@@ -24,8 +30,8 @@ const useProcessContextState = (): ProcessContextType => {
   );
 
   const openProcess = useCallback(
-    (processId: string, url: string, icon?: string) =>
-      setProcesses(openingProcess(processId, url, icon)),
+    (processId: string, url: string, initialIcon?: string) =>
+      setProcesses(openingProcess(processId, url, initialIcon)),
     [],
   );
 
@@ -61,11 +67,12 @@ const useProcessContextState = (): ProcessContextType => {
 
   return {
     closeProcess,
-    openProcess,
-    processes,
+    icon,
+    linkElement,
     maximize,
     minimize,
-    linkElement,
+    openProcess,
+    processes,
     title,
     url,
   };

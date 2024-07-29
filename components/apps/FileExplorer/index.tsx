@@ -6,6 +6,8 @@ import { IoMdRefresh } from "react-icons/io";
 import Button from "@/components/common/Button";
 import type { ComponentProps } from "@/components/common/types";
 import FileManager from "@/components/system/FileManager";
+import { useFileSystem } from "@/context/FileSystem";
+import { getIconFromIni } from "@/context/FileSystem/functions";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
 
@@ -15,9 +17,12 @@ const _tailwind = ["hover:bg-titlebar-backgroundHover"];
 
 const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
   const {
-    processes: { [id]: { closing = false, url = "" } = {} },
+    icon: setProcessIcon,
+    processes: { [id]: process },
     title,
   } = useProcesses();
+  const { closing = false, icon = "", url = "" } = process || {};
+  const { fs } = useFileSystem();
 
   const {
     sizes: {
@@ -49,10 +54,22 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
   ];
 
   useEffect(() => {
+    const directoryName = basename(url);
+
     if (url) {
-      title(id, basename(url) || "File Explorer");
+      title(id, directoryName || "This PC");
+
+      if (fs && !icon) {
+        setProcessIcon(
+          id,
+          `/System/Icons/${directoryName ? "folder" : "This PC"}.ico`,
+        );
+        getIconFromIni(fs, url).then((iconFile) =>
+          setProcessIcon(id, iconFile),
+        );
+      }
     }
-  }, [id, title, url]);
+  }, [fs, icon, id, setProcessIcon, title, url]);
 
   return url ? (
     <div className="w-full h-full">

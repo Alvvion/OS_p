@@ -58,6 +58,25 @@ export const getShortcutInfo = (contents: Buffer): FileInfo => {
   return { icon, pid, url };
 };
 
+export const getIconFromIni = (
+  fs: FSModule,
+  directory: string,
+): Promise<string> =>
+  new Promise((resolve) => {
+    fs.readFile(
+      join(directory, "desktop.ini"),
+      (error, contents = Buffer.from("")) => {
+        if (!error) {
+          const {
+            ShellClassInfo: { IconFile = "" },
+          } = ini.parse(contents.toString()) as ShellClassInfo;
+
+          if (IconFile) resolve(IconFile);
+        }
+      },
+    );
+  });
+
 export const getInfoWithoutExtension = (
   fs: FSModule,
   path: string,
@@ -69,19 +88,7 @@ export const getInfoWithoutExtension = (
       callback({ icon, pid: "FileExplorer", url: path });
 
     setFolderInfo("/System/Icons/folder.ico");
-
-    fs.readFile(
-      join(path, "desktop.ini"),
-      (error, contents = Buffer.from("")) => {
-        if (!error) {
-          const {
-            ShellClassInfo: { IconFile = "" },
-          } = ini.parse(contents.toString()) as ShellClassInfo;
-
-          if (IconFile) setFolderInfo(IconFile);
-        }
-      },
-    );
+    getIconFromIni(fs, path).then(setFolderInfo);
   } else {
     callback({ icon: "/System/Icons/ICON2_1.ico", pid: "", url: "" });
   }

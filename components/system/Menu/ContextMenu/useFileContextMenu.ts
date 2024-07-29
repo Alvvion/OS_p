@@ -152,7 +152,7 @@ const useFileContextMenu = (
       const isFolder = extname(url) === "";
       menuItems.unshift({
         label: `Open ${isFolder ? "folder" : "file"} location`,
-        action: () => openProcess("FileExplorer", dirname(url)),
+        action: () => openProcess("FileExplorer", dirname(url), ""),
       });
     }
 
