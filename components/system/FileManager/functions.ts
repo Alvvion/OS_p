@@ -1,6 +1,6 @@
 import { basename, extname, join } from "path";
 
-import { SYSTEM_FILES } from "@/utils/constants";
+import { SYSTEM_FILES, SYSTEM_PATHS } from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
 import type {
@@ -21,7 +21,7 @@ export const iterateFileNames = (name: string, iteration: number): string => {
 export const filterSystemFiles =
   (directory: string) =>
   (file: string): boolean =>
-    !SYSTEM_FILES.has(join(directory, file));
+    !SYSTEM_PATHS.has(join(directory, file)) && !SYSTEM_FILES.has(file);
 
 const sortByName = ([a]: FileStats, [b]: FileStats): number =>
   a.localeCompare(b, "en", { sensitivity: "base" });

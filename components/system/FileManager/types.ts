@@ -119,3 +119,9 @@ export type FileType = [string, Buffer];
 export type FileStats = [string, Stats];
 
 export type SortFunction = (a: FileStats, b: FileStats) => number;
+
+export type ShellClassInfo = {
+  ShellClassInfo: {
+    IconFile: string;
+  };
+};

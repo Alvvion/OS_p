@@ -274,7 +274,7 @@ const useFolder = (
         BaseURL: process,
         IconFile: pathExtension
           ? getIconByFileExtension(pathExtension)
-          : "/System/Icons/ICON16772_1.ico",
+          : "/System/Icons/folder.ico",
         URL: path,
       },
       {

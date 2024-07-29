@@ -50,7 +50,7 @@ const useFolderContextMenu = (
         {
           label: "New Folder",
           action: () => newPath("New Folder", undefined, true),
-          icon: "/System/Icons/ICON16772_1.ico",
+          icon: "/System/Icons/folder.ico",
         },
         { separator: true },
         {

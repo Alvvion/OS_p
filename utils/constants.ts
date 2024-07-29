@@ -105,7 +105,9 @@ export const TRANSITIONS_IN_MILLISECONDS = {
   DOUBLE_CLICK: 500,
 };
 
-export const SYSTEM_FILES = new Set(["/.deletedFiles.log"]);
+export const SYSTEM_FILES = new Set(["desktop.ini"]);
+
+export const SYSTEM_PATHS = new Set(["/.deletedFiles.log"]);
 
 export const MOUNTABLE_EXTENSIONS = new Set([".iso", ".zip", ".wsz", ".jsdos"]);
 

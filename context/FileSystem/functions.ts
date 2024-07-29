@@ -1,12 +1,13 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import ini from "ini";
-import { extname } from "path";
+import { extname, join } from "path";
 
 import { monacoExtensions } from "@/components/apps/MonacoEditor/config";
 import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
 import type {
   FileInfo,
   InternetShortcut,
+  ShellClassInfo,
 } from "@/components/system/FileManager/types";
 import {
   IMAGE_FILE_EXTENSION,
@@ -58,13 +59,33 @@ export const getShortcutInfo = (contents: Buffer): FileInfo => {
 };
 
 export const getInfoWithoutExtension = (
+  fs: FSModule,
   path: string,
   isDirectory: boolean,
-): FileInfo => ({
-  icon: `/System/Icons/${isDirectory ? "ICON16772_1.ico" : "ICON2_1.ico"}`,
-  pid: isDirectory ? "FileExplorer" : "",
-  url: path,
-});
+  callback: (value: FileInfo) => void,
+): void => {
+  if (isDirectory) {
+    const setFolderInfo = (icon: string): void =>
+      callback({ icon, pid: "FileExplorer", url: path });
+
+    setFolderInfo("/System/Icons/folder.ico");
+
+    fs.readFile(
+      join(path, "desktop.ini"),
+      (error, contents = Buffer.from("")) => {
+        if (!error) {
+          const {
+            ShellClassInfo: { IconFile = "" },
+          } = ini.parse(contents.toString()) as ShellClassInfo;
+
+          if (IconFile) setFolderInfo(IconFile);
+        }
+      },
+    );
+  } else {
+    callback({ icon: "/System/Icons/ICON2_1.ico", pid: "", url: "" });
+  }
+};
 
 export const getInfoWithExtension = (
   fs: FSModule,
