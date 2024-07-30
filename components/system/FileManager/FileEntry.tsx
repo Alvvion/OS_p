@@ -14,6 +14,7 @@ import {
   IMAGE_FILE_EXTENSION,
   PREVENT_SCROLL,
   SHORTCUT,
+  VIDEO_FILE_EXTENSIONS,
 } from "@/utils/constants";
 import { getFormattedSize } from "@/utils/functions";
 
@@ -56,7 +57,9 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const openFile = useFile(url);
 
   const fileName = basename(path);
-  const isImageExtension = IMAGE_FILE_EXTENSION.has(extname(url));
+  const urlExt = extname(url);
+  const isDynamicIcon =
+    IMAGE_FILE_EXTENSION.has(urlExt) || VIDEO_FILE_EXTENSIONS.has(urlExt);
 
   const showFullName =
     focusedEntries.length === 1 && focusedEntries[0] === fileName;
@@ -82,7 +85,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const singleClick = view === "start";
 
   const { onClick } = useDoubleClick(
-    () => openFile(pid, isImageExtension ? undefined : icon),
+    () => openFile(pid, isDynamicIcon ? undefined : icon),
     singleClick,
   );
 

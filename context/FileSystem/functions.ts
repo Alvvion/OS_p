@@ -25,6 +25,7 @@ import extensions from "./extensions";
 const getDefaultFileViewer = (extension: string): string => {
   if (monacoExtensions.has(extension)) return "MonacoEditor";
   if (IMAGE_FILE_EXTENSION.has(extension)) return "Photos";
+  if (VIDEO_FILE_EXTENSIONS.has(extension)) return "VideoPlayer";
 
   return "";
 };
@@ -118,7 +119,11 @@ export const getInfoWithExtension = (
 
         callback({ icon, pid, url });
 
-        if (IMAGE_FILE_EXTENSION.has(urlExt) || urlExt === ".mp3") {
+        if (
+          IMAGE_FILE_EXTENSION.has(urlExt) ||
+          VIDEO_FILE_EXTENSIONS.has(urlExt) ||
+          urlExt === ".mp3"
+        ) {
           getInfoWithExtension(fs, url, urlExt, ({ icon: urlIcon }) => {
             if (urlIcon && urlIcon !== icon) {
               callback({ icon: urlIcon, pid, url });
