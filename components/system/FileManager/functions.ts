@@ -13,6 +13,7 @@ import type {
   SelectionRect,
   SortBy,
   SortFunction,
+  WrapData,
 } from "./types";
 
 export const iterateFileNames = (name: string, iteration: number): string => {
@@ -139,7 +140,7 @@ export const getLineCount = (
   fontSize: string,
   fontFamily: string,
   maxWidth: number,
-): number => {
+): WrapData => {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext(
     "2d",
@@ -148,13 +149,14 @@ export const getLineCount = (
   const lines = [""];
 
   context.font = `${fontSize} ${fontFamily}`;
+  const { width: totalWidth } = context.measureText(text);
 
-  if (context.measureText(text).width > maxWidth) {
+  if (totalWidth > maxWidth) {
     [...text].forEach((character) => {
       const lineCount = lines.length - 1;
       const lineText = `${lines[lineCount]}${character}`;
-
-      if (context.measureText(lineText).width > maxWidth) {
+      const { width: lineWidth } = context.measureText(lineText);
+      if (lineWidth > maxWidth) {
         lines.push(character);
       } else {
         lines[lineCount] = lineText;
@@ -162,5 +164,5 @@ export const getLineCount = (
     });
   }
 
-  return lines.length;
+  return { lines, width: Math.min(maxWidth, totalWidth) };
 };

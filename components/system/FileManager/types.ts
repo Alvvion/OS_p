@@ -126,3 +126,8 @@ export type ShellClassInfo = {
     IconFile: string;
   };
 };
+
+export type WrapData = {
+  lines: string[];
+  width: number;
+};

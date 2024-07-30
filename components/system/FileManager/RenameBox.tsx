@@ -15,16 +15,21 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
     renameFile(path, inputRef?.current?.value);
   };
 
-  const updateRows = useCallback(
+  const updateDimensions = useCallback(
     (text: string): void => {
-      const lines = getLineCount(
+      const textPadding = sizes.fileEntry.renamePadding * 2 + 2;
+      const { lines, width } = getLineCount(
         text,
         sizes.fileEntry.fontSize,
         formats.systemFont,
-        sizes.fileEntry.renameWidth - sizes.fileEntry.renamePadding * 2,
+        sizes.fileEntry.renameWidth - textPadding,
       );
 
-      inputRef.current?.setAttribute("rows", lines.toString());
+      inputRef.current?.setAttribute("rows", lines.length.toString());
+      inputRef.current?.setAttribute(
+        "style",
+        `width: ${Math.ceil(width + textPadding)}px`,
+      );
     },
     [
       formats.systemFont,
@@ -37,8 +42,8 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
   useEffect(() => {
     inputRef?.current?.focus(PREVENT_SCROLL);
     inputRef?.current?.setSelectionRange(0, name.length - extname(name).length);
-    updateRows(name);
-  }, [name, updateRows]);
+    updateDimensions(name);
+  }, [name, updateDimensions]);
 
   return (
     <textarea
@@ -46,10 +51,16 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
       defaultValue={name}
       onBlurCapture={saveRename}
       onClick={haltEvent}
-      onKeyDown={({ key }) => key === "Enter" && saveRename()}
+      onKeyDown={({ key, target }) => {
+        if (key === "Enter") {
+          saveRename();
+        } else if (key.length === 1 && target instanceof HTMLTextAreaElement) {
+          updateDimensions(`${target.value}${key}`);
+        }
+      }}
       onKeyUp={(event) => {
         if (event.target instanceof HTMLTextAreaElement) {
-          updateRows(event.target.value);
+          updateDimensions(event.target.value);
         }
 
         haltEvent(event);
