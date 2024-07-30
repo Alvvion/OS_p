@@ -10,6 +10,7 @@ import type {
   ShellClassInfo,
 } from "@/components/system/FileManager/types";
 import {
+  BASE_2D_CONTEXT_OPTIONS,
   IMAGE_FILE_EXTENSION,
   ONE_TIME_PASSIVE_EVENT,
   PREVIEW_FRAME_SECOND,
@@ -150,7 +151,7 @@ export const getInfoWithExtension = (
             const canvas = document.createElement("canvas");
 
             canvas
-              .getContext("2d")
+              .getContext("2d", BASE_2D_CONTEXT_OPTIONS)
               ?.drawImage(video, 0, 0, canvas.width, canvas.height);
             canvas.toBlob(
               (blob) =>

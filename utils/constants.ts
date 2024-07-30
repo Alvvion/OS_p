@@ -129,3 +129,8 @@ export const VIDEO_FILE_EXTENSIONS = new Set([
   ".ogv",
   ".webm",
 ]);
+
+export const BASE_2D_CONTEXT_OPTIONS: CanvasRenderingContext2DSettings = {
+  alpha: false,
+  desynchronized: true,
+};

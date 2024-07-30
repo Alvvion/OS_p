@@ -1,6 +1,10 @@
 import { basename, extname, join } from "path";
 
-import { SYSTEM_FILES, SYSTEM_PATHS } from "@/utils/constants";
+import {
+  BASE_2D_CONTEXT_OPTIONS,
+  SYSTEM_FILES,
+  SYSTEM_PATHS,
+} from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
 import type {
@@ -137,10 +141,10 @@ export const getLineCount = (
   maxWidth: number,
 ): number => {
   const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d", {
-    alpha: false,
-    desynchronized: true,
-  }) as CanvasRenderingContext2D;
+  const context = canvas.getContext(
+    "2d",
+    BASE_2D_CONTEXT_OPTIONS,
+  ) as CanvasRenderingContext2D;
   const lines = [""];
 
   context.font = `${fontSize} ${fontFamily}`;
