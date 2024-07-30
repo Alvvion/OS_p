@@ -18,6 +18,7 @@ import useSelection from "./useSelection";
 const FileManager: React.FC<FileManagerProps> = ({
   closing,
   hideLoading,
+  scrollable,
   url,
   view = "default",
 }) => {
@@ -68,7 +69,7 @@ const FileManager: React.FC<FileManagerProps> = ({
   ) : (
     <ol
       ref={fileManagerRef}
-      className={`grid grid-flow-col [main>&]:pb-5 [section_&]:grid-flow-row ${view === "default" ? "custom-scrollbar" : ""}`}
+      className={`grid grid-flow-col [main>&]:pb-5 [section_&]:grid-flow-row ${view === "default" && scrollable ? "custom-scrollbar" : ""}`}
       style={{
         height: `calc(100% - ${height})`,
         gridTemplateColumns: `repeat(auto-fill, ${gridEntryWidth})`,

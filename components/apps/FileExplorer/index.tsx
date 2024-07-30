@@ -86,7 +86,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
           </Button>
         ))}
       </header>
-      <FileManager url={url} closing={closing} />
+      <FileManager url={url} closing={closing} scrollable />
     </div>
   ) : undefined;
 };

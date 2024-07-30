@@ -6,6 +6,7 @@ import type { Size } from "@/components/common/types";
 export type FileManagerProps = {
   closing?: boolean;
   hideLoading?: boolean;
+  scrollable: boolean;
   url: string;
   view?: "default" | "start";
 };
