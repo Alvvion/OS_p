@@ -67,9 +67,11 @@ export const processDir: Processes = {
     backgroundColor: "#000",
   },
   VideoPlayer: {
+    autoSizing: true,
     backgroundColor: "#000",
     Component: dynamic(() => import("@/components/apps/VideoPlayer")),
     icon: "/System/Icons/vlc.png",
+    lockAspectRatio: true,
     title: "Video Player",
   },
   Webamp: {

@@ -3,7 +3,14 @@ import { useEffect, useState } from "react";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
-import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
+import useWindowSize from "@/hooks/useWindowSize";
+import {
+  bufferToUrl,
+  cleanUpBufferUrl,
+  loadFiles,
+  viewHeight,
+  viewWidth,
+} from "@/utils/functions";
 
 import { config, getVideoType, libs, ytLib } from "./config";
 import type { VideoPlayer } from "./types";
@@ -22,6 +29,7 @@ const useVideoPlayer = (
   } = useProcesses();
   const [player, setPlayer] = useState<VideoPlayer>();
   const { appendFileToTitle } = useTitle(id);
+  const { updateWindowSize } = useWindowSize(id);
 
   useEffect(() => {
     if (url) {
@@ -30,10 +38,19 @@ const useVideoPlayer = (
         ?.childNodes as NodeListOf<HTMLVideoElement>;
       const type = isYT ? "video/youtube" : getVideoType(url) || "video/mp4";
       const loadPlayer = (src: string): void => {
-        const sources = [{ src, type }];
-
         if (player) {
-          player.src(sources);
+          player.src([{ src, type }]);
+
+          player.on("firstplay", () => {
+            const [height, width] = [player.videoHeight(), player.videoWidth()];
+            const [vh, vw] = [viewHeight(), viewWidth()];
+
+            if (height > vh || width > vw) {
+              updateWindowSize(vw * (height / width), vw);
+            } else {
+              updateWindowSize(height, width);
+            }
+          });
         } else if (window.videojs) {
           setPlayer(
             window.videojs(videoElement, {
@@ -41,7 +58,6 @@ const useVideoPlayer = (
               ...(isYT
                 ? { techOrder: ["youtube"], youtube: { ytControls: 2 } }
                 : { controls: true, inactivityTimeout: 0 }),
-              sources,
             }),
           );
         }
@@ -62,7 +78,7 @@ const useVideoPlayer = (
         }
       });
     }
-  }, [appendFileToTitle, containerRef, fs, player, url]);
+  }, [appendFileToTitle, containerRef, fs, player, updateWindowSize, url]);
 
   useEffect(
     () => () => {

@@ -74,7 +74,7 @@ const WindowActionButton: React.FC<ComponentProps> = ({ id }) => {
       </Button>
       <Button
         extraStyles={`h-full flex place-content-center place-items-center ${
-          autoSizing ? disabled : `hover:${backgroundHover}`
+          autoSizing && !lockAspectRatio ? disabled : `hover:${backgroundHover}`
         } active:${backgroundActive}`}
         style={{
           width: buttonWidth,
