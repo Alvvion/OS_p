@@ -5,7 +5,7 @@ import { haltEvent } from "@/context/FileSystem/functions";
 import { useTheme } from "@/context/Theme";
 import { PREVENT_SCROLL } from "@/utils/constants";
 
-import { getLineCount } from "./functions";
+import { getTextWrapData } from "./functions";
 import type { RenameBoxProps } from "./types";
 
 const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
@@ -18,7 +18,7 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
   const updateDimensions = useCallback(
     (text: string): void => {
       const textPadding = sizes.fileEntry.renamePadding * 2 + 2;
-      const { lines, width } = getLineCount(
+      const { lines, width } = getTextWrapData(
         text,
         sizes.fileEntry.fontSize,
         formats.systemFont,

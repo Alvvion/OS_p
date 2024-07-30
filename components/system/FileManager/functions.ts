@@ -135,27 +135,44 @@ export const createLink = (
   setState(link.href);
 };
 
-export const getLineCount = (
+const canvasContexts: Record<string, CanvasRenderingContext2D> = {};
+
+const measureText = (
+  text: string,
+  fontSize: string,
+  fontFamily: string,
+): TextMetrics => {
+  const font = `${fontSize} ${fontFamily}`;
+
+  if (!canvasContexts[font]) {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext(
+      "2d",
+      BASE_2D_CONTEXT_OPTIONS,
+    ) as CanvasRenderingContext2D;
+
+    context.font = font;
+    canvasContexts[font] = context;
+  }
+
+  return canvasContexts[font].measureText(text);
+};
+
+export const getTextWrapData = (
   text: string,
   fontSize: string,
   fontFamily: string,
   maxWidth: number,
 ): WrapData => {
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext(
-    "2d",
-    BASE_2D_CONTEXT_OPTIONS,
-  ) as CanvasRenderingContext2D;
   const lines = [""];
 
-  context.font = `${fontSize} ${fontFamily}`;
-  const { width: totalWidth } = context.measureText(text);
+  const { width: totalWidth } = measureText(text, fontSize, fontFamily);
 
   if (totalWidth > maxWidth) {
     [...text].forEach((character) => {
       const lineCount = lines.length - 1;
       const lineText = `${lines[lineCount]}${character}`;
-      const { width: lineWidth } = context.measureText(lineText);
+      const { width: lineWidth } = measureText(lineText, fontSize, fontFamily);
       if (lineWidth > maxWidth) {
         lines.push(character);
       } else {
