@@ -3,6 +3,7 @@ import { useRef } from "react";
 import type { ChildrenProp } from "@/components/common/types";
 import { useTheme } from "@/context/Theme";
 
+import FileManager from "../FileManager";
 import useWallpaper from "./useWallpaper";
 
 const Desktop: React.FC<ChildrenProp> = ({ children }) => {
@@ -16,6 +17,12 @@ const Desktop: React.FC<ChildrenProp> = ({ children }) => {
       `}
       ref={desktopRef}
     >
+      <FileManager
+        url="/Users/Public/Desktop"
+        hideLoading
+        scrollable={false}
+        systemShortcuts={["This PC.url", "Public.url"]}
+      />
       {children}
     </main>
   );

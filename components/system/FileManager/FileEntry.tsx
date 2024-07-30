@@ -45,6 +45,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   renaming,
   selectionRect,
   setRenaming,
+  systemShortcut,
   stats,
   view,
   ...events
@@ -63,9 +64,12 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const isDynamicIcon =
     IMAGE_FILE_EXTENSION.has(urlExt) || VIDEO_FILE_EXTENSIONS.has(urlExt);
 
-  const filteredSubIcons = hideShortcutIcon
-    ? subIcons?.filter((iconEntry) => iconEntry !== `${ICON_PATH}shortcut.png`)
-    : subIcons;
+  const filteredSubIcons =
+    hideShortcutIcon || systemShortcut
+      ? subIcons?.filter(
+          (iconEntry) => iconEntry !== `${ICON_PATH}shortcut.png`,
+        )
+      : subIcons;
 
   const showFullName =
     focusedEntries.length === 1 && focusedEntries[0] === fileName;

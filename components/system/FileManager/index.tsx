@@ -19,6 +19,7 @@ const FileManager: React.FC<FileManagerProps> = ({
   closing,
   hideLoading,
   scrollable,
+  systemShortcuts = [],
   url,
   view = "default",
 }) => {
@@ -48,6 +49,7 @@ const FileManager: React.FC<FileManagerProps> = ({
     useSelection(fileManagerRef);
   const fileDrop = useFileDrop(folderActions.newPath);
   const folderContextMenu = useFolderContextMenu(url, folderActions);
+  const fileNames = Object.keys(files);
 
   useEffect(() => {
     const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
@@ -92,23 +94,28 @@ const FileManager: React.FC<FileManagerProps> = ({
           />
         </>
       )}
-      {Object.keys(files).map((file) => (
-        <FileEntry
-          fileActions={fileActions}
-          fileManagerRef={fileManagerRef}
-          hideShortcutIcon={view === "start"}
-          key={file}
-          name={basename(file, SHORTCUT)}
-          path={join(url, file)}
-          renaming={renaming === file}
-          selectionRect={selectionRect}
-          setRenaming={setRenaming}
-          stats={files[file]}
-          view={view}
-          {...focusableEntry(file)}
-          {...draggableEntry(url, file)}
-        />
-      ))}
+      {fileNames.length > 0 &&
+        [
+          ...systemShortcuts.filter((file) => fileNames.includes(file)),
+          ...fileNames.filter((file) => !systemShortcuts.includes(file)),
+        ].map((file) => (
+          <FileEntry
+            fileActions={fileActions}
+            fileManagerRef={fileManagerRef}
+            hideShortcutIcon={view === "start"}
+            key={file}
+            name={basename(file, SHORTCUT)}
+            path={join(url, file)}
+            renaming={renaming === file}
+            selectionRect={selectionRect}
+            setRenaming={setRenaming}
+            systemShortcut={systemShortcuts.includes(file)}
+            stats={files[file]}
+            view={view}
+            {...focusableEntry(file)}
+            {...draggableEntry(url, file)}
+          />
+        ))}
     </ol>
   );
 };

@@ -7,6 +7,7 @@ export type FileManagerProps = {
   closing?: boolean;
   hideLoading?: boolean;
   scrollable: boolean;
+  systemShortcuts?: string[];
   url: string;
   view?: "default" | "start";
 };
@@ -52,6 +53,7 @@ export type FileEntryProps = FocusableEntry &
     renaming: boolean;
     selectionRect?: SelectionRect;
     setRenaming: React.Dispatch<React.SetStateAction<string>>;
+    systemShortcut: boolean;
     stats: Stats;
     view: "default" | "start";
   };

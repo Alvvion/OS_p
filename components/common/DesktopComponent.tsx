@@ -1,5 +1,4 @@
 import Desktop from "@/components/system/Desktop";
-import FileManager from "@/components/system/FileManager";
 import Taskbar from "@/components/system/Taskbar";
 import ProcessLoader from "@/components/system/Window/ProcessLoader";
 import useIFrameFocuser from "@/hooks/useIFrameFocuser";
@@ -10,7 +9,6 @@ const DesktopComponent: React.FC = () => {
   useUrlLoader();
   return (
     <Desktop>
-      <FileManager url="/Users/Public/Desktop" hideLoading scrollable={false} />
       <Taskbar />
       <ProcessLoader />
     </Desktop>
