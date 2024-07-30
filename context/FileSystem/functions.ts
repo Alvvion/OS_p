@@ -12,7 +12,9 @@ import type {
 import {
   IMAGE_FILE_EXTENSION,
   ONE_TIME_PASSIVE_EVENT,
+  PREVIEW_FRAME_SECOND,
   SHORTCUT,
+  VIDEO_FILE_EXTENSIONS,
 } from "@/utils/constants";
 import { bufferToUrl } from "@/utils/functions";
 
@@ -129,6 +131,33 @@ export const getInfoWithExtension = (
     getInfoByFileExtension("/System/Icons/ICON132_1.ico");
     fs.readFile(path, (error, contents = Buffer.from("")) => {
       if (!error) getInfoByFileExtension(bufferToUrl(contents));
+    });
+  } else if (VIDEO_FILE_EXTENSIONS.has(extension)) {
+    getInfoByFileExtension("/System/Icons/vlc.png");
+    fs.readFile(path, (error, contents = Buffer.from("")) => {
+      if (!error) {
+        const video = document.createElement("video");
+
+        video.currentTime = PREVIEW_FRAME_SECOND;
+        video.addEventListener(
+          "loadeddata",
+          () => {
+            const canvas = document.createElement("canvas");
+
+            canvas
+              .getContext("2d")
+              ?.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(
+              (blob) =>
+                blob && getInfoByFileExtension(URL.createObjectURL(blob)),
+            );
+          },
+          ONE_TIME_PASSIVE_EVENT,
+        );
+
+        video.src = bufferToUrl(contents);
+        video.load();
+      }
     });
   } else if (extension === ".mp3") {
     getInfoByFileExtension("/System/Icons/music_48.png");

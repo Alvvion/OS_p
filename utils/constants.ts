@@ -118,3 +118,14 @@ export const PREVENT_SCROLL = { preventScroll: true };
 export const MAX_MOVES = 5;
 
 export const SHORTCUT_APPEND = " - Shortcut";
+
+export const PREVIEW_FRAME_SECOND = 3;
+
+export const VIDEO_FILE_EXTENSIONS = new Set([
+  ".mkv",
+  ".mp4",
+  ".ogg",
+  ".ogm",
+  ".ogv",
+  ".webm",
+]);
