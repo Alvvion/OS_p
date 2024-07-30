@@ -57,10 +57,10 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
       autoComplete="off"
       rows={1}
       spellCheck={false}
-      className="border-rename-box-border border text-[11.5px] mb-0.5 py-px px-[5px] relative text-center top-0.5 rounded-none focus:outline-none resize-none overflow-hidden"
+      className="border-rename-box-border border text-[11.5px] mb-0.5 relative text-center top-0.5 rounded-none focus:outline-none resize-none overflow-hidden"
       style={{
         width: `${sizes.fileEntry.renameWidth}px`,
-        padding: `${sizes.fileEntry.renamePadding}px`,
+        padding: `0 ${sizes.fileEntry.renamePadding}px`,
       }}
     />
   );

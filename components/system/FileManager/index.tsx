@@ -69,9 +69,9 @@ const FileManager: React.FC<FileManagerProps> = ({
   ) : (
     <ol
       ref={fileManagerRef}
-      className={`grid grid-flow-col [main>&]:pb-5 [section_&]:grid-flow-row ${view === "default" && scrollable ? "custom-scrollbar" : ""}`}
+      className={`grid grid-flow-col [main>&]:pb-5 [section_&]:grid-flow-row ${view === "default" && scrollable ? "custom-scrollbar" : "overflow-hidden"}`}
       style={{
-        height: `calc(100% - ${height})`,
+        height: view === "default" ? `calc(100% - ${height})` : "100%",
         gridTemplateColumns: `repeat(auto-fill, ${gridEntryWidth})`,
         gridTemplateRows: `repeat(auto-fill, ${gridEntryHeight})`,
         padding,
