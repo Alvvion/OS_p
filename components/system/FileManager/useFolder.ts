@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useFileSystem } from "@/context/FileSystem";
 import { getIconByFileExtension } from "@/context/FileSystem/functions";
 import { useSession } from "@/context/Session";
-import { SHORTCUT, SHORTCUT_APPEND } from "@/utils/constants";
+import { ICON_PATH, SHORTCUT, SHORTCUT_APPEND } from "@/utils/constants";
 import { cleanUpBufferUrl } from "@/utils/functions";
 
 import {
@@ -274,7 +274,7 @@ const useFolder = (
         BaseURL: process,
         IconFile: pathExtension
           ? getIconByFileExtension(pathExtension)
-          : "/System/Icons/folder.ico",
+          : `${ICON_PATH}folder.ico`,
         URL: path,
       },
       {

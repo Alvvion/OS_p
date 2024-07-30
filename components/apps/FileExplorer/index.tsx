@@ -10,6 +10,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import { getIconFromIni } from "@/context/FileSystem/functions";
 import { useProcesses } from "@/context/Process";
 import { useTheme } from "@/context/Theme";
+import { ICON_PATH } from "@/utils/constants";
 
 import type { ButtonOnNavType } from "./types";
 
@@ -62,7 +63,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
       if (fs && !icon) {
         setProcessIcon(
           id,
-          `/System/Icons/${directoryName ? "folder" : "This PC"}.ico`,
+          `${ICON_PATH}${directoryName ? "folder" : "This PC"}.ico`,
         );
         getIconFromIni(fs, url).then((iconFile) =>
           setProcessIcon(id, iconFile),

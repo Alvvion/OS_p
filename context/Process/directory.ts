@@ -1,11 +1,13 @@
 import dynamic from "next/dynamic";
 
+import { ICON_PATH } from "@/utils/constants";
+
 import type { Processes } from "./types";
 
 export const processDir: Processes = {
   FileExplorer: {
     Component: dynamic(() => import("@/components/apps/FileExplorer")),
-    icon: "/System/Icons/win-file-explorer.ico",
+    icon: `${ICON_PATH}win-file-explorer.ico`,
     title: "File Explorer",
     backgroundColor: "#191919",
     titlebarStyle: "File Explorer",
@@ -14,7 +16,7 @@ export const processDir: Processes = {
     autoSizing: true,
     backgroundColor: "#000",
     Component: dynamic(() => import("@/components/apps/JSDOS")),
-    icon: "/System/Icons/jsdos.png",
+    icon: `${ICON_PATH}jsdos.png`,
     title: "JSDOS",
     lockAspectRatio: true,
   },
@@ -25,7 +27,7 @@ export const processDir: Processes = {
       height: 400,
       width: 400,
     },
-    icon: "/System/Icons/monaco.png",
+    icon: `${ICON_PATH}monaco.png`,
     title: "Monaco Editor",
   },
   Photos: {
@@ -35,7 +37,7 @@ export const processDir: Processes = {
       height: 400,
       width: 500,
     },
-    icon: "/System/Icons/photos.png",
+    icon: `${ICON_PATH}photos.png`,
     prependTaskbarTitle: true,
     title: "Photos",
   },
@@ -46,7 +48,7 @@ export const processDir: Processes = {
       height: 400,
       width: 550,
     },
-    icon: "/System/Icons/ruffle.png",
+    icon: `${ICON_PATH}ruffle.png`,
     title: "Ruffle",
   },
   TinyMCE: {
@@ -56,12 +58,12 @@ export const processDir: Processes = {
       height: 400,
       width: 400,
     },
-    icon: "/System/Icons/tinymce.png",
+    icon: `${ICON_PATH}tinymce.png`,
     title: "TinyMCE",
   },
   V86: {
     Component: dynamic(() => import("@/components/apps/V86")),
-    icon: "/System/Icons/V86.ico",
+    icon: `${ICON_PATH}V86.ico`,
     title: "V86",
     autoSizing: true,
     backgroundColor: "#000",
@@ -70,14 +72,14 @@ export const processDir: Processes = {
     autoSizing: true,
     backgroundColor: "#000",
     Component: dynamic(() => import("@/components/apps/VideoPlayer")),
-    icon: "/System/Icons/vlc.png",
+    icon: `${ICON_PATH}vlc.png`,
     lockAspectRatio: true,
     title: "Video Player",
   },
   Webamp: {
     Component: dynamic(() => import("@/components/apps/Webamp")),
     hasWindow: false,
-    icon: "/System/Icons/webamp_48.png",
+    icon: `${ICON_PATH}webamp_48.png`,
     title: "Webamp",
     singleton: true,
   },

@@ -134,3 +134,5 @@ export const BASE_2D_CONTEXT_OPTIONS: CanvasRenderingContext2DSettings = {
   alpha: false,
   desynchronized: true,
 };
+
+export const ICON_PATH = "/System/Icons/";

@@ -1,6 +1,7 @@
 import Button from "@/components/common/Button";
 import Icon from "@/components/common/Icon";
 import { useTheme } from "@/context/Theme";
+import { ICON_PATH } from "@/utils/constants";
 
 import type { StartButtonProps } from "./types";
 
@@ -33,7 +34,7 @@ const StartButton: React.FC<StartButtonProps> = ({
       onClick={() => toggleStartMenu()}
     >
       <Icon
-        src="/System/Icons/windows11.png"
+        src={`${ICON_PATH}windows11.png`}
         alt="Start Button"
         width={width}
         height={height}

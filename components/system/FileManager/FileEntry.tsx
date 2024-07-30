@@ -11,6 +11,7 @@ import { useTheme } from "@/context/Theme";
 import formats from "@/context/Theme/default/formats";
 import useDoubleClick from "@/hooks/useDoubleClick";
 import {
+  ICON_PATH,
   IMAGE_FILE_EXTENSION,
   PREVENT_SCROLL,
   SHORTCUT,
@@ -36,6 +37,7 @@ const _tailwind = [
 const FileEntry: React.FC<FileEntryProps> = ({
   fileActions,
   fileManagerRef,
+  hideShortcutIcon,
   isDragging,
   isSelected,
   name,
@@ -47,7 +49,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   view,
   ...events
 }) => {
-  const { icon, pid, url } = useFileInfo(path, stats.isDirectory());
+  const { icon, pid, subIcons, url } = useFileInfo(path, stats.isDirectory());
   const { pasteList = {} } = useFileSystem();
 
   const { blurEntry, focusEntry, focusedEntries } = useSession();
@@ -60,6 +62,10 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const urlExt = extname(url);
   const isDynamicIcon =
     IMAGE_FILE_EXTENSION.has(urlExt) || VIDEO_FILE_EXTENSIONS.has(urlExt);
+
+  const filteredSubIcons = hideShortcutIcon
+    ? subIcons?.filter((iconEntry) => iconEntry !== `${ICON_PATH}shortcut.png`)
+    : subIcons;
 
   const showFullName =
     focusedEntries.length === 1 && focusedEntries[0] === fileName;
@@ -169,13 +175,17 @@ const FileEntry: React.FC<FileEntryProps> = ({
         title={createTooltip()}
         {...useFileContextMenu(url, pid, path, setRenaming, fileActions)}
       >
-        <figure className="flex flex-col place-items-center mb-[-3px]">
-          <Icon
-            src={icon}
-            alt={name}
-            size={view === "default" ? iconSize : "36px"}
-            moving={pasteList[path] === "move"}
-          />
+        <figure className="flex flex-col place-items-center mb-[-3px] relative">
+          {[icon, ...(filteredSubIcons || [])].map((entryIcon) => (
+            <Icon
+              key={entryIcon}
+              src={entryIcon}
+              alt={name}
+              size={view === "default" ? iconSize : "36px"}
+              moving={icon === entryIcon && pasteList[path] === "move"}
+              className="shortcut"
+            />
+          ))}
           {renaming ? (
             <RenameBox
               name={name}

@@ -11,6 +11,7 @@ import type {
 } from "@/components/system/FileManager/types";
 import {
   BASE_2D_CONTEXT_OPTIONS,
+  ICON_PATH,
   IMAGE_FILE_EXTENSION,
   ONE_TIME_PASSIVE_EVENT,
   PREVIEW_FRAME_SECOND,
@@ -38,7 +39,7 @@ export const getIconByFileExtension = (extension: string): string => {
   if (extensionIcon) return extensionIcon;
   return (
     processDir[defaultProcess || getDefaultFileViewer(extension)]?.icon ||
-    "/System/Icons/ICON2_1.ico"
+    `${ICON_PATH}ICON2_1.ico`
   );
 };
 
@@ -91,10 +92,10 @@ export const getInfoWithoutExtension = (
     const setFolderInfo = (icon: string): void =>
       callback({ icon, pid: "FileExplorer", url: path });
 
-    setFolderInfo("/System/Icons/folder.ico");
+    setFolderInfo(`${ICON_PATH}folder.ico`);
     getIconFromIni(fs, path).then(setFolderInfo);
   } else {
-    callback({ icon: "/System/Icons/ICON2_1.ico", pid: "", url: "" });
+    callback({ icon: `${ICON_PATH}ICON2_1.ico`, pid: "", url: "" });
   }
 };
 
@@ -104,21 +105,24 @@ export const getInfoWithExtension = (
   extension: string,
   callback: (value: FileInfo) => void,
 ): void => {
+  const subIcons: string[] = [];
   const getInfoByFileExtension = (icon?: string): void =>
     callback({
       icon: icon || getIconByFileExtension(extension),
       pid: getProcessByFileExtension(extension),
+      subIcons,
       url: path,
     });
 
   if (extension === SHORTCUT) {
     fs.readFile(path, (err, contents = Buffer.from("")) => {
+      subIcons.push(`${ICON_PATH}shortcut.png`);
       if (err) getInfoByFileExtension();
       else {
         const { icon, pid, url } = getShortcutInfo(contents);
         const urlExt = extname(url);
 
-        callback({ icon, pid, url });
+        callback({ icon, pid, subIcons, url });
 
         if (
           IMAGE_FILE_EXTENSION.has(urlExt) ||
@@ -127,19 +131,19 @@ export const getInfoWithExtension = (
         ) {
           getInfoWithExtension(fs, url, urlExt, ({ icon: urlIcon }) => {
             if (urlIcon && urlIcon !== icon) {
-              callback({ icon: urlIcon, pid, url });
+              callback({ icon: urlIcon, pid, subIcons, url });
             }
           });
         }
       }
     });
   } else if (IMAGE_FILE_EXTENSION.has(extension)) {
-    getInfoByFileExtension("/System/Icons/ICON132_1.ico");
+    getInfoByFileExtension(`${ICON_PATH}ICON132_1.ico`);
     fs.readFile(path, (error, contents = Buffer.from("")) => {
       if (!error) getInfoByFileExtension(bufferToUrl(contents));
     });
   } else if (VIDEO_FILE_EXTENSIONS.has(extension)) {
-    getInfoByFileExtension("/System/Icons/vlc.png");
+    getInfoByFileExtension(`${ICON_PATH}vlc.png`);
     fs.readFile(path, (error, contents = Buffer.from("")) => {
       if (!error) {
         const video = document.createElement("video");
@@ -166,7 +170,7 @@ export const getInfoWithExtension = (
       }
     });
   } else if (extension === ".mp3") {
-    getInfoByFileExtension("/System/Icons/music_48.png");
+    getInfoByFileExtension(`${ICON_PATH}music_48.png`);
     fs.readFile(path, (error, contents = Buffer.from("")) => {
       if (!error) {
         import("music-metadata-browser").then(({ parseBuffer, selectCover }) =>

@@ -1,22 +1,24 @@
+import { ICON_PATH } from "@/utils/constants";
+
 import type { Extension } from "./types";
 
 const extensions = {
   ".img": {
-    icon: "/System/Icons/imageres_5205.ico",
+    icon: `${ICON_PATH}imageres_5205.ico`,
     process: ["V86"],
     type: "Disc Image File",
   },
   ".iso": {
-    icon: "/System/Icons/imageres_5205.ico",
+    icon: `${ICON_PATH}imageres_5205.ico`,
     process: ["FileExplorer", "V86"],
     type: "Disk Image File",
   },
   ".jsdos": {
-    icon: "/System/Icons/jsdos.png",
+    icon: `${ICON_PATH}jsdos.png`,
     process: ["JSDOS", "FileExplorer"],
   },
   ".mp3": {
-    icon: "/System/Icons/music_48.png",
+    icon: `${ICON_PATH}music_48.png`,
     process: ["Webamp"],
   },
   ".spl": {
@@ -24,22 +26,22 @@ const extensions = {
     type: "FutureSplash File",
   },
   ".swf": {
-    icon: "/System/Icons/ruffle.png",
+    icon: `${ICON_PATH}ruffle.png`,
     process: ["Ruffle"],
     type: "Shockwave Flash File",
   },
   ".whtml": {
-    icon: "/System/Icons/tinymce.png",
+    icon: `${ICON_PATH}tinymce.png`,
     process: ["TinyMCE", "MonacoEditor"],
     type: "WYSIWYG HTML File",
   },
   ".wsz": {
-    icon: "/System/Icons/music_48.png",
+    icon: `${ICON_PATH}music_48.png`,
     process: ["Webamp", "FileExplorer"],
     type: "Winamp Skin File",
   },
   ".zip": {
-    icon: "/System/Icons/compressed.png",
+    icon: `${ICON_PATH}compressed.png`,
     process: ["FileExplorer", "JSDOS"],
     type: "Compressed (zipped) Folder",
   },

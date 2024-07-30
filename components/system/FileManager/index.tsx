@@ -94,14 +94,15 @@ const FileManager: React.FC<FileManagerProps> = ({
       )}
       {Object.keys(files).map((file) => (
         <FileEntry
+          fileActions={fileActions}
+          fileManagerRef={fileManagerRef}
+          hideShortcutIcon={view === "start"}
           key={file}
           name={basename(file, SHORTCUT)}
           path={join(url, file)}
           renaming={renaming === file}
-          setRenaming={setRenaming}
-          fileManagerRef={fileManagerRef}
-          fileActions={fileActions}
           selectionRect={selectionRect}
+          setRenaming={setRenaming}
           stats={files[file]}
           view={view}
           {...focusableEntry(file)}

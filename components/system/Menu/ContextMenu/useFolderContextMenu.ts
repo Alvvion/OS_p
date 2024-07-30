@@ -3,6 +3,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import { getIconByFileExtension } from "@/context/FileSystem/functions";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
+import { ICON_PATH } from "@/utils/constants";
 
 import type { ContextMenu } from "../types";
 
@@ -50,7 +51,7 @@ const useFolderContextMenu = (
         {
           label: "New Folder",
           action: () => newPath("New Folder", undefined, true),
-          icon: "/System/Icons/folder.ico",
+          icon: `${ICON_PATH}folder.ico`,
         },
         { separator: true },
         {

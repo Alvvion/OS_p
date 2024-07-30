@@ -44,11 +44,12 @@ export type SelectionRect = Partial<Size> & Partial<Position>;
 
 export type FileEntryProps = FocusableEntry &
   DraggableEntry & {
+    fileActions: FileActions;
+    fileManagerRef: React.MutableRefObject<HTMLOListElement | null>;
+    hideShortcutIcon?: boolean;
     name: string;
     path: string;
     renaming: boolean;
-    fileActions: FileActions;
-    fileManagerRef: React.MutableRefObject<HTMLOListElement | null>;
     selectionRect?: SelectionRect;
     setRenaming: React.Dispatch<React.SetStateAction<string>>;
     stats: Stats;
@@ -58,6 +59,7 @@ export type FileEntryProps = FocusableEntry &
 export type FileInfo = {
   icon: string;
   pid: string;
+  subIcons?: string[];
   url: string;
 };
 

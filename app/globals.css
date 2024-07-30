@@ -225,4 +225,9 @@ ul {
   .video-player .video-js video {
     padding-bottom: 30px;
   }
+
+  .shortcut:not(:first-of-type) {
+    position: absolute;
+    top: -1px;
+  }
 }
