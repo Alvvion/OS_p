@@ -1,4 +1,5 @@
 import { extname } from "path";
+import type videojs from "video.js";
 
 export const config = {
   autoplay: true,
@@ -16,7 +17,7 @@ export const config = {
       inline: false,
     },
   },
-  preload: "auto",
+  preload: "auto" as videojs.Preload,
 };
 
 export const libs = [

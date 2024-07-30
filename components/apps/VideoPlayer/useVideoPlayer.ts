@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type videojs from "video.js";
 
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
@@ -13,7 +14,6 @@ import {
 } from "@/utils/functions";
 
 import { config, getVideoType, libs, ytLib } from "./config";
-import type { VideoPlayer } from "./types";
 
 const isYouTubeUrl = (url: string): boolean =>
   url.includes("youtube.com/") || url.includes("youtu.be/");
@@ -27,7 +27,7 @@ const useVideoPlayer = (
   const {
     processes: { [id]: { closing = false } = {} },
   } = useProcesses();
-  const [player, setPlayer] = useState<VideoPlayer>();
+  const [player, setPlayer] = useState<ReturnType<typeof videojs>>();
   const { appendFileToTitle } = useTitle(id);
   const { updateWindowSize } = useWindowSize(id);
 
