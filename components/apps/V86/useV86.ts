@@ -1,5 +1,5 @@
 import { basename, extname, join } from "path";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
@@ -24,16 +24,37 @@ const useV86 = (
   containerRef: React.MutableRefObject<HTMLDivElement | null>,
 ): void => {
   const { appendFileToTitle } = useTitle(id);
-  const [emulator, setEmulator] = useState<V86Starter>();
+  const [emulator, setEmulator] = useState<Record<string, V86Starter>>({});
   const { fs, mkdirRecursive, updateFolder } = useFileSystem();
   const {
     processes: { [id]: { closing = false } = {} },
   } = useProcesses();
 
-  useV86ScreenSize(id, containerRef, emulator);
+  const closeDiskImage = useCallback(
+    (diskImageUrl: string): Promise<void> =>
+      new Promise((resolve) => {
+        emulator[diskImageUrl]?.save_state((_e, newState) =>
+          mkdirRecursive(SAVE_PATH, () => {
+            const saveName = `${basename(diskImageUrl)}${saveExtension}`;
+            fs?.writeFile(
+              join(SAVE_PATH, saveName),
+              Buffer.from(new Uint8Array(newState)),
+              () => {
+                emulator[diskImageUrl].destroy();
+                updateFolder(SAVE_PATH, saveName);
+                resolve();
+              },
+            );
+          }),
+        );
+      }),
+    [emulator, fs, mkdirRecursive, updateFolder],
+  );
+
+  useV86ScreenSize(id, containerRef, emulator[url]);
 
   useEffect(() => {
-    if (!emulator && fs && url) {
+    if (fs && url && !emulator[url]) {
       fs.readFile(url, (_imageError, imageContents = Buffer.from("")) => {
         loadFiles(libs).then(() => {
           const isISO = extname(url).toLowerCase() === ".iso";
@@ -53,30 +74,40 @@ const useV86 = (
             ...config,
           };
 
-          fs?.readFile(
+          fs.readFile(
             join(SAVE_PATH, `${basename(url)}${saveExtension}`),
             (saveError, saveContents = Buffer.from("")) => {
-              if (!saveError) {
-                v86StarterConfig.initial_state = {
-                  url: bufferToUrl(saveContents),
-                };
-              }
+              const [currentUrl] = Object.keys(emulator);
+              const loadEmulator = (): void => {
+                if (!saveError) {
+                  v86StarterConfig.initial_state = {
+                    url: bufferToUrl(saveContents),
+                  };
+                }
 
-              if (window.V86Starter) {
-                const v86 = new window.V86Starter(v86StarterConfig);
+                if (window.V86Starter) {
+                  const v86 = new window.V86Starter(v86StarterConfig);
 
-                v86.add_listener("emulator-loaded", () => {
-                  appendFileToTitle(url);
-                  cleanUpBufferUrl(bufferUrl);
-                  if (v86StarterConfig.initial_state) {
-                    cleanUpBufferUrl(v86StarterConfig.initial_state.url);
-                  }
-                });
+                  v86.add_listener("emulator-loaded", () => {
+                    appendFileToTitle(url);
+                    cleanUpBufferUrl(bufferUrl);
+                    if (v86StarterConfig.initial_state) {
+                      cleanUpBufferUrl(v86StarterConfig.initial_state.url);
+                    }
+                  });
 
-                containerRef.current?.addEventListener("click", v86.lock_mouse);
+                  containerRef.current?.addEventListener(
+                    "click",
+                    v86.lock_mouse,
+                  );
 
-                setEmulator(v86);
-              }
+                  setEmulator({ [url]: v86 });
+                }
+              };
+
+              if (currentUrl) {
+                closeDiskImage(currentUrl).then(loadEmulator);
+              } else loadEmulator();
             },
           );
         });
@@ -84,30 +115,15 @@ const useV86 = (
     }
 
     return () => {
-      if (closing && emulator && fs && url) {
-        emulator.save_state((_error, newState) =>
-          mkdirRecursive(SAVE_PATH, () => {
-            const saveName = `${basename(url)}${saveExtension}`;
-            fs.writeFile(
-              join(SAVE_PATH, saveName),
-              Buffer.from(new Uint8Array(newState)),
-              () => {
-                emulator.destroy();
-                updateFolder(SAVE_PATH, saveName);
-              },
-            );
-          }),
-        );
-      }
+      if (closing) closeDiskImage(url);
     };
   }, [
     appendFileToTitle,
+    closeDiskImage,
     closing,
     containerRef,
     emulator,
     fs,
-    mkdirRecursive,
-    updateFolder,
     url,
   ]);
 };
