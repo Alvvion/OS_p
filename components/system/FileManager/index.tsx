@@ -47,7 +47,7 @@ const FileManager: React.FC<FileManagerProps> = ({
 
   const { isSelecting, selectionRect, selectionStyling, selectionEvents } =
     useSelection(fileManagerRef);
-  const fileDrop = useFileDrop(folderActions.newPath);
+  const fileDrop = useFileDrop({ callback: folderActions.newPath });
   const folderContextMenu = useFolderContextMenu(url, folderActions);
   const fileNames = Object.keys(files);
 

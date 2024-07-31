@@ -136,3 +136,5 @@ export const BASE_2D_CONTEXT_OPTIONS: CanvasRenderingContext2DSettings = {
 };
 
 export const ICON_PATH = "/System/Icons/";
+
+export const TEMP_PATH = "/temp";

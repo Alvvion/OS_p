@@ -9,6 +9,7 @@ import {
   ZoomOut,
 } from "@/components/common/Icons";
 import type { ComponentProps } from "@/components/common/types";
+import useFileDrop from "@/components/system/FileManager/useFileDrop";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useDoubleClick from "@/hooks/useDoubleClick";
@@ -21,7 +22,7 @@ import useFullscreen from "./useFullScreen";
 
 const Photos: React.FC<ComponentProps> = ({ id }) => {
   const { processes: { [id]: process } = {} } = useProcesses();
-  const { url = "" } = process || {};
+  const { closing = false, url = "" } = process || {};
   const [src, setSrc] = useState("");
   const { appendFileToTitle } = useTitle(id);
   const { fs } = useFileSystem();
@@ -36,7 +37,7 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
   const { fullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   useEffect(() => {
-    if (fs && url && !src) {
+    if (fs && url && !closing) {
       fs?.readFile(url, (error, contents = Buffer.from("")) => {
         if (!error) {
           setSrc(bufferToUrl(contents));
@@ -46,7 +47,7 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
     }
 
     return () => cleanUpBufferUrl(src);
-  }, [appendFileToTitle, fs, src, url]);
+  }, [appendFileToTitle, closing, fs, src, url]);
 
   return (
     <div
@@ -54,6 +55,7 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
       className="bg-[#222] flex pb-8 pt-12 relative"
       onBlur={overrideSubMenuStyling}
       style={{ height: "93%" }}
+      {...useFileDrop({ id })}
     >
       <nav className="flex h-12 place-content-center place-items-center absolute top-0 w-full">
         <Button

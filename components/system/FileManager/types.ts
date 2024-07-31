@@ -65,6 +65,11 @@ export type FileInfo = {
   url: string;
 };
 
+export type FileDropHook = {
+  callback?: (path: string, buffer?: Buffer) => void;
+  id?: string;
+};
+
 export type FileDrop = {
   onDragOver: (event: React.DragEvent<HTMLElement>) => void;
   onDrop: (event: React.DragEvent<HTMLElement>) => void;
