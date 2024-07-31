@@ -28,21 +28,36 @@ const useDosCI = (
     linkElement,
     processes: { [id]: { closing = false } = {} },
   } = useProcesses();
-  const [dosCI, setDosCI] = useState<CommandInterface>();
+  const [dosCI, setDosCI] = useState<Record<string, CommandInterface>>({});
 
   useEffect(() => {
-    if (dosInstance && !dosCI && fs && url) {
+    const closeBundle = (bundleUrl: string, closeInstance = false): void => {
+      dosCI[bundleUrl]?.persist().then((saveZip) =>
+        mkdirRecursive(SAVE_PATH, () => {
+          const saveName = `${basename(bundleUrl)}${saveExtension}`;
+
+          fs?.writeFile(join(SAVE_PATH, saveName), Buffer.from(saveZip), () => {
+            if (closeInstance) dosInstance?.stop();
+            updateFolder(SAVE_PATH, saveName);
+          });
+        }),
+      );
+    };
+    if (dosInstance && fs && url && !dosCI[url]) {
       fs.readFile(url, async (_urlError, urlContents = Buffer.from("")) => {
         const bundleURL = bufferToUrl(await addJSDOSConfig(urlContents, fs));
 
         fs.readFile(
           join(SAVE_PATH, `${basename(url)}${saveExtension}`),
           (saveError, saveContents = Buffer.from("")) => {
+            const [currentUrl] = Object.keys(dosCI);
             let optionalChangesUrl = "";
 
             if (!saveError) {
               optionalChangesUrl = bufferToUrl(saveContents);
             }
+
+            if (currentUrl) closeBundle(currentUrl);
 
             // NOTE: js-dos v7 appends `?dt=` (Removed in lib, for now...)
             dosInstance.run(bundleURL, optionalChangesUrl).then((ci) => {
@@ -50,7 +65,7 @@ const useDosCI = (
 
               if (canvas instanceof HTMLCanvasElement) {
                 linkElement(id, "peekElement", canvas);
-                setDosCI(ci);
+                setDosCI({ [url]: ci });
                 appendFileToTitle(url);
                 cleanUpBufferUrl(bundleURL);
                 if (optionalChangesUrl) cleanUpBufferUrl(optionalChangesUrl);
@@ -63,21 +78,7 @@ const useDosCI = (
     }
 
     return () => {
-      if (closing && dosCI && fs && url) {
-        dosCI.persist().then((saveZip) => {
-          mkdirRecursive(SAVE_PATH, () => {
-            const saveName = `${basename(url)}${saveExtension}`;
-            fs.writeFile(
-              join(SAVE_PATH, saveName),
-              Buffer.from(saveZip),
-              () => {
-                dosInstance?.stop();
-                updateFolder(SAVE_PATH, saveName);
-              },
-            );
-          });
-        });
-      }
+      if (closing) closeBundle(url, closing);
     };
   }, [
     appendFileToTitle,
@@ -93,7 +94,7 @@ const useDosCI = (
     url,
   ]);
 
-  return dosCI;
+  return dosCI[url];
 };
 
 export default useDosCI;
