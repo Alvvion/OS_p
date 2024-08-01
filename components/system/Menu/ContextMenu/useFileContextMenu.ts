@@ -43,9 +43,11 @@ const useFileContextMenu = (
   const { contextMenu } = useMenu();
   const { blurEntry, focusEntry, focusedEntries, setWallpaper } = useSession();
   const { copyEntries, moveEntries } = useFileSystem();
+  const baseName = basename(path);
+  const isFocusedEntry = focusedEntries.includes(baseName);
 
   const absoluteEntries = (): string[] =>
-    focusedEntries.length === 1
+    focusedEntries.length === 1 || !isFocusedEntry
       ? [path]
       : [
           ...new Set([
@@ -80,7 +82,7 @@ const useFileContextMenu = (
       label: "Delete",
       action: () => absoluteEntries().forEach((entry) => deleteFile(entry)),
     },
-    { label: "Rename", action: () => setState(basename(path)) },
+    { label: "Rename", action: () => setState(basename) },
   );
 
   if (!isShortcut && url && (pathExtension || pid !== "FileExplorer")) {
@@ -169,8 +171,8 @@ const useFileContextMenu = (
 
   return {
     onContextMenuCapture: (event) => {
-      blurEntry();
-      focusEntry(basename(path));
+      if (!isFocusedEntry) blurEntry();
+      focusEntry(baseName);
       contextMenu?.(menuItems)(event);
     },
   };
