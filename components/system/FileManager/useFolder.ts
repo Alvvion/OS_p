@@ -161,7 +161,7 @@ const useFolder = (
   const getFile = (path: string): Promise<FileType | void> =>
     new Promise((resolve) => {
       if (extname(path) === SHORTCUT) resolve();
-      else if (files?.[basename(path)]?.isDirectory()) resolve();
+      if (files?.[basename(path)]?.isDirectory()) resolve();
       else
         fs?.readFile(path, (_readError, contents = Buffer.from("")) =>
           resolve([basename(path), contents]),
@@ -313,24 +313,31 @@ const useFolder = (
     });
 
   const newShortcut = (path: string, process: string): void => {
-    const baseName = basename(path);
-    const shortcutPath = `${baseName}${SHORTCUT_APPEND}${SHORTCUT}`;
     const pathExtension = extname(path);
-    const shortcutData = ini.encode(
-      {
-        BaseURL: process,
-        IconFile: pathExtension
-          ? getIconByFileExtension(pathExtension)
-          : `${ICON_PATH}folder.ico`,
-        URL: path,
-      },
-      {
-        section: "InternetShortcut",
-        whitespace: false,
-      },
-    );
 
-    newPath(shortcutPath, Buffer.from(shortcutData));
+    if (pathExtension === SHORTCUT) {
+      fs?.readFile(path, (_readError, contents = Buffer.from("")) =>
+        newPath(basename(path), contents),
+      );
+    } else {
+      const baseName = basename(path);
+      const shortcutPath = `${baseName}${SHORTCUT_APPEND}${SHORTCUT}`;
+      const shortcutData = ini.encode(
+        {
+          BaseURL: process,
+          IconFile: pathExtension
+            ? getIconByFileExtension(pathExtension)
+            : `${ICON_PATH}/folder.ico`,
+          URL: path,
+        },
+        {
+          section: "InternetShortcut",
+          whitespace: false,
+        },
+      );
+
+      newPath(shortcutPath, Buffer.from(shortcutData));
+    }
   };
 
   useEffect(() => {

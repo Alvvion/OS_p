@@ -65,16 +65,17 @@ const useFileContextMenu = (
   const pathExtension = extname(path);
   const isShortcut = pathExtension === SHORTCUT;
 
-  if (!isShortcut) {
-    const defaultProcess =
-      extensionProcess || getProcessByFileExtension(urlExtension);
+  const defaultProcess =
+    extensionProcess || getProcessByFileExtension(urlExtension);
 
-    if (defaultProcess || (!pathExtension && !urlExtension)) {
-      menuItems.push({
-        label: "Create shortcut",
-        action: () => newShortcut(path, defaultProcess || "FileExplorer"),
-      });
-    }
+  if (defaultProcess || isShortcut || (!pathExtension && !urlExtension)) {
+    menuItems.push({
+      label: "Create shortcut",
+      action: () =>
+        absoluteEntries().forEach((entry) =>
+          newShortcut(entry, defaultProcess || "FileExplorer"),
+        ),
+    });
   }
 
   menuItems.push(
@@ -85,7 +86,7 @@ const useFileContextMenu = (
     { label: "Rename", action: () => setState(basename) },
   );
 
-  if (!isShortcut && url && (pathExtension || pid !== "FileExplorer")) {
+  if (url && (pathExtension || pid !== "FileExplorer")) {
     menuItems.unshift({ separator: true });
 
     if (MOUNTABLE_EXTENSIONS.has(pathExtension)) {
@@ -162,17 +163,19 @@ const useFileContextMenu = (
     }
 
     menuItems.unshift({
-      icon: isShortcut || extname(url) ? pidIcon : undefined,
+      icon: pidIcon,
       label: "Open",
       primary: true,
-      action: () => openFile(pid),
+      action: () => openFile(pid, pidIcon),
     });
   }
 
   return {
     onContextMenuCapture: (event) => {
-      if (!isFocusedEntry) blurEntry();
-      focusEntry(baseName);
+      if (!isFocusedEntry) {
+        blurEntry();
+        focusEntry(baseName);
+      }
       contextMenu?.(menuItems)(event);
     },
   };

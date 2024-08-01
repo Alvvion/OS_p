@@ -2,6 +2,7 @@ import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
 import { useProcesses } from "@/context/Process";
 import useWindowActions from "@/hooks/useWindowActions";
+import { ICON_PATH } from "@/utils/constants";
 
 import type { ContextMenu } from "../types";
 
@@ -16,24 +17,24 @@ const useTitlebarContextMenu = (id: string): ContextMenu => {
     {
       label: "Restore",
       disabled: !maximized,
-      icon: `/System/Icons/restore${maximized ? "" : "_disabled"}.png`,
+      icon: `${ICON_PATH}restore${maximized ? "" : "_disabled"}.png`,
       action: () => onMaximize(),
     },
     {
       label: "Minimize",
-      icon: "/System/Icons/minimize.png",
+      icon: `${ICON_PATH}minimize.png`,
       action: () => onMinimize(),
     },
     {
       label: "Maximize",
       disabled: maximized,
-      icon: `/System/Icons/maximize${maximized ? "_disabled" : ""}.png`,
+      icon: `${ICON_PATH}maximize${maximized ? "_disabled" : ""}.png`,
       action: () => onMaximize(),
     },
     { separator: true },
     {
       label: "Close",
-      icon: "/System/Icons/close.png",
+      icon: `${ICON_PATH}close.png`,
       action: () => onClose(),
     },
   ];
