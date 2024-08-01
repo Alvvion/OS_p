@@ -16,7 +16,7 @@ export type Files = Record<string, Stats>;
 
 export type FileActions = {
   archiveFiles: (paths: string[]) => Promise<void>;
-  deleteFile: (path: string) => void;
+  deleteFile: (path: string) => Promise<void>;
   downloadFiles: (paths: string[]) => Promise<void>;
   extractFiles: (path: string) => void;
   newShortcut: (path: string, process: string) => void;
