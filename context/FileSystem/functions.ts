@@ -124,7 +124,11 @@ export const getInfoWithExtension = (
 
         callback({ icon, pid, subIcons, url });
 
-        if (
+        if (pid === "FileExplorer") {
+          getIconFromIni(fs, url).then((iniIcon) =>
+            callback({ icon: iniIcon, pid, subIcons, url }),
+          );
+        } else if (
           IMAGE_FILE_EXTENSION.has(urlExt) ||
           VIDEO_FILE_EXTENSIONS.has(urlExt) ||
           urlExt === ".mp3"

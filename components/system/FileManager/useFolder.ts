@@ -12,7 +12,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useFileSystem } from "@/context/FileSystem";
 import { getIconByFileExtension } from "@/context/FileSystem/functions";
 import { useSession } from "@/context/Session";
-import { ICON_PATH, SHORTCUT, SHORTCUT_APPEND } from "@/utils/constants";
+import {
+  ICON_PATH,
+  INVALID_FILE_CHARACTERS,
+  SHORTCUT,
+  SHORTCUT_APPEND,
+} from "@/utils/constants";
 import { cleanUpBufferUrl } from "@/utils/functions";
 
 import {
@@ -135,7 +140,7 @@ const useFolder = (
   };
 
   const renameFile = (path: string, name?: string): void => {
-    const newName = name?.trim();
+    const newName = name?.replace(INVALID_FILE_CHARACTERS, "").trim();
 
     if (newName) {
       const newPath = join(
