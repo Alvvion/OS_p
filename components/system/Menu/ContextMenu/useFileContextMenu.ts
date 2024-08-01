@@ -133,21 +133,24 @@ const useFileContextMenu = (
     });
   }
 
+  menuItems.unshift({ separator: true });
+
+  if (!pid && filterdOpenWith.length === 0) {
+    filterdOpenWith.push("MonacoEditor");
+  }
+
+  if (filterdOpenWith.length > 0) {
+    menuItems.unshift({
+      label: "Open with",
+      menu: filterdOpenWith.map((id): MenuItem => {
+        const { icon, title: label } = processDir[id] || {};
+        const action = (): void => openFile(id, icon);
+
+        return { icon, label, action };
+      }),
+    });
+  }
   if (pid) {
-    menuItems.unshift({ separator: true });
-
-    if (filterdOpenWith.length > 0) {
-      menuItems.unshift({
-        label: "Open with",
-        menu: filterdOpenWith.map((id): MenuItem => {
-          const { icon, title: label } = processDir[id] || {};
-          const action = (): void => openFile(id, icon);
-
-          return { icon, label, action };
-        }),
-      });
-    }
-
     if (isShortcut && url && url !== "/") {
       const isFolder = extname(url) === "";
       menuItems.unshift({
