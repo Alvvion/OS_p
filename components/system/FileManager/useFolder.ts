@@ -10,7 +10,10 @@ import { basename, dirname, extname, isAbsolute, join, relative } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
-import { getIconByFileExtension } from "@/context/FileSystem/functions";
+import {
+  getIconByFileExtension,
+  getShortcutInfo,
+} from "@/context/FileSystem/functions";
 import { useSession } from "@/context/Session";
 import {
   ICON_PATH,
@@ -27,7 +30,7 @@ import {
   iterateFileNames,
   sortContents,
 } from "./functions";
-import type { Files, FileStats, Folder, ZipFile } from "./types";
+import type { Files, FileStat, FileStats, Folder, ZipFile } from "./types";
 import useSortBy from "./useSortBy";
 
 const useFolder = (
@@ -54,21 +57,47 @@ const useFolder = (
   const [downloadLink, setDownloadLink] = useState("");
   const [isLoading, setLoading] = useState(true);
 
+  const statsWithShortcutInfo = useCallback(
+    (fileName: string, stats: Stats): Promise<FileStat> =>
+      new Promise((resolve) => {
+        if (extname(fileName) === SHORTCUT) {
+          fs?.readFile(
+            join(directory, fileName),
+            (_readError, contents = Buffer.from("")) =>
+              resolve(
+                Object.assign(stats, {
+                  systemShortcut: getShortcutInfo(contents).type === "System",
+                }),
+              ),
+          );
+        } else {
+          resolve(stats);
+        }
+      }),
+    [directory, fs],
+  );
+
   const getFiles = useCallback(
     (fileNames: string[]): Promise<Files> =>
       Promise.all(
         fileNames.map(
           (file): Promise<FileStats> =>
             new Promise((resolve, reject) => {
-              fs?.stat(join(directory, file), (error, stats) =>
+              fs?.stat(join(directory, file), async (error, stats) =>
                 error
                   ? reject(error)
-                  : resolve([file, stats as unknown as Stats]),
+                  : resolve([
+                      file,
+                      await statsWithShortcutInfo(
+                        file,
+                        stats as unknown as Stats,
+                      ),
+                    ]),
               );
             }),
         ),
       ).then(Object.fromEntries),
-    [directory, fs],
+    [directory, fs, statsWithShortcutInfo],
   );
 
   const updateFiles = useCallback(
@@ -86,11 +115,16 @@ const useFolder = (
             currentFiles,
         );
       } else if (newFile) {
-        fs?.stat(join(directory, newFile), (error, stats) => {
+        fs?.stat(join(directory, newFile), async (error, stats) => {
           if (!error && stats) {
+            const baseName = basename(newFile);
+            const allStats = await statsWithShortcutInfo(
+              baseName,
+              stats as unknown as Stats,
+            );
             setFiles((currentFiles = {}) => ({
               ...currentFiles,
-              [basename(newFile)]: stats as unknown as Stats,
+              [baseName]: allStats,
             }));
           }
         });
@@ -114,7 +148,7 @@ const useFolder = (
         });
       }
     },
-    [directory, fs, getFiles],
+    [directory, fs, getFiles, statsWithShortcutInfo],
   );
 
   const deleteFile = (path: string, updatePath = true): Promise<void> => {

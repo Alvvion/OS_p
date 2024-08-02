@@ -17,12 +17,7 @@ const Desktop: React.FC<ChildrenProp> = ({ children }) => {
       `}
       ref={desktopRef}
     >
-      <FileManager
-        url="/Users/Public/Desktop"
-        hideLoading
-        scrollable={false}
-        systemShortcuts={["This PC.url", "Public.url"]}
-      />
+      <FileManager url="/Users/Public/Desktop" hideLoading scrollable={false} />
       {children}
     </main>
   );

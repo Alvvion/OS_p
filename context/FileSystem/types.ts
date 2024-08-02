@@ -27,3 +27,18 @@ export type Extension = {
   process: string[];
   type?: string;
 };
+
+export type InternetShortcut = {
+  InternetShortcut: {
+    BaseURL: string;
+    IconFile: string;
+    Type: string;
+    URL: string;
+  };
+};
+
+export type ShellClassInfo = {
+  ShellClassInfo: {
+    IconFile: string;
+  };
+};

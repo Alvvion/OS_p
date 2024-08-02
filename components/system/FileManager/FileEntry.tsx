@@ -44,7 +44,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
   renaming,
   selectionRect,
   setRenaming,
-  systemShortcut,
   stats,
   view,
   ...events
@@ -64,7 +63,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
     IMAGE_FILE_EXTENSION.has(urlExt) || VIDEO_FILE_EXTENSIONS.has(urlExt);
 
   const filteredSubIcons =
-    hideShortcutIcon || systemShortcut
+    hideShortcutIcon || stats.systemShortcut
       ? subIcons?.filter(
           (iconEntry) => iconEntry !== `${ICON_PATH}shortcut.png`,
         )

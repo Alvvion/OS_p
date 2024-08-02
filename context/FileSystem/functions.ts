@@ -4,11 +4,7 @@ import { extname, join } from "path";
 
 import { monacoExtensions } from "@/components/apps/MonacoEditor/config";
 import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
-import type {
-  FileInfo,
-  InternetShortcut,
-  ShellClassInfo,
-} from "@/components/system/FileManager/types";
+import type { FileInfo } from "@/components/system/FileManager/types";
 import {
   BASE_2D_CONTEXT_OPTIONS,
   ICON_PATH,
@@ -23,6 +19,7 @@ import { bufferToUrl } from "@/utils/functions";
 import { processDir } from "../Process/directory";
 import type { ExtensionType } from "./extensions";
 import extensions from "./extensions";
+import type { InternetShortcut, ShellClassInfo } from "./types";
 
 const getDefaultFileViewer = (extension: string): string => {
   if (monacoExtensions.has(extension)) return "MonacoEditor";
@@ -54,13 +51,18 @@ export const getProcessByFileExtension = (extension: string): string => {
 
 export const getShortcutInfo = (contents: Buffer): FileInfo => {
   const {
-    InternetShortcut: { BaseURL: pid = "", IconFile: icon = "", URL: url = "" },
+    InternetShortcut: {
+      BaseURL: pid = "",
+      IconFile: icon = "",
+      Type: type = "",
+      URL: url = "",
+    },
   } = ini.parse(contents.toString()) as InternetShortcut;
   if (!icon && pid) {
-    return { icon: processDir[pid]?.icon, pid, url };
+    return { icon: processDir[pid]?.icon, pid, type, url };
   }
 
-  return { icon, pid, url };
+  return { icon, pid, type, url };
 };
 
 export const getIconFromIni = (

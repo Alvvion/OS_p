@@ -45,6 +45,11 @@ const sortByDate = (
   [, { mtimeMs: bTime }]: FileStats,
 ): number => aTime - bTime;
 
+const sortSystemShortcuts = (
+  [, { systemShortcut: aSystem }]: FileStats,
+  [, { systemShortcut: bSystem }]: FileStats,
+): number => (aSystem === bSystem ? 0 : aSystem ? -1 : 1);
+
 const sortFunctionMap: Record<string, SortFunction> = {
   name: sortByName,
   size: sortBySize,
@@ -88,7 +93,7 @@ export const sortContents = (
     ...(preSort
       ? files.sort(sortByName).sort(sortFunction)
       : files.sort(sortByName)),
-  ];
+  ].sort(sortSystemShortcuts);
 
   return Object.fromEntries(sortedContents);
 };

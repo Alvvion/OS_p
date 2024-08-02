@@ -19,7 +19,6 @@ const FileManager: React.FC<FileManagerProps> = ({
   closing,
   hideLoading,
   scrollable,
-  systemShortcuts = [],
   url,
   view = "default",
 }) => {
@@ -54,15 +53,14 @@ const FileManager: React.FC<FileManagerProps> = ({
   useEffect(() => {
     const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
 
-    if (isMountable && Object.keys(files).length === 0) {
+    if (isMountable && fileNames.length === 0) {
       mountFs(url).then(() => updateFiles());
     }
 
     return () => {
-      if (isMountable && Object.keys(files).length > 0 && closing)
-        unMountFs(url);
+      if (isMountable && fileNames.length > 0 && closing) unMountFs(url);
     };
-  }, [url, files, mountFs, unMountFs, updateFiles, closing]);
+  }, [closing, fileNames, mountFs, unMountFs, updateFiles, url]);
 
   return !hideLoading && isLoading ? (
     <div className="cursor-wait w-full flex flex-col items-center justify-center text-xs pt-5 h-screen">
@@ -94,28 +92,23 @@ const FileManager: React.FC<FileManagerProps> = ({
           />
         </>
       )}
-      {fileNames.length > 0 &&
-        [
-          ...systemShortcuts.filter((file) => fileNames.includes(file)),
-          ...fileNames.filter((file) => !systemShortcuts.includes(file)),
-        ].map((file) => (
-          <FileEntry
-            fileActions={fileActions}
-            fileManagerRef={fileManagerRef}
-            hideShortcutIcon={view === "start"}
-            key={file}
-            name={basename(file, SHORTCUT)}
-            path={join(url, file)}
-            renaming={renaming === file}
-            selectionRect={selectionRect}
-            setRenaming={setRenaming}
-            systemShortcut={systemShortcuts.includes(file)}
-            stats={files[file]}
-            view={view}
-            {...focusableEntry(file)}
-            {...draggableEntry(url, file)}
-          />
-        ))}
+      {fileNames.map((file) => (
+        <FileEntry
+          fileActions={fileActions}
+          fileManagerRef={fileManagerRef}
+          hideShortcutIcon={view === "start"}
+          key={file}
+          name={basename(file, SHORTCUT)}
+          path={join(url, file)}
+          renaming={renaming === file}
+          selectionRect={selectionRect}
+          setRenaming={setRenaming}
+          stats={files[file]}
+          view={view}
+          {...focusableEntry(file)}
+          {...draggableEntry(url, file)}
+        />
+      ))}
     </ol>
   );
 };

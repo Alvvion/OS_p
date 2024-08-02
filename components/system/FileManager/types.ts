@@ -7,12 +7,9 @@ export type FileManagerProps = {
   closing?: boolean;
   hideLoading?: boolean;
   scrollable: boolean;
-  systemShortcuts?: string[];
   url: string;
   view?: "default" | "start";
 };
-
-export type Files = Record<string, Stats>;
 
 export type FileActions = {
   archiveFiles: (paths: string[]) => Promise<void>;
@@ -43,6 +40,14 @@ export type DraggableEntries = (url: string, file: string) => DraggableEntry;
 
 export type SelectionRect = Partial<Size> & Partial<Position>;
 
+export type FileStat = Stats & {
+  systemShortcut?: boolean;
+};
+
+export type FileStats = [string, FileStat];
+
+export type Files = Record<string, FileStat>;
+
 export type FileEntryProps = FocusableEntry &
   DraggableEntry & {
     fileActions: FileActions;
@@ -53,8 +58,7 @@ export type FileEntryProps = FocusableEntry &
     renaming: boolean;
     selectionRect?: SelectionRect;
     setRenaming: React.Dispatch<React.SetStateAction<string>>;
-    systemShortcut: boolean;
-    stats: Stats;
+    stats: FileStat;
     view: "default" | "start";
   };
 
@@ -62,6 +66,7 @@ export type FileInfo = {
   icon: string;
   pid: string;
   subIcons?: string[];
+  type?: string;
   url: string;
 };
 
@@ -116,25 +121,9 @@ export type Selection = {
 
 export type UseFile = (pid: string, icon?: string) => void;
 
-export type InternetShortcut = {
-  InternetShortcut: {
-    BaseURL: string;
-    IconFile: string;
-    URL: string;
-  };
-};
-
 export type ZipFile = [string, Buffer];
 
-export type FileStats = [string, Stats];
-
 export type SortFunction = (a: FileStats, b: FileStats) => number;
-
-export type ShellClassInfo = {
-  ShellClassInfo: {
-    IconFile: string;
-  };
-};
 
 export type WrapData = {
   lines: string[];
