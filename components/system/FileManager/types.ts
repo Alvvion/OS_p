@@ -124,7 +124,7 @@ export type InternetShortcut = {
   };
 };
 
-export type FileType = [string, Buffer];
+export type ZipFile = [string, Buffer];
 
 export type FileStats = [string, Stats];
 

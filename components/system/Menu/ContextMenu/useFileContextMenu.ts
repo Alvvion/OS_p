@@ -89,7 +89,7 @@ const useFileContextMenu = (
     },
   );
 
-  if (url && (pathExtension || pid !== "FileExplorer")) {
+  if (url) {
     menuItems.unshift({ separator: true });
 
     if (MOUNTABLE_EXTENSIONS.has(pathExtension)) {

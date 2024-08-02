@@ -1,3 +1,4 @@
+import type { FSModule } from "browserfs/dist/node/core/FS";
 import { basename, extname, join } from "path";
 
 import {
@@ -189,9 +190,36 @@ export const truncateName = (
   maxWidth: number,
 ): string => {
   const { lines } = getTextWrapData(name, fontSize, fontFamily, maxWidth);
-  console.log(lines, `${lines.slice(0, 2).join("").slice(0, -3)}...`);
 
   return lines.length > 2
     ? `${lines.slice(0, 2).join("").slice(0, -3)}...`
     : name;
 };
+
+export const findPathsRecursive = (
+  fs: FSModule | undefined,
+  paths: string[],
+): Promise<string[]> =>
+  new Promise((resolve) => {
+    Promise.all(
+      paths.map(
+        (path): Promise<string[]> =>
+          new Promise((pathResolve) => {
+            fs?.stat(path, (_statError, stats) => {
+              if (stats?.isDirectory()) {
+                fs?.readdir(path, (_readError, files = []) =>
+                  pathResolve(
+                    findPathsRecursive(
+                      fs,
+                      files.map((file) => join(path, file)),
+                    ),
+                  ),
+                );
+              } else {
+                pathResolve([path]);
+              }
+            });
+          }),
+      ),
+    ).then((newPaths) => resolve(newPaths.flat()));
+  });
