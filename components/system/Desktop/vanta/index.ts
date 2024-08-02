@@ -17,14 +17,16 @@ const disableControls = {
 const vantaWaves =
   (config: VantaWavesConfig) =>
   (el?: HTMLElement | null): void => {
+    const { VANTA } = window;
+    VANTA?.current?.destroy();
+
+    if (!el) return;
+
     loadFiles(libs).then(() => {
-      const { VANTA } = window;
-
-      VANTA?.current?.destroy();
-
+      const { VANTA: { WAVES } = {} } = window;
       const vantaEffect =
-        el && isWebGLAvailable
-          ? VANTA?.WAVES({ el, ...disableControls, ...config })
+        isWebGLAvailable && WAVES
+          ? WAVES({ el, ...disableControls, ...config })
           : undefined;
 
       if (vantaEffect) {
