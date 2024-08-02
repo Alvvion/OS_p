@@ -83,7 +83,10 @@ const useFileContextMenu = (
       label: "Delete",
       action: () => absoluteEntries().forEach((entry) => deleteFile(entry)),
     },
-    { label: "Rename", action: () => setState(basename) },
+    {
+      label: "Rename",
+      action: () => setState(baseName),
+    },
   );
 
   if (url && (pathExtension || pid !== "FileExplorer")) {
