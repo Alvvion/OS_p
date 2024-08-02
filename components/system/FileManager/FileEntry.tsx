@@ -8,7 +8,6 @@ import type { ExtensionType } from "@/context/FileSystem/extensions";
 import extensions from "@/context/FileSystem/extensions";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
-import formats from "@/context/Theme/default/formats";
 import useDoubleClick from "@/hooks/useDoubleClick";
 import {
   ICON_PATH,
@@ -76,7 +75,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const {
     sizes: {
-      fileEntry: { iconSize, fontSize, letterSpacing },
+      fileEntry: { iconSize, fontSize, letterSpacing, maxTextDisplayLength },
     },
     colors: {
       fileEntry: {
@@ -90,6 +89,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         borderFocusedHover,
       },
     },
+    formats,
   } = useTheme();
 
   const singleClick = view === "start";
@@ -209,7 +209,14 @@ const FileEntry: React.FC<FileEntryProps> = ({
               }}
               className="leading-[1.2] my-px mx-0 overflow-hidden py-0.5 px-px [word-break:break-word]"
             >
-              {showFullName ? name : truncateName(name)}
+              {showFullName
+                ? name
+                : truncateName(
+                    name,
+                    fontSize,
+                    formats.systemFont,
+                    maxTextDisplayLength,
+                  )}
             </figcaption>
           )}
         </figure>

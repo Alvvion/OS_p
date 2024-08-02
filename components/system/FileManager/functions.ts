@@ -113,13 +113,6 @@ export const isSelectionIntersecting = (
   );
 };
 
-export const truncateName = (name: string): string => {
-  const maxLength = 15;
-  const useFullName = name.length <= maxLength;
-
-  return useFullName ? name : `${name.slice(0, maxLength)}...`;
-};
-
 export const createLink = (
   contents: Buffer,
   setState: React.Dispatch<React.SetStateAction<string>>,
@@ -162,17 +155,20 @@ export const getTextWrapData = (
   text: string,
   fontSize: string,
   fontFamily: string,
-  maxWidth: number,
+  maxWidth?: number,
 ): WrapData => {
   const lines = [""];
 
   const { width: totalWidth } = measureText(text, fontSize, fontFamily);
+
+  if (!maxWidth) return { lines: [text], width: totalWidth };
 
   if (totalWidth > maxWidth) {
     [...text].forEach((character) => {
       const lineCount = lines.length - 1;
       const lineText = `${lines[lineCount]}${character}`;
       const { width: lineWidth } = measureText(lineText, fontSize, fontFamily);
+
       if (lineWidth > maxWidth) {
         lines.push(character);
       } else {
@@ -181,5 +177,21 @@ export const getTextWrapData = (
     });
   }
 
-  return { lines, width: Math.min(maxWidth, totalWidth) };
+  return {
+    lines,
+    width: Math.min(maxWidth, totalWidth),
+  };
+};
+export const truncateName = (
+  name: string,
+  fontSize: string,
+  fontFamily: string,
+  maxWidth: number,
+): string => {
+  const { lines } = getTextWrapData(name, fontSize, fontFamily, maxWidth);
+  console.log(lines, `${lines.slice(0, 2).join("").slice(0, -3)}...`);
+
+  return lines.length > 2
+    ? `${lines.slice(0, 2).join("").slice(0, -3)}...`
+    : name;
 };

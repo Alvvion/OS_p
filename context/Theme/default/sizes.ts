@@ -37,7 +37,8 @@ const sizes = {
     iconSize: "48px",
     letterSpacing: "0.25px",
     renamePadding: 5,
-    renameWidth: 75,
+    renameWidth: "72px",
+    maxTextDisplayLength: 60,
   },
   fileExplorer: {
     height: "51px",
