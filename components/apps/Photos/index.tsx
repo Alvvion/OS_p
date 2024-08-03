@@ -91,13 +91,14 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
         className="flex h-full my-0 mr-8 ml-12 overflow-hidden place-content-center place-items-center w-full"
         {...useDoubleClick(() => zoom("toggle"))}
       >
-        <img
-          alt={basename(url, extname(url))}
-          ref={imageRef}
-          src={src[url]}
-          className="max-h-full max-w-full"
-          {...dragZoomProps}
-        />
+        {src[url] && (
+          <img
+            alt={basename(url, extname(url))}
+            ref={imageRef}
+            src={src[url]}
+            {...dragZoomProps}
+          />
+        )}
       </figure>
       <nav className="flex h-12 place-content-center place-items-center absolute bottom-0 right-0">
         <Button
