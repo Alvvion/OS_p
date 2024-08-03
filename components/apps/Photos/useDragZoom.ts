@@ -1,5 +1,5 @@
 import { basename } from "path";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Position } from "react-rnd";
 
 import { useProcesses } from "@/context/Process";
@@ -27,6 +27,24 @@ const useDragZoom = (
   const isDragging = dragging.length > 0;
   const isMaxZoom = scale === MAX_ZOOM;
   const isMinZoom = scale === MIN_ZOOM;
+
+  const adjustDragZoom = useCallback(
+    (newScale: number): void => {
+      setScale(newScale);
+
+      const newIsMinZoom = newScale === MIN_ZOOM;
+
+      if (newIsMinZoom) setTranslate({ x: 0, y: 0 });
+
+      appendFileToTitle(
+        newIsMinZoom
+          ? basename(url)
+          : `${basename(url)} (${Math.floor(newScale * 100)}%)`,
+      );
+    },
+    [appendFileToTitle, url],
+  );
+
   const zoom = (zoomDirection: "in" | "out" | "toggle"): void => {
     let adjustedScale: number;
 
@@ -39,15 +57,7 @@ const useDragZoom = (
           : Math.max(scale * (2 - ZOOM_STEP), MIN_ZOOM);
     }
 
-    appendFileToTitle(
-      isMinZoom
-        ? basename(url)
-        : `${basename(url)} (${Math.floor(adjustedScale * 100)}%)`,
-    );
-
-    setScale(adjustedScale);
-
-    if (isMinZoom) setTranslate({ x: 0, y: 0 });
+    adjustDragZoom(adjustedScale);
   };
   const onMouseDown: React.MouseEventHandler = (event) => {
     if (scale > MIN_ZOOM) {
@@ -96,6 +106,14 @@ const useDragZoom = (
     ]);
   };
   const resetDrag = (): void => setDragging([]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      new ResizeObserver(() => adjustDragZoom(MIN_ZOOM)).observe(
+        containerRef.current,
+      );
+    }
+  }, [adjustDragZoom, containerRef]);
 
   return {
     dragZoomProps: {
