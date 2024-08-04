@@ -29,11 +29,11 @@ export type FocusableEntry = {
 export type FocusableEntries = (file: string) => FocusableEntry;
 
 export type DraggableEntry = {
-  draggable: boolean;
-  isDragging: boolean;
-  onDragStart: React.DragEventHandler;
-  onDragEnd: React.DragEventHandler;
-  onDragOver: React.DragEventHandler;
+  draggable?: boolean;
+  isDragging?: boolean;
+  onDragStart?: React.DragEventHandler;
+  onDragEnd?: React.DragEventHandler;
+  onDragOver?: React.DragEventHandler;
 };
 
 export type DraggableEntries = (url: string, file: string) => DraggableEntry;

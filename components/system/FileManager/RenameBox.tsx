@@ -42,6 +42,7 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
         updateDimensions(event.target);
         haltEvent(event);
       }}
+      onDragStart={haltEvent}
       autoComplete="off"
       rows={1}
       spellCheck={false}

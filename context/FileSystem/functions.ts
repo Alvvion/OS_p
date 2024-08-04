@@ -1,6 +1,6 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import ini from "ini";
-import { extname, join } from "path";
+import { dirname, extname, join } from "path";
 
 import { monacoExtensions } from "@/components/apps/MonacoEditor/config";
 import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
@@ -230,6 +230,6 @@ export const handleFileInputEvent = (
   } else {
     const filePaths = eventTarget?.getData("text").split(",");
 
-    filePaths.forEach((path) => callback(path));
+    filePaths.forEach((path) => dirname(path) !== "." && callback(path));
   }
 };

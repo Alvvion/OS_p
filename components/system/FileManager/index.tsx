@@ -106,7 +106,7 @@ const FileManager: React.FC<FileManagerProps> = ({
           stats={files[file]}
           view={view}
           {...focusableEntry(file)}
-          {...draggableEntry(url, file)}
+          {...(renaming !== file && draggableEntry(url, file))}
         />
       ))}
     </ol>
