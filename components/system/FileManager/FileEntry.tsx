@@ -12,6 +12,7 @@ import useDoubleClick from "@/hooks/useDoubleClick";
 import {
   ICON_PATH,
   IMAGE_FILE_EXTENSION,
+  MOUNTABLE_EXTENSIONS,
   PREVENT_SCROLL,
   SHORTCUT,
   VIDEO_FILE_EXTENSIONS,
@@ -140,7 +141,12 @@ const FileEntry: React.FC<FileEntryProps> = ({
     const extension = extname(path);
     const isShortcut = extension === SHORTCUT;
 
-    if (isShortcut || stats.isDirectory()) return undefined;
+    if (
+      isShortcut ||
+      (stats.isDirectory() && !MOUNTABLE_EXTENSIONS.has(extension))
+    ) {
+      return undefined;
+    }
 
     const type =
       extensions[extension as ExtensionType]?.type ||
