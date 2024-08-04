@@ -9,15 +9,18 @@ import ini from "ini";
 import { basename, dirname, extname, isAbsolute, join, relative } from "path";
 import { useCallback, useEffect, useState } from "react";
 
+import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
 import { useFileSystem } from "@/context/FileSystem";
 import {
   getIconByFileExtension,
   getShortcutInfo,
 } from "@/context/FileSystem/functions";
+import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import {
   ICON_PATH,
   INVALID_FILE_CHARACTERS,
+  PROCESS_DELIMITER,
   SHORTCUT,
   SHORTCUT_APPEND,
 } from "@/utils/constants";
@@ -53,6 +56,7 @@ const useFolder = (
     setSortOrders,
     sortOrders: { [directory]: sortOrder } = {},
   } = useSession();
+  const { closeProcess } = useProcesses();
   const [files, setFiles] = useState<Files>();
   const [downloadLink, setDownloadLink] = useState("");
   const [isLoading, setLoading] = useState(true);
@@ -133,6 +137,13 @@ const useFolder = (
         fs?.readdir(directory, async (error, contents = []) => {
           setLoading(false);
           if (error) {
+            if (error.code === "ENOENT") {
+              closeWithTransition(
+                closeProcess,
+                `FileExplorer${PROCESS_DELIMITER}${directory}`,
+              );
+            }
+
             setFiles({});
           } else {
             const filteredFiles = contents.filter(filterSystemFiles(directory));
@@ -148,7 +159,7 @@ const useFolder = (
         });
       }
     },
-    [directory, fs, getFiles, statsWithShortcutInfo],
+    [closeProcess, directory, fs, getFiles, statsWithShortcutInfo],
   );
 
   const deleteFile = (path: string, updatePath = true): Promise<void> => {
