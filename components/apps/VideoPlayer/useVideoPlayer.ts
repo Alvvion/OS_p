@@ -32,52 +32,55 @@ const useVideoPlayer = (
   const { updateWindowSize } = useWindowSize(id);
 
   useEffect(() => {
-    if (url) {
-      const isYT = isYouTubeUrl(url);
+    const isYT = isYouTubeUrl(url);
+    const loadPlayer = (src?: string): void => {
       const [videoElement] = containerRef.current
         ?.childNodes as NodeListOf<HTMLVideoElement>;
-      const type = isYT ? "video/youtube" : getVideoType(url) || "video/mp4";
-      const loadPlayer = (src: string): void => {
-        if (player) {
-          player.src([{ src, type }]);
-
-          player.on("firstplay", () => {
-            const [height, width] = [player.videoHeight(), player.videoWidth()];
-            const [vh, vw] = [viewHeight(), viewWidth()];
-
-            if (height > vh || width > vw) {
-              updateWindowSize(vw * (height / width), vw);
-            } else {
-              updateWindowSize(height, width);
-            }
-          });
-        } else if (window.videojs) {
-          setPlayer(
-            window.videojs(videoElement, {
-              ...config,
-              ...(isYT
-                ? { techOrder: ["youtube"], youtube: { ytControls: 2 } }
-                : { controls: true, inactivityTimeout: 0 }),
-            }),
-          );
+      if (player) {
+        if (src && url) {
+          player.src([
+            {
+              src,
+              type: isYT ? "video/youtube" : getVideoType(url) || "video/mp4",
+            },
+          ]);
         }
+        player.on("firstplay", () => {
+          const [height, width] = [player.videoHeight(), player.videoWidth()];
+          const [vh, vw] = [viewHeight(), viewWidth()];
 
-        if (!isYT) {
-          appendFileToTitle(url);
-          cleanUpBufferUrl(url);
-        }
-      };
+          if (height > vh || width > vw) {
+            updateWindowSize(vw * (height / width), vw);
+          } else {
+            updateWindowSize(height, width);
+          }
+        });
+      } else if (window.videojs) {
+        setPlayer(
+          window.videojs(videoElement, {
+            ...config,
+            ...(isYT
+              ? { techOrder: ["youtube"], youtube: { ytControls: 2 } }
+              : { controls: true, inactivityTimeout: 0 }),
+          }),
+        );
+      }
 
-      loadFiles(isYT ? [...libs, ytLib] : libs).then(() => {
-        if (isYT) {
-          loadPlayer(url);
-        } else {
-          fs?.readFile(url, (_error, contents = Buffer.from("")) =>
-            loadPlayer(bufferToUrl(contents)),
-          );
-        }
-      });
-    }
+      if (!isYT) {
+        appendFileToTitle(url);
+        cleanUpBufferUrl(url);
+      }
+    };
+
+    loadFiles(isYT ? [...libs, ytLib] : libs).then(() => {
+      if (isYT) {
+        loadPlayer(url);
+      } else {
+        fs?.readFile(url, (_error, contents = Buffer.from("")) =>
+          loadPlayer(bufferToUrl(contents)),
+        );
+      }
+    });
   }, [appendFileToTitle, containerRef, fs, player, updateWindowSize, url]);
 
   useEffect(

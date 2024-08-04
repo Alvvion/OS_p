@@ -8,10 +8,7 @@ const VideoPlayer: React.FC<ComponentProps> = ({ id }) => (
   <AppContianer
     id={id}
     useHook={useVideoPlayer}
-    className="flex w-full video-player !h-[92%]"
-    // style={{
-    //   height: `calc(100% - ${sizes.titlebar.height}) !important`,
-    // }}
+    className="flex w-full video-player relative h-full"
   >
     <video className="video-js vjs-big-play-centered" />
   </AppContianer>

@@ -23,7 +23,7 @@ const AppContianer: React.FC<ContainerProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`${className} h-full`}
+      className={`${className}`}
       {...useFileDrop({ id })}
       {...restProps}
     >
