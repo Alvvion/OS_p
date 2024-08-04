@@ -8,6 +8,7 @@ import type { ContainerProps } from "./types";
 const AppContianer: React.FC<ContainerProps> = ({
   id,
   useHook,
+  className,
   children,
   ...restProps
 }) => {
@@ -20,7 +21,12 @@ const AppContianer: React.FC<ContainerProps> = ({
   useHook(id, currentUrl, containerRef);
 
   return (
-    <div ref={containerRef} {...useFileDrop({ id })} {...restProps}>
+    <div
+      ref={containerRef}
+      className={`${className} h-full`}
+      {...useFileDrop({ id })}
+      {...restProps}
+    >
       {children}
     </div>
   );
