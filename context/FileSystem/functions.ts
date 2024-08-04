@@ -163,10 +163,11 @@ export const getInfoWithExtension = (
             canvas
               .getContext("2d", BASE_2D_CONTEXT_OPTIONS)
               ?.drawImage(video, 0, 0, canvas.width, canvas.height);
-            canvas.toBlob(
-              (blob) =>
-                blob && getInfoByFileExtension(URL.createObjectURL(blob)),
-            );
+            canvas.toBlob((blob) => {
+              if (blob instanceof Blob) {
+                getInfoByFileExtension(URL.createObjectURL(blob));
+              }
+            });
           },
           ONE_TIME_PASSIVE_EVENT,
         );
