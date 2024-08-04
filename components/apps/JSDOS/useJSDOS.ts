@@ -20,11 +20,11 @@ const useJSDOS = (
   const { closeProcess } = useProcesses();
 
   useEffect(() => {
-    if (!dosInstance && containerRef.current) {
+    if (!dosInstance) {
       loadFiles(libs).then(() => {
-        window.emulators.pathPrefix = pathPrefix;
+        if (window.emulators) window.emulators.pathPrefix = pathPrefix;
 
-        if (containerRef.current instanceof HTMLDivElement) {
+        if (containerRef.current && window.Dos) {
           setDosInstance(window.Dos(containerRef.current, dosOptions));
         }
       });
