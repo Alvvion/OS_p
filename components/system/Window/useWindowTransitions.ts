@@ -9,7 +9,7 @@ import {
   staticMinimizeVariant,
 } from "@/utils/animate";
 import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
-import { pxToNumber, viewHeight } from "@/utils/functions";
+import { viewHeight } from "@/utils/functions";
 
 const useWindowTransitions = (id: string): MotionProps => {
   const {
@@ -31,7 +31,7 @@ const useWindowTransitions = (id: string): MotionProps => {
 
     setMaximize({
       ...staticMaximizeVariant,
-      height: viewHeight() - pxToNumber(taskbar?.height),
+      height: viewHeight() - 45,
       x: -windowX,
       y: -windowY,
     });

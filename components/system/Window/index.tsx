@@ -51,7 +51,7 @@ const Window: React.FC<WindowComponentProps> = ({
           boxShadow: isForeground ? boxShadow : boxShadowInactive,
           outline: isForeground ? outline : outlineInactive,
         }}
-        className="absolute w-full h-full overflow-hidden rounded-[5px]"
+        className="absolute w-full h-full overflow-hidden rounded-[5px] flex flex-col"
         onContextMenu={(event) => event.preventDefault()}
         {...windowTransition}
         {...focusableProps}
