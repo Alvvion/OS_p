@@ -17,8 +17,9 @@ import useTitle from "@/hooks/useTitle";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
 import { overrideSubMenuStyling } from "../MonacoEditor/functions";
-import useDragZoom from "./useDragZoom";
+import { panZoomConfig } from "./config";
 import useFullscreen from "./useFullScreen";
+import usePanZoom from "./usePanZoom";
 
 const Photos: React.FC<ComponentProps> = ({ id }) => {
   const { processes: { [id]: process } = {} } = useProcesses();
@@ -29,10 +30,11 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const imageContainerRef = useRef<HTMLDivElement | null>(null);
-  const { dragZoomProps, isMaxZoom, isMinZoom, zoom } = useDragZoom(
+  const { maxScale, minScale } = panZoomConfig;
+  const { reset, scale, zoomIn, zoomOut, zoomToPoint } = usePanZoom(
     id,
-    imageRef,
-    imageContainerRef,
+    imageRef.current,
+    imageContainerRef.current,
   );
   const { fullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
@@ -66,37 +68,41 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
       <nav className="flex h-12 place-content-center place-items-center absolute top-0 w-full">
         <Button
           title="Zoom in"
-          disabled={isMaxZoom}
+          disabled={scale === maxScale}
           extraStyles="h-12 w-12 disabled:pointer-events-none hover:bg-[#4b4b4b80] active:bg-[#64646480]"
-          onClick={() => zoom("in")}
+          onClick={zoomIn}
         >
           <ZoomIn
-            extraStyles={`fill-white h-4 w-full ${isMaxZoom ? "bg-[#7D7D7D]" : ""}`}
+            extraStyles={`fill-white h-4 w-full ${scale === maxScale ? "bg-[#7D7D7D]" : ""}`}
           />
         </Button>
         <Button
           title="Zoom out"
-          disabled={isMinZoom}
+          disabled={scale === minScale}
           extraStyles="h-12 w-12 disabled:pointer-events-none hover:bg-[#4b4b4b80] active:bg-[#64646480]"
-          onClick={() => zoom("out")}
+          onClick={zoomOut}
         >
           <ZoomOut
-            extraStyles={`h-4 w-full ${isMinZoom ? "fill-[#7D7D7D]" : "fill-white"}`}
+            extraStyles={`h-4 w-full ${scale === minScale ? "fill-[#7D7D7D]" : "fill-white"}`}
           />
         </Button>
       </nav>
       <figure
         ref={imageContainerRef}
-        onWheel={({ deltaY }) => zoom(deltaY < 0 ? "in" : "out")}
         className="flex h-full my-0 mr-8 ml-12 overflow-hidden place-content-center place-items-center w-full"
-        {...useDoubleClick(() => zoom("toggle"))}
+        {...useDoubleClick((event) => {
+          if (scale === minScale) {
+            zoomToPoint?.(minScale * 2, event, { animate: true });
+          } else {
+            reset?.();
+          }
+        })}
       >
         {src[url] && (
           <img
             alt={basename(url, extname(url))}
             ref={imageRef}
             src={src[url]}
-            {...dragZoomProps}
           />
         )}
       </figure>
