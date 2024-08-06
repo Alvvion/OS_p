@@ -48,19 +48,19 @@ const FileManager: React.FC<FileManagerProps> = ({
     useSelection(fileManagerRef);
   const fileDrop = useFileDrop({ callback: folderActions.newPath });
   const folderContextMenu = useFolderContextMenu(url, folderActions);
-  const fileNames = Object.keys(files);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
-    const isMountable = MOUNTABLE_EXTENSIONS.has(extname(url));
-
-    if (isMountable && fileNames.length === 0) {
-      mountFs(url).then(() => updateFiles());
+    if (MOUNTABLE_EXTENSIONS.has(extname(url)) && !mounted) {
+      mountFs(url).then(() => {
+        setMounted(true);
+        updateFiles();
+      });
     }
-
     return () => {
-      if (isMountable && fileNames.length > 0 && closing) unMountFs(url);
+      if (mounted && closing) unMountFs(url);
     };
-  }, [closing, fileNames, mountFs, unMountFs, updateFiles, url]);
+  }, [closing, mountFs, mounted, unMountFs, updateFiles, url]);
 
   return !hideLoading && isLoading ? (
     <div className="cursor-wait w-full flex flex-col items-center justify-center text-xs pt-5 h-screen">
@@ -92,7 +92,7 @@ const FileManager: React.FC<FileManagerProps> = ({
           />
         </>
       )}
-      {fileNames.map((file) => (
+      {Object.keys(files).map((file) => (
         <FileEntry
           fileActions={fileActions}
           fileManagerRef={fileManagerRef}
