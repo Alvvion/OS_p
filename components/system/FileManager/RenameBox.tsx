@@ -1,33 +1,44 @@
 import { extname } from "path";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { haltEvent } from "@/context/FileSystem/functions";
 import { useTheme } from "@/context/Theme";
 import { MAX_FILE_NAME_LENGTH, PREVENT_SCROLL } from "@/utils/constants";
 
+import { getTextWrapData } from "./functions";
 import type { RenameBoxProps } from "./types";
 
 const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
-  const { sizes } = useTheme();
+  const { sizes, formats } = useTheme();
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const saveRename = (): void => {
     renameFile(path, inputRef?.current?.value);
   };
 
-  const updateDimensions = (
-    textArea: EventTarget | HTMLTextAreaElement | null,
-  ): void => {
-    if (textArea instanceof HTMLTextAreaElement) {
-      textArea.setAttribute("style", "height: 1px;");
-      textArea.setAttribute("style", `height: ${textArea.scrollHeight + 2}px;`);
-    }
-  };
+  const updateDimensions = useCallback(
+    (textArea: EventTarget | HTMLTextAreaElement | null): void => {
+      if (textArea instanceof HTMLTextAreaElement) {
+        const { width } = getTextWrapData(
+          textArea.value,
+          sizes.fileEntry.fontSize,
+          formats.systemFont,
+        );
+
+        /* eslint-disable no-param-reassign */
+        textArea.style.height = "1px";
+        textArea.style.height = `${textArea.scrollHeight + 2}px`;
+        textArea.style.width = `${width + 22}px`;
+        /* eslint-enable no-param-reassign */
+      }
+    },
+    [formats.systemFont, sizes.fileEntry.fontSize],
+  );
 
   useEffect(() => {
     updateDimensions(inputRef.current);
     inputRef?.current?.focus(PREVENT_SCROLL);
     inputRef?.current?.setSelectionRange(0, name.length - extname(name).length);
-  }, [name]);
+  }, [name, updateDimensions]);
 
   return (
     <textarea
@@ -47,9 +58,8 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
       autoComplete="off"
       rows={1}
       spellCheck={false}
-      className="border-rename-box-border border text-[11.5px] mb-0.5 relative text-center top-0.5 rounded-none focus:outline-none resize-none overflow-hidden z-10 w-[70px] whitespace-break-spaces"
+      className="border-rename-box-border border text-[11.5px] mb-0.5 relative text-center top-0.5 rounded-none focus:outline-none resize-none overflow-hidden z-10 whitespace-break-spaces max-w-[70px] min-w-[30px]"
       style={{
-        // width: `${sizes.fileEntry.renameWidth}px`,
         padding: `0 ${sizes.fileEntry.renamePadding}px`,
       }}
     />
