@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 
 import { haltEvent } from "@/context/FileSystem/functions";
 import { useTheme } from "@/context/Theme";
-import { PREVENT_SCROLL } from "@/utils/constants";
+import { MAX_FILE_NAME_LENGTH, PREVENT_SCROLL } from "@/utils/constants";
 
 import type { RenameBoxProps } from "./types";
 
@@ -35,6 +35,7 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
       defaultValue={name}
       onBlurCapture={saveRename}
       onClick={haltEvent}
+      maxLength={MAX_FILE_NAME_LENGTH}
       onKeyDown={({ key }) => {
         if (key === "Enter") saveRename();
       }}
@@ -46,7 +47,7 @@ const RenameBox: React.FC<RenameBoxProps> = ({ name, path, renameFile }) => {
       autoComplete="off"
       rows={1}
       spellCheck={false}
-      className="border-rename-box-border border text-[11.5px] mb-0.5 relative text-center top-0.5 rounded-none focus:outline-none resize-none overflow-hidden z-10 w-[70px]"
+      className="border-rename-box-border border text-[11.5px] mb-0.5 relative text-center top-0.5 rounded-none focus:outline-none resize-none overflow-hidden z-10 w-[70px] whitespace-break-spaces"
       style={{
         // width: `${sizes.fileEntry.renameWidth}px`,
         padding: `0 ${sizes.fileEntry.renamePadding}px`,

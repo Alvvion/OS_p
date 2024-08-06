@@ -36,7 +36,7 @@ const sizes = {
     fontSize: "11.5px",
     iconSize: "48px",
     letterSpacing: "0.25px",
-    renamePadding: 5,
+    renamePadding: "10px",
     renameWidth: "72px",
     maxTextDisplayLength: 60,
   },

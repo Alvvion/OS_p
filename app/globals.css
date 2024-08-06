@@ -88,7 +88,12 @@ ul {
   .video-player .video-js .vjs-control-bar {
     background-color: rgb(240, 240, 240);
     display: flex !important;
+    opacity: 1 !important;
     padding: 0 1px;
+  }
+
+  .video-js.vjs-fullscreen.vjs-user-inactive .vjs-control-bar {
+    opacity: 0 !important;
   }
   .video-player .video-js .vjs-button {
     color: rgb(116, 116, 116);
