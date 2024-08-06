@@ -3,7 +3,7 @@ const sizes = {
     subMenuOffset: 3,
   },
   taskbar: {
-    height: "40px",
+    height: "2.8em",
     clock: {
       width: "120px",
       fontSize: "12px",

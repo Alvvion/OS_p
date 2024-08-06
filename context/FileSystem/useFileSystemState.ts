@@ -7,7 +7,7 @@ import type XmlHttpRequest from "browserfs/dist/node/backend/XmlHttpRequest";
 import type ZipFS from "browserfs/dist/node/backend/ZipFS";
 import type { BFSCallback } from "browserfs/dist/node/core/file_system";
 import type { FSModule } from "browserfs/dist/node/core/FS";
-import { dirname, extname, join } from "path";
+import { extname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import * as BrowserFS from "@/public/System/BrowserFS/browserfs.min.js";
@@ -52,10 +52,7 @@ const useFileSystemState = (): FileSystemStateType => {
         folder === "/"
           ? [folder]
           : Object.keys(fsWatchers).filter(
-              (watchedPath) =>
-                watchedPath === folder ||
-                (watchedPath !== "/" && watchedPath === dirname(folder)) ||
-                watchedPath.startsWith(join(folder, "/")),
+              (watchedPath) => watchedPath === folder,
             );
 
       relevantPaths.forEach((watchedFolder) =>
