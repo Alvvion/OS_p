@@ -16,6 +16,7 @@ export type LocaleDateTime = {
 
 export type Events = {
   onBlurCapture: (event: React.FocusEvent<HTMLElement>) => void;
+  onClickCapture: (event?: React.MouseEvent<HTMLElement>) => void;
   onFocusCapture: (event?: React.FocusEvent<HTMLElement>) => void;
 };
 

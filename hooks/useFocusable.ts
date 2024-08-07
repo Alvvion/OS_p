@@ -48,14 +48,16 @@ const useFocusable = (
   };
 
   const moveToFront = useCallback(
-    (event?: React.FocusEvent<HTMLElement>) => {
+    (event?: React.FocusEvent<HTMLElement> | React.MouseEvent<HTMLElement>) => {
       const { relatedTarget } = event || {};
       if (componentWindow?.contains(document.activeElement)) {
         prependToStack(id);
         setForegroundId(id);
       } else if (!relatedTarget || document.activeElement === taskbarEntry) {
         componentWindow?.focus(PREVENT_SCROLL);
-        callbackEvents?.onFocusCapture?.(event);
+        callbackEvents?.onFocusCapture?.(
+          event as React.FocusEvent<HTMLElement>,
+        );
       }
     },
     [
@@ -76,7 +78,13 @@ const useFocusable = (
     if (process && !closing && !minimized) setForegroundId(id);
   }, [closing, id, minimized, process, setForegroundId, url]);
 
-  return { zIndex, tabIndex: -1, onFocusCapture: moveToFront, onBlurCapture };
+  return {
+    zIndex,
+    tabIndex: -1,
+    onFocusCapture: moveToFront,
+    onBlurCapture,
+    onClickCapture: moveToFront,
+  };
 };
 
 export default useFocusable;
