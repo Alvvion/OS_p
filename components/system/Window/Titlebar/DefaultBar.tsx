@@ -25,7 +25,7 @@ const DefaultBar: React.FC<ComponentProps> = ({ id }) => {
 
   return (
     <header
-      className="handle flex justify-between"
+      className="handle flex justify-between z-10"
       style={{ backgroundColor: bgColor }}
       onTouchStartCapture={({ target }) => {
         if (target instanceof HTMLElement) target.click();

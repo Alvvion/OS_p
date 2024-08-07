@@ -26,19 +26,13 @@ const _tailwind = [
 const WindowActionButton: React.FC<ComponentProps> = ({ id }) => {
   const { onMinimize, onMaximize, onClose } = useWindowActions(id);
   const {
-    processes: {
-      [id]: {
-        autoSizing = false,
-        maximized = false,
-        lockAspectRatio = false,
-      } = {},
-    },
+    processes: { [id]: process },
   } = useProcesses();
+  const { allowResizing = true, maximized } = process || {};
 
   const { foregroundId } = useSession();
 
   const isForeground = id === foregroundId;
-  const diasbleMaximize = autoSizing && !lockAspectRatio;
 
   const {
     sizes: {
@@ -74,7 +68,7 @@ const WindowActionButton: React.FC<ComponentProps> = ({ id }) => {
       </Button>
       <Button
         extraStyles={`h-full flex place-content-center place-items-center ${
-          autoSizing && !lockAspectRatio ? disabled : `hover:${backgroundHover}`
+          allowResizing ? `hover:${backgroundHover}` : disabled
         } active:${backgroundActive}`}
         style={{
           width: buttonWidth,
@@ -82,7 +76,7 @@ const WindowActionButton: React.FC<ComponentProps> = ({ id }) => {
           transition: "background-color 0.25 ease",
         }}
         onClick={onMaximize}
-        disabled={diasbleMaximize}
+        disabled={!allowResizing}
       >
         {maximized ? (
           <MaximizedIcon
@@ -91,13 +85,13 @@ const WindowActionButton: React.FC<ComponentProps> = ({ id }) => {
         ) : (
           <MaximizeIcon
             extraStyles={`${
-              diasbleMaximize
+              allowResizing
                 ? isForeground
-                  ? disabled
-                  : disabledInactive
-                : isForeground
                   ? "fill-white"
                   : buttonInactive
+                : isForeground
+                  ? disabled
+                  : disabledInactive
             }`}
           />
         )}

@@ -7,6 +7,7 @@ export type ProcessElement = {
 };
 
 export type Process = ProcessElement & {
+  allowResizing?: boolean;
   autoSizing?: boolean;
   backgroundColor?: string;
   closing?: boolean;

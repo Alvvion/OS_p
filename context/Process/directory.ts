@@ -63,17 +63,17 @@ export const processDir: Processes = {
   },
   V86: {
     Component: dynamic(() => import("@/components/apps/V86")),
-    icon: `${ICON_PATH}V86.ico`,
-    title: "V86",
+    allowResizing: false,
     autoSizing: true,
     backgroundColor: "#000",
+    icon: `${ICON_PATH}V86.ico`,
+    title: "V86",
   },
   VideoPlayer: {
     autoSizing: true,
     backgroundColor: "#000",
     Component: dynamic(() => import("@/components/apps/VideoPlayer")),
     icon: `${ICON_PATH}vlc.png`,
-    lockAspectRatio: true,
     title: "Video Player",
   },
   Webamp: {

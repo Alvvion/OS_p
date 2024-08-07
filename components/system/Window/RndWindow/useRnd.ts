@@ -10,8 +10,14 @@ import useStateSize from "./useStateSize";
 
 const useRnd = (id: string, maximized = false): RndHook => {
   const {
-    processes: { [id]: { autoSizing = false, lockAspectRatio = false } = {} },
+    processes: { [id]: process },
   } = useProcesses();
+
+  const {
+    allowResizing = true,
+    autoSizing = false,
+    lockAspectRatio = false,
+  } = process || {};
 
   const [size, setSize] = useStateSize(id, autoSizing);
   const [position, setPosition] = useStatePosition(id, size);
@@ -34,8 +40,7 @@ const useRnd = (id: string, maximized = false): RndHook => {
 
   return {
     disableDragging: maximized,
-    enableResizing:
-      !maximized && (!autoSizing || (autoSizing && lockAspectRatio)),
+    enableResizing: allowResizing && !maximized,
     lockAspectRatio,
     onDragStop,
     onResizeStop,
