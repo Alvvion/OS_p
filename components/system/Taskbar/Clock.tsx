@@ -1,24 +1,19 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useTheme } from "@/context/Theme";
-import useLocaleDateTime from "@/hooks/useDateTImeLocale";
+import useWorker from "@/hooks/useWorker";
+
+import type { LocaleTimeDate } from "./clockWorker";
+import clockWorker from "./clockWorker";
 
 const Clock: React.FC = () => {
-  const [now, setNow] = useState<Date>(new Date());
-  const { date, time, datetime } = useLocaleDateTime(now);
+  const [{ date = "", time = "", dateTime = "" }, setNow] =
+    useState<LocaleTimeDate>({} as LocaleTimeDate);
 
-  const updateClock = (): void => setNow(new Date());
-
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-
-    timeoutId = setTimeout(() => {
-      updateClock();
-      timeoutId = setInterval(updateClock, 1000);
-    }, 1000 - new Date().getMilliseconds());
-
-    return () => clearTimeout(timeoutId);
-  }, []);
+  useWorker<LocaleTimeDate>(
+    clockWorker,
+    useCallback(({ data }) => setNow(data), []),
+  );
 
   const {
     colors: {
@@ -34,7 +29,7 @@ const Clock: React.FC = () => {
   return (
     <time
       className="mr-[10px] flex flex-col justify-end items-end p-[0.3rem] rounded-[0.25rem] place-content-center place-items-center"
-      dateTime={datetime}
+      dateTime={dateTime}
       suppressHydrationWarning
       style={{ color: text, fontSize }}
     >
