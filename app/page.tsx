@@ -1,0 +1,28 @@
+"use client";
+
+import Desktop from "@/components/system/Desktop";
+import FileManager from "@/components/system/FileManager";
+import ProcessLoader from "@/components/system/Window/ProcessLoader";
+import Taskbar from "@/components/system/Window/Taskbar";
+import { FileSystemProvider } from "@/context/FileSystem";
+import { ProcessProvider } from "@/context/Process";
+import { SessionProvider } from "@/context/Session";
+import { ThemeProvider } from "@/context/Theme";
+
+export default function Home() {
+  return (
+    <FileSystemProvider>
+      <SessionProvider>
+        <ThemeProvider>
+          <Desktop>
+            <ProcessProvider>
+              <FileManager directory="/desktop" />
+              <Taskbar />
+              <ProcessLoader />
+            </ProcessProvider>
+          </Desktop>
+        </ThemeProvider>
+      </SessionProvider>
+    </FileSystemProvider>
+  );
+}
