@@ -1,4 +1,4 @@
-/* eslint-disable no-nested-ternary */
+ 
 import Button from "@/components/common/Button";
 import {
   CloseIcon,

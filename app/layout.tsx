@@ -1,4 +1,4 @@
-/* eslint-disable linebreak-style */
+ 
 import "./globals.css";
 
 import type { Metadata } from "next";
