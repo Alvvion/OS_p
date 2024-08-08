@@ -14,6 +14,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useDoubleClick from "@/hooks/useDoubleClick";
 import useTitle from "@/hooks/useTitle";
+import { EMPTY_BUFFER } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
 import { overrideSubMenuStyling } from "../MonacoEditor/functions";
@@ -40,7 +41,7 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
 
   useEffect(() => {
     if (fs && url && !src[url] && !closing) {
-      fs?.readFile(url, (error, contents = Buffer.from("")) => {
+      fs?.readFile(url, (error, contents = EMPTY_BUFFER) => {
         if (!error) {
           setSrc((currentSrc) => {
             const [currentUrl] = Object.keys(currentSrc);

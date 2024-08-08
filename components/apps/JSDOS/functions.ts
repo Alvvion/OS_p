@@ -3,6 +3,8 @@ import { unzip, zip } from "fflate";
 import type { AsyncZippable } from "fflate/node";
 import { join } from "path";
 
+import { EMPTY_BUFFER } from "@/utils/constants";
+
 import { zipConfigFiles } from "./config";
 
 const isFileInZip = (buffer: Buffer, zipFilePath: string): Promise<boolean> =>
@@ -38,7 +40,7 @@ const addFileToZip = (
 ): Promise<Buffer> =>
   new Promise((resolve) => {
     unzip(buffer, (_unzipError, zipData) => {
-      fs.readFile(filePath, (_readError, contents = Buffer.from("")) => {
+      fs.readFile(filePath, (_readError, contents = EMPTY_BUFFER) => {
         zip(
           { ...zipData, ...addFileToZippable(zipFilePath, contents) },
           (_zipError, newZipData) => {

@@ -4,6 +4,7 @@ import type { Editor } from "tinymce";
 
 import { useFileSystem } from "@/context/FileSystem";
 import useTitle from "@/hooks/useTitle";
+import { EMPTY_BUFFER } from "@/utils/constants";
 import { loadFiles } from "@/utils/functions";
 
 import { config, libs } from "./config";
@@ -48,7 +49,7 @@ const useTinyMCE = (
 
   useEffect(() => {
     if (url && editor) {
-      fs?.readFile(url, (error, contents = Buffer.from("")) => {
+      fs?.readFile(url, (error, contents = EMPTY_BUFFER) => {
         if (!error) {
           if (contents.length > 0) setReadOnlyMode(editor);
           editor.setContent(contents.toString());

@@ -7,6 +7,7 @@ import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
 import type { FileInfo } from "@/components/system/FileManager/types";
 import {
   BASE_2D_CONTEXT_OPTIONS,
+  EMPTY_BUFFER,
   ICON_PATH,
   IMAGE_FILE_EXTENSION,
   ONE_TIME_PASSIVE_EVENT,
@@ -72,7 +73,7 @@ export const getIconFromIni = (
   new Promise((resolve) => {
     fs.readFile(
       join(directory, "desktop.ini"),
-      (error, contents = Buffer.from("")) => {
+      (error, contents = EMPTY_BUFFER) => {
         if (!error) {
           const {
             ShellClassInfo: { IconFile = "" },
@@ -117,7 +118,7 @@ export const getInfoWithExtension = (
     });
 
   if (extension === SHORTCUT) {
-    fs.readFile(path, (err, contents = Buffer.from("")) => {
+    fs.readFile(path, (err, contents = EMPTY_BUFFER) => {
       subIcons.push(`${ICON_PATH}shortcut.png`);
       if (err) getInfoByFileExtension();
       else {
@@ -145,12 +146,12 @@ export const getInfoWithExtension = (
     });
   } else if (IMAGE_FILE_EXTENSION.has(extension)) {
     getInfoByFileExtension(`${ICON_PATH}ICON132_1.ico`);
-    fs.readFile(path, (error, contents = Buffer.from("")) => {
+    fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
       if (!error) getInfoByFileExtension(bufferToUrl(contents));
     });
   } else if (VIDEO_FILE_EXTENSIONS.has(extension)) {
     getInfoByFileExtension(`${ICON_PATH}vlc.png`);
-    fs.readFile(path, (error, contents = Buffer.from("")) => {
+    fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
       if (!error) {
         const video = document.createElement("video");
 
@@ -178,7 +179,7 @@ export const getInfoWithExtension = (
     });
   } else if (extension === ".mp3") {
     getInfoByFileExtension(`${ICON_PATH}music_48.png`);
-    fs.readFile(path, (error, contents = Buffer.from("")) => {
+    fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
       if (!error) {
         import("music-metadata-browser").then(({ parseBuffer, selectCover }) =>
           parseBuffer(

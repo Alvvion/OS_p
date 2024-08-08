@@ -142,3 +142,5 @@ export const TEMP_PATH = "/temp";
 export const INVALID_FILE_CHARACTERS = /["*/:<>?\\|]/g;
 
 export const MAX_FILE_NAME_LENGTH = 223;
+
+export const EMPTY_BUFFER = Buffer.from("");

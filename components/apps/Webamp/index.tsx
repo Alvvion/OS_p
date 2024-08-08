@@ -7,6 +7,7 @@ import useWindowTransitions from "@/components/system/Window/useWindowTransition
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useFocusable from "@/hooks/useFocusable";
+import { EMPTY_BUFFER } from "@/utils/constants";
 import { bufferToUrl, loadFiles } from "@/utils/functions";
 
 import {
@@ -47,7 +48,7 @@ const Webamp: React.FC<ComponentProps> = ({ id }) => {
 
   useEffect(() => {
     if (url && url !== currentUrl && webampCI) {
-      fs?.readFile(url, (_e, content = Buffer.from("")) => {
+      fs?.readFile(url, (_e, content = EMPTY_BUFFER) => {
         if (extname(url) === ".mp3") {
           parseTrack(content, basename(url)).then((track) => {
             setCurrentUrl(url);

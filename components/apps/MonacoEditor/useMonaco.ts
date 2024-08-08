@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import useTitle from "@/hooks/useTitle";
+import { EMPTY_BUFFER } from "@/utils/constants";
 import { cleanUpGlobals } from "@/utils/functions";
 
 import { config, globals, theme } from "./config";
@@ -50,7 +51,7 @@ const useMonaco = (
 
   useEffect(() => {
     if (monaco && editor && url) {
-      fs?.readFile(url, (error, contents = Buffer.from("")) => {
+      fs?.readFile(url, (error, contents = EMPTY_BUFFER) => {
         if (!error) {
           editor.getModel()?.dispose();
           editor.setModel(

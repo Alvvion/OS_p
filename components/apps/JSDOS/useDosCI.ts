@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
-import { SAVE_PATH } from "@/utils/constants";
+import { EMPTY_BUFFER, SAVE_PATH } from "@/utils/constants";
 import {
   bufferToUrl,
   cleanUpBufferUrl,
@@ -48,12 +48,12 @@ const useDosCI = (
 
   useEffect(() => {
     if (dosInstance && fs && url && !dosCI[url]) {
-      fs.readFile(url, async (_urlError, urlContents = Buffer.from("")) => {
+      fs.readFile(url, async (_urlError, urlContents = EMPTY_BUFFER) => {
         const bundleURL = bufferToUrl(await addJSDOSConfig(urlContents, fs));
 
         fs.readFile(
           join(SAVE_PATH, `${basename(url)}${saveExtension}`),
-          (saveError, saveContents = Buffer.from("")) => {
+          (saveError, saveContents = EMPTY_BUFFER) => {
             const [currentUrl] = Object.keys(dosCI);
             let optionalChangesUrl = "";
 

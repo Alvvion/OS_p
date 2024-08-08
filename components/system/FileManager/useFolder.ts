@@ -18,6 +18,7 @@ import {
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import {
+  EMPTY_BUFFER,
   ICON_PATH,
   INVALID_FILE_CHARACTERS,
   PROCESS_DELIMITER,
@@ -67,7 +68,7 @@ const useFolder = (
         if (extname(fileName) === SHORTCUT) {
           fs?.readFile(
             join(directory, fileName),
-            (_readError, contents = Buffer.from("")) =>
+            (_readError, contents = EMPTY_BUFFER) =>
               resolve(
                 Object.assign(stats, {
                   systemShortcut: getShortcutInfo(contents).type === "System",
@@ -206,7 +207,7 @@ const useFolder = (
 
   const getFile = (path: string): Promise<ZipFile> =>
     new Promise((resolve) => {
-      fs?.readFile(path, (_readError, contents = Buffer.from("")) =>
+      fs?.readFile(path, (_readError, contents = EMPTY_BUFFER) =>
         resolve([relative(directory, path), contents]),
       );
     });
@@ -307,7 +308,7 @@ const useFolder = (
     );
 
   const extractFiles = (path: string): void => {
-    fs?.readFile(path, (readError, zipContents = Buffer.from("")) => {
+    fs?.readFile(path, (readError, zipContents = EMPTY_BUFFER) => {
       if (!readError) {
         unzip(zipContents, (_unzipError, unzippedFiles) => {
           const zipFolderName = basename(path, extname(path));
@@ -363,7 +364,7 @@ const useFolder = (
     const pathExtension = extname(path);
 
     if (pathExtension === SHORTCUT) {
-      fs?.readFile(path, (_readError, contents = Buffer.from("")) =>
+      fs?.readFile(path, (_readError, contents = EMPTY_BUFFER) =>
         newPath(basename(path), contents),
       );
     } else {

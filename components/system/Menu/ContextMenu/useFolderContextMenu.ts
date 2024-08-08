@@ -3,7 +3,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import { getIconByFileExtension } from "@/context/FileSystem/functions";
 import { useMenu } from "@/context/Menu";
 import type { MenuItem } from "@/context/Menu/types";
-import { ICON_PATH } from "@/utils/constants";
+import { EMPTY_BUFFER, ICON_PATH } from "@/utils/constants";
 
 import type { ContextMenu } from "../types";
 
@@ -57,12 +57,12 @@ const useFolderContextMenu = (
         {
           label: "Rich Text Document",
           action: () =>
-            newPath("New Rich Text Document.whtml", Buffer.from(""), true),
+            newPath("New Rich Text Document.whtml", EMPTY_BUFFER, true),
           icon: getIconByFileExtension(".whtml"),
         },
         {
           label: "Text Document",
-          action: () => newPath("New Text Document.txt", Buffer.from(""), true),
+          action: () => newPath("New Text Document.txt", EMPTY_BUFFER, true),
           icon: getIconByFileExtension(".txt"),
         },
       ],

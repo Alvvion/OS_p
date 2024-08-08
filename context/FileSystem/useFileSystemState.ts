@@ -11,6 +11,7 @@ import { extname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import * as BrowserFS from "@/public/System/BrowserFS/browserfs.min.js";
+import { EMPTY_BUFFER } from "@/utils/constants";
 
 import FileSystemConfig from "./config";
 import { handleFileInputEvent } from "./functions";
@@ -87,7 +88,7 @@ const useFileSystemState = (): FileSystemStateType => {
 
   const mountFs = (url: string): Promise<void> =>
     new Promise((resolve) => {
-      fs?.readFile(url, (_readErr, fileData = Buffer.from("")) => {
+      fs?.readFile(url, (_readErr, fileData = EMPTY_BUFFER) => {
         const isISO = extname(url) === ".iso";
         const createFs: BFSCallback<IsoFS | ZipFS> = (_createErr, newFs) => {
           if (newFs) {

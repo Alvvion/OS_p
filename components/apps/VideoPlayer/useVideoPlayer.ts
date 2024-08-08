@@ -5,6 +5,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
 import useWindowSize from "@/hooks/useWindowSize";
+import { EMPTY_BUFFER } from "@/utils/constants";
 import {
   bufferToUrl,
   cleanUpBufferUrl,
@@ -104,7 +105,7 @@ const useVideoPlayer = (
         if (isYT) {
           loadFiles([ytLib]).then(() => loadPlayer(url));
         } else {
-          fs?.readFile(url, (_error, contents = Buffer.from("")) =>
+          fs?.readFile(url, (_error, contents = EMPTY_BUFFER) =>
             loadPlayer(bufferToUrl(contents)),
           );
         }

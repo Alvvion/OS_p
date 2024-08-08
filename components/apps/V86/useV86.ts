@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
-import { SAVE_PATH } from "@/utils/constants";
+import { EMPTY_BUFFER, SAVE_PATH } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
 
 import {
@@ -78,7 +78,7 @@ const useV86 = (
 
   useEffect(() => {
     if (!loading && fs && url && !emulator[url]) {
-      fs.readFile(url, (_imageError, imageContents = Buffer.from("")) => {
+      fs.readFile(url, (_imageError, imageContents = EMPTY_BUFFER) => {
         const isISO = extname(url).toLowerCase() === ".iso";
         const bufferUrl = bufferToUrl(imageContents);
         const v86ImageConfig: V86ImageConfig = {
@@ -98,7 +98,7 @@ const useV86 = (
 
         fs.readFile(
           join(SAVE_PATH, `${basename(url)}${saveExtension}`),
-          (saveError, saveContents = Buffer.from("")) => {
+          (saveError, saveContents = EMPTY_BUFFER) => {
             const [currentUrl] = Object.keys(emulator);
             const loadEmulator = (): void => {
               if (!saveError) {

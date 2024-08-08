@@ -4,6 +4,7 @@ import { useCallback, useEffect } from "react";
 import { useFileSystem } from "@/context/FileSystem";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
+import { EMPTY_BUFFER } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
 import { cssFit } from "./contant";
@@ -21,7 +22,7 @@ const useWallpaper = (refElement: RefObject<HTMLElement>): void => {
   useEffect(() => {
     if (sessionLoaded) {
       if (wallpaperImage) {
-        fs?.readFile(wallpaperImage, (error, contents = Buffer.from("")) => {
+        fs?.readFile(wallpaperImage, (error, contents = EMPTY_BUFFER) => {
           if (error) {
             loadThemeWallpaper();
           } else {

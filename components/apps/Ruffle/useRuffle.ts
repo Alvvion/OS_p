@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import useTitle from "@/hooks/useTitle";
+import { EMPTY_BUFFER } from "@/utils/constants";
 import { loadFiles } from "@/utils/functions";
 
 import type { RufflePlayer } from "./types";
@@ -43,7 +44,7 @@ const useRuffle = (
 
   useEffect(() => {
     if (containerRef.current && player && url) {
-      fs?.readFile(url, (error, contents = Buffer.from("")) => {
+      fs?.readFile(url, (error, contents = EMPTY_BUFFER) => {
         if (!error) {
           player.load({ data: contents }).then(() => {
             appendFileToTitle(basename(url, extname(url)));
