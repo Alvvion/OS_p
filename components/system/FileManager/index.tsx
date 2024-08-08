@@ -1,6 +1,7 @@
 import { basename, extname, join } from "path";
 import { useEffect, useRef, useState } from "react";
 
+import Loading from "@/components/common/Loading";
 import NoPointersEvents from "@/components/common/NoPointersEvents";
 import useFolderContextMenu from "@/components/system/Menu/ContextMenu/useFolderContextMenu";
 import { useFileSystem } from "@/context/FileSystem";
@@ -63,9 +64,7 @@ const FileManager: React.FC<FileManagerProps> = ({
   }, [closing, mountFs, mounted, unMountFs, updateFiles, url]);
 
   return !hideLoading && isLoading ? (
-    <div className="cursor-wait w-full flex flex-col items-center justify-center text-xs pt-5 h-screen">
-      <div className="text-white">Working on it...</div>
-    </div>
+    <Loading />
   ) : (
     <ol
       ref={fileManagerRef}

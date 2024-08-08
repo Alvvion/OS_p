@@ -1,8 +1,9 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import { useProcesses } from "@/context/Process";
 
 import useFileDrop from "../system/FileManager/useFileDrop";
+import Loading from "./Loading";
 import type { ContainerProps } from "./types";
 
 const AppContianer: React.FC<ContainerProps> = ({
@@ -17,14 +18,18 @@ const AppContianer: React.FC<ContainerProps> = ({
   } = useProcesses();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [loading, setLoading] = useState(true);
+  const fileDrop = useFileDrop({ id });
 
-  useHook(id, currentUrl, containerRef);
+  useHook(id, currentUrl, containerRef, setLoading, loading);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <div
       ref={containerRef}
       className={`${className}`}
-      {...useFileDrop({ id })}
+      {...fileDrop}
       {...restProps}
     >
       {children}

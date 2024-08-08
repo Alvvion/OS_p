@@ -34,6 +34,8 @@ export type ContainerHook = (
   id: string,
   url: string,
   container: React.MutableRefObject<HTMLDivElement | null>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  loading: boolean,
 ) => void;
 
 export interface ContainerProps extends React.ComponentPropsWithoutRef<"div"> {

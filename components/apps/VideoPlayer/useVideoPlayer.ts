@@ -22,66 +22,105 @@ const useVideoPlayer = (
   id: string,
   url: string,
   containerRef: React.MutableRefObject<HTMLDivElement | null>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  loading: boolean,
 ): void => {
   const { fs } = useFileSystem();
   const {
     processes: { [id]: { closing = false } = {} },
   } = useProcesses();
+  const { updateWindowSize } = useWindowSize(id);
   const [player, setPlayer] = useState<ReturnType<typeof videojs>>();
   const { appendFileToTitle } = useTitle(id);
-  const { updateWindowSize } = useWindowSize(id);
 
   useEffect(() => {
-    const isYT = isYouTubeUrl(url);
-    const loadPlayer = (src?: string): void => {
-      const [videoElement] = containerRef.current
-        ?.childNodes as NodeListOf<HTMLVideoElement>;
-      if (player) {
-        if (src && url) {
-          player.src([
-            {
-              src,
-              type: isYT ? "video/youtube" : getVideoType(url) || "video/mp4",
-            },
-          ]);
-        }
-        player.on("firstplay", () => {
-          const [height, width] = [player.videoHeight(), player.videoWidth()];
-          const [vh, vw] = [viewHeight(), viewWidth()];
-
-          if (height > vh || width > vw) {
-            updateWindowSize(vw * (height / width), vw);
+    let timeoutId: NodeJS.Timeout;
+    if (loading)
+      loadFiles(libs).then(() => {
+        const checkVideoJs = (): void => {
+          if (window.videojs === undefined) {
+            timeoutId = setTimeout(checkVideoJs, 100);
           } else {
-            updateWindowSize(height, width);
+            setLoading(false);
           }
-        });
-      } else if (window.videojs) {
-        setPlayer(
-          window.videojs(videoElement, {
-            ...config,
-            ...(isYT
-              ? { techOrder: ["youtube"], youtube: { ytControls: 2 } }
-              : { controls: true, inactivityTimeout: 1000 }),
-          }),
-        );
-      }
+        };
+        checkVideoJs();
+      });
 
-      if (!isYT) {
-        appendFileToTitle(url);
-        cleanUpBufferUrl(url);
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
     };
+  }, [loading, setLoading]);
 
-    loadFiles(isYT ? [...libs, ytLib] : libs).then(() => {
-      if (isYT) {
-        loadPlayer(url);
+  useEffect(() => {
+    if (!loading) {
+      const isYT = isYouTubeUrl(url);
+      const loadPlayer = (src?: string): void => {
+        const [videoElement] = containerRef.current
+          ?.childNodes as NodeListOf<HTMLVideoElement>;
+
+        if (player) {
+          if (src && url) {
+            player.src([
+              {
+                src,
+                type: isYT ? "video/youtube" : getVideoType(url) || "video/mp4",
+              },
+            ]);
+          }
+
+          player.on("firstplay", () => {
+            const [height, width] = [player.videoHeight(), player.videoWidth()];
+            const [vh, vw] = [viewHeight(), viewWidth()];
+
+            if (height && width) {
+              if (height > vh || width > vw) {
+                updateWindowSize(vw * (height / width), vw);
+              } else {
+                updateWindowSize(height, width);
+              }
+            }
+          });
+        } else {
+          setPlayer(
+            window.videojs(videoElement, {
+              ...config,
+              ...(isYT
+                ? { techOrder: ["youtube"], youtube: { ytControls: 2 } }
+                : { controls: true, inactivityTimeout: 1000 }),
+            }),
+          );
+        }
+
+        if (url && !isYT) {
+          appendFileToTitle(url);
+          cleanUpBufferUrl(url);
+        }
+      };
+
+      if (url) {
+        if (isYT) {
+          loadFiles([ytLib]).then(() => loadPlayer(url));
+        } else {
+          fs?.readFile(url, (_error, contents = Buffer.from("")) =>
+            loadPlayer(bufferToUrl(contents)),
+          );
+        }
       } else {
-        fs?.readFile(url, (_error, contents = Buffer.from("")) =>
-          loadPlayer(bufferToUrl(contents)),
-        );
+        loadPlayer();
       }
-    });
-  }, [appendFileToTitle, containerRef, fs, player, updateWindowSize, url]);
+    }
+  }, [
+    appendFileToTitle,
+    containerRef,
+    fs,
+    loading,
+    player,
+    updateWindowSize,
+    url,
+  ]);
 
   useEffect(
     () => () => {
