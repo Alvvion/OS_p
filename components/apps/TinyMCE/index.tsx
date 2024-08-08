@@ -18,7 +18,7 @@ const TinyMCE: React.FC<ComponentProps> = ({ id }) => {
   return (
     <AppContianer
       onBlur={maybeMaintainFocus}
-      className="tinymce"
+      className="tinymce h-full"
       id={id}
       useHook={useTinyMCE}
     >

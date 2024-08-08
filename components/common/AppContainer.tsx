@@ -23,17 +23,18 @@ const AppContianer: React.FC<ContainerProps> = ({
 
   useHook(id, currentUrl, containerRef, setLoading, loading);
 
-  return loading ? (
-    <Loading />
-  ) : (
-    <div
-      ref={containerRef}
-      className={`${className}`}
-      {...fileDrop}
-      {...restProps}
-    >
-      {children}
-    </div>
+  return (
+    <>
+      {loading && <Loading />}
+      <div
+        ref={containerRef}
+        className={`${className} ${loading ? "hidden" : "visible"}`}
+        {...fileDrop}
+        {...restProps}
+      >
+        {children}
+      </div>
+    </>
   );
 };
 

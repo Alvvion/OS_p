@@ -13,6 +13,7 @@ const useJSDOS = (
   id: string,
   url: string,
   containerRef: React.MutableRefObject<HTMLDivElement | null>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ): void => {
   const { updateWindowSize } = useWindowSize(id);
   const [dosInstance, setDosInstance] = useState<DosInstance>();
@@ -26,10 +27,11 @@ const useJSDOS = (
 
         if (containerRef.current && window.Dos) {
           setDosInstance(window.Dos(containerRef.current, dosOptions));
+          setLoading(false);
         }
       });
     }
-  }, [containerRef, dosInstance]);
+  }, [containerRef, dosInstance, setLoading]);
 
   useEffect(() => {
     if (dosCI) {

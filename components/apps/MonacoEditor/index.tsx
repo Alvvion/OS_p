@@ -9,7 +9,7 @@ const MonacoEditor: React.FC<ComponentProps> = ({ id }) => (
     id={id}
     useHook={useMonaco}
     onBlur={overrideSubMenuStyling}
-    className="w-full text-white"
+    className="w-full text-white h-full"
   />
 );
 

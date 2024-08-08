@@ -41,7 +41,7 @@ export type V86 = {
 
 declare global {
   interface Window {
-    V86Starter?: V86Constructor;
+    V86Starter: V86Constructor;
   }
   interface Navigator {
     deviceMemory: number;
