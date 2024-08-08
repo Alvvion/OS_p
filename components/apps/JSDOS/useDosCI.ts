@@ -7,11 +7,8 @@ import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
 import { SAVE_PATH } from "@/utils/constants";
-import {
-  bufferToUrl,
-  cleanUpBufferUrl,
-  cleanUpGlobals,
-} from "@/utils/functions";
+import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
+import { cleanUpGlobals } from "@/utils/globals";
 
 import { globals, saveExtension } from "./config";
 import { addJSDOSConfig } from "./functions";

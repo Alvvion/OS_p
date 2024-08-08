@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useFileSystem } from "@/context/FileSystem";
 import useTitle from "@/hooks/useTitle";
 import { EMPTY_BUFFER } from "@/utils/constants";
-import { cleanUpGlobals } from "@/utils/functions";
+import { cleanUpGlobals, lockGlobal, unlockGlobal } from "@/utils/globals";
 
 import { config, globals, theme } from "./config";
 import { detectLanguage } from "./functions";
@@ -24,8 +24,12 @@ const useMonaco = (
 
   useEffect(() => {
     if (!monaco) {
+      unlockGlobal("define");
       loader.config(config);
-      loader.init().then((monacoInstance) => setMonaco(monacoInstance));
+      loader.init().then((monacoInstance) => {
+        lockGlobal("define");
+        setMonaco(monacoInstance);
+      });
     }
   }, [monaco]);
 
@@ -51,6 +55,7 @@ const useMonaco = (
 
   useEffect(() => {
     if (monaco && editor && url) {
+      unlockGlobal("define");
       fs?.readFile(url, (error, contents = EMPTY_BUFFER) => {
         if (!error) {
           editor.getModel()?.dispose();
@@ -63,6 +68,7 @@ const useMonaco = (
           );
           appendFileToTitle(basename(url));
         }
+        setTimeout(() => lockGlobal("define"), 3000);
       });
     }
   }, [appendFileToTitle, editor, fs, monaco, url]);
