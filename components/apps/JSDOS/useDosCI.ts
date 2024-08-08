@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
-import { EMPTY_BUFFER, SAVE_PATH } from "@/utils/constants";
+import { SAVE_PATH } from "@/utils/constants";
 import {
   bufferToUrl,
   cleanUpBufferUrl,
@@ -23,7 +23,8 @@ const useDosCI = (
   dosInstance?: DosInstance,
 ): CommandInterface | undefined => {
   const { appendFileToTitle } = useTitle(id);
-  const { fs, mkdirRecursive, updateFolder } = useFileSystem();
+  const { exists, mkdirRecursive, readFile, updateFolder, writeFile } =
+    useFileSystem();
   const {
     linkElement,
     processes: { [id]: { closing = false } = {} },
@@ -31,73 +32,71 @@ const useDosCI = (
   const [dosCI, setDosCI] = useState<Record<string, CommandInterface>>({});
 
   const closeBundle = useCallback(
-    (bundleUrl: string, closeInstance = false): void => {
-      dosCI[bundleUrl]?.persist().then((saveZip) =>
-        mkdirRecursive(SAVE_PATH, () => {
-          const saveName = `${basename(bundleUrl)}${saveExtension}`;
+    async (bundleUrl: string, closeInstance = false): Promise<void> => {
+      const saveName = `${basename(bundleUrl)}${saveExtension}`;
 
-          fs?.writeFile(join(SAVE_PATH, saveName), Buffer.from(saveZip), () => {
-            if (closeInstance) dosInstance?.stop();
-            updateFolder(SAVE_PATH, saveName);
-          });
-        }),
-      );
+      if (!(await exists(SAVE_PATH))) await mkdirRecursive(SAVE_PATH);
+
+      if (
+        await writeFile(
+          join(SAVE_PATH, saveName),
+          Buffer.from(await dosCI[bundleUrl]?.persist()),
+          true,
+        )
+      ) {
+        if (closeInstance) dosInstance?.stop();
+        updateFolder(SAVE_PATH, saveName);
+      }
     },
-    [dosCI, dosInstance, fs, mkdirRecursive, updateFolder],
+    [dosCI, dosInstance, exists, mkdirRecursive, updateFolder, writeFile],
   );
 
-  useEffect(() => {
-    if (dosInstance && fs && url && !dosCI[url]) {
-      fs.readFile(url, async (_urlError, urlContents = EMPTY_BUFFER) => {
-        const bundleURL = bufferToUrl(await addJSDOSConfig(urlContents, fs));
+  const loadBundle = useCallback(async () => {
+    const [currentUrl] = Object.keys(dosCI);
 
-        fs.readFile(
-          join(SAVE_PATH, `${basename(url)}${saveExtension}`),
-          (saveError, saveContents = EMPTY_BUFFER) => {
-            const [currentUrl] = Object.keys(dosCI);
-            let optionalChangesUrl = "";
+    if (currentUrl) closeBundle(currentUrl);
 
-            if (!saveError) {
-              optionalChangesUrl = bufferToUrl(saveContents);
-            }
+    const bundleURL = bufferToUrl(
+      await addJSDOSConfig(await readFile(url), readFile),
+    );
+    const savePath = join(SAVE_PATH, `${basename(url)}${saveExtension}`);
+    const stateUrl = (await exists(savePath))
+      ? bufferToUrl(await readFile(savePath))
+      : undefined;
+    // NOTE: js-dos v7 appends `?dt=` (Removed in lib, for now...)
+    const ci = await dosInstance?.run(bundleURL, stateUrl);
 
-            if (currentUrl) closeBundle(currentUrl);
-
-            // NOTE: js-dos v7 appends `?dt=` (Removed in lib, for now...)
-            dosInstance.run(bundleURL, optionalChangesUrl).then((ci) => {
-              const canvas = containerRef.current?.querySelector("canvas");
-
-              if (canvas instanceof HTMLCanvasElement) {
-                linkElement(id, "peekElement", canvas);
-                setDosCI({ [url]: ci });
-                appendFileToTitle(url);
-                cleanUpBufferUrl(bundleURL);
-                if (optionalChangesUrl) cleanUpBufferUrl(optionalChangesUrl);
-                cleanUpGlobals(globals);
-              }
-            });
-          },
-        );
-      });
+    if (ci) {
+      const canvas = containerRef.current?.querySelector("canvas");
+      if (canvas instanceof HTMLCanvasElement) {
+        linkElement(id, "peekElement", canvas);
+        setDosCI({ [url]: ci });
+        appendFileToTitle(url);
+        cleanUpBufferUrl(bundleURL);
+        if (stateUrl) cleanUpBufferUrl(stateUrl);
+        cleanUpGlobals(globals);
+      }
     }
+  }, [
+    appendFileToTitle,
+    closeBundle,
+    containerRef,
+    dosCI,
+    dosInstance,
+    exists,
+    id,
+    linkElement,
+    readFile,
+    url,
+  ]);
+
+  useEffect(() => {
+    if (dosInstance && url && !dosCI[url]) loadBundle();
 
     return () => {
       if (closing) closeBundle(url, closing);
     };
-  }, [
-    appendFileToTitle,
-    closeBundle,
-    closing,
-    containerRef,
-    dosCI,
-    dosInstance,
-    fs,
-    id,
-    linkElement,
-    mkdirRecursive,
-    updateFolder,
-    url,
-  ]);
+  }, [closeBundle, closing, dosCI, dosInstance, loadBundle, url]);
 
   return dosCI[url];
 };

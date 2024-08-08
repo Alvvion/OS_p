@@ -1,14 +1,13 @@
-import type {
-  BFSCallback,
-  BFSOneArgCallback,
-} from "browserfs/dist/node/core/file_system";
+import type { ApiError } from "browserfs/dist/node/core/api_error";
+import type { BFSCallback } from "browserfs/dist/node/core/file_system";
 import type { AsyncZippable } from "fflate";
-import { unzip, zip } from "fflate";
+import { zip } from "fflate";
 import type { Stats } from "fs";
 import ini from "ini";
 import { basename, dirname, extname, isAbsolute, join, relative } from "path";
 import { useCallback, useEffect, useState } from "react";
 
+import { unzipAsync } from "@/components/apps/JSDOS/functions";
 import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
 import { useFileSystem } from "@/context/FileSystem";
 import {
@@ -41,27 +40,35 @@ const useFolder = (
   directory: string,
   setRenaming: React.Dispatch<React.SetStateAction<string>>,
 ): Folder => {
+  const [files, setFiles] = useState<Files>();
+  const [downloadLink, setDownloadLink] = useState("");
+  const [isLoading, setLoading] = useState(true);
   const {
     addFile,
     addFsWatcher,
     copyEntries,
+    exists,
     fs,
+    mkdir,
     pasteList,
+    readdir,
+    readFile,
     removeFsWatcher,
+    rename,
+    rmdir,
+    stat,
+    unlink,
     updateFolder,
+    writeFile,
   } = useFileSystem();
   const {
-    focusEntry,
     blurEntry,
+    focusEntry,
     sessionLoaded,
     setSortOrders,
     sortOrders: { [directory]: sortOrder } = {},
   } = useSession();
   const { closeProcess } = useProcesses();
-  const [files, setFiles] = useState<Files>();
-  const [downloadLink, setDownloadLink] = useState("");
-  const [isLoading, setLoading] = useState(true);
-
   const statsWithShortcutInfo = useCallback(
     (fileName: string, stats: Stats): Promise<FileStat> =>
       new Promise((resolve) => {
@@ -81,32 +88,25 @@ const useFolder = (
       }),
     [directory, fs],
   );
-
   const getFiles = useCallback(
-    (fileNames: string[]): Promise<Files> =>
-      Promise.all(
-        fileNames.map(
-          (file): Promise<FileStats> =>
-            new Promise((resolve, reject) => {
-              fs?.stat(join(directory, file), async (error, stats) =>
-                error
-                  ? reject(error)
-                  : resolve([
-                      file,
-                      await statsWithShortcutInfo(
-                        file,
-                        stats as unknown as Stats,
-                      ),
-                    ]),
-              );
-            }),
+    async (fileNames: string[]): Promise<Files> =>
+      Object.fromEntries(
+        await Promise.all(
+          fileNames.map(
+            async (file): Promise<FileStats> => [
+              file,
+              await statsWithShortcutInfo(
+                file,
+                await stat(join(directory, file)),
+              ),
+            ],
+          ),
         ),
-      ).then(Object.fromEntries),
-    [directory, fs, statsWithShortcutInfo],
+      ),
+    [directory, stat, statsWithShortcutInfo],
   );
-
   const updateFiles = useCallback(
-    (newFile?: string, oldFile?: string, initialOrder?: string[]) => {
+    async (newFile?: string, oldFile?: string, initialOrder?: string[]) => {
       if (oldFile && newFile) {
         setFiles(
           ({ [basename(oldFile)]: fileStats, ...currentFiles } = {}) => ({
@@ -120,102 +120,71 @@ const useFolder = (
             currentFiles,
         );
       } else if (newFile) {
-        fs?.stat(join(directory, newFile), async (error, stats) => {
-          if (!error && stats) {
-            const baseName = basename(newFile);
-            const allStats = await statsWithShortcutInfo(
-              baseName,
-              stats as unknown as Stats,
-            );
-            setFiles((currentFiles = {}) => ({
-              ...currentFiles,
-              [baseName]: allStats,
-            }));
-          }
-        });
+        const baseName = basename(newFile);
+        const allStats = await statsWithShortcutInfo(
+          baseName,
+          await stat(join(directory, newFile)),
+        );
+
+        setFiles((currentFiles = {}) => ({
+          ...currentFiles,
+          [baseName]: allStats,
+        }));
       } else {
         setLoading(true);
-        fs?.readdir(directory, async (error, contents = []) => {
-          setLoading(false);
-          if (error) {
-            if (error.code === "ENOENT") {
-              closeWithTransition(
-                closeProcess,
-                `FileExplorer${PROCESS_DELIMITER}${directory}`,
-              );
-            }
 
-            setFiles({});
-          } else {
-            const filteredFiles = contents.filter(filterSystemFiles(directory));
-            const updatedFiles = await getFiles(filteredFiles);
+        try {
+          const dirContents = await readdir(directory);
+          const updatedFiles = await getFiles(
+            dirContents.filter(filterSystemFiles(directory)),
+          );
 
-            setFiles((currentFiles = {}) =>
-              sortContents(
-                updatedFiles,
-                initialOrder || Object.keys(currentFiles),
-              ),
+          setFiles((currentFiles = {}) =>
+            sortContents(
+              updatedFiles,
+              initialOrder || Object.keys(currentFiles),
+            ),
+          );
+        } catch (error) {
+          if ((error as ApiError).code === "ENOENT") {
+            closeWithTransition(
+              closeProcess,
+              `FileExplorer${PROCESS_DELIMITER}${directory}`,
             );
           }
-        });
+        }
+
+        setLoading(false);
       }
     },
-    [closeProcess, directory, fs, getFiles, statsWithShortcutInfo],
+    [closeProcess, directory, getFiles, readdir, stat, statsWithShortcutInfo],
   );
+  const deletePath = async (path: string, updatePath = true): Promise<void> => {
+    try {
+      await unlink(path);
+    } catch (error) {
+      if ((error as ApiError).code === "EISDIR") {
+        const dirContents = await readdir(path);
 
-  const deleteFile = (path: string, updatePath = true): Promise<void> => {
-    const updateDirectory = (): void => {
-      if (updatePath) updateFolder(directory, undefined, basename(path));
-    };
-
-    return new Promise((resolve) => {
-      fs?.unlink(path, (unlinkError) => {
-        if (unlinkError?.code === "EISDIR") {
-          fs?.readdir(path, (_error, contents = []) =>
-            Promise.all(
-              contents.map((entry) => deleteFile(join(path, entry), false)),
-            )
-              .then(() => fs.rmdir(path, updateDirectory))
-              .finally(resolve),
-          );
-        } else {
-          updateDirectory();
-          resolve();
-        }
-      });
-    });
-  };
-
-  const renameFile = (path: string, name?: string): void => {
-    const newName = name?.replace(INVALID_FILE_CHARACTERS, "").trim();
-
-    if (newName) {
-      const newPath = join(
-        directory,
-        `${newName}${path.endsWith(SHORTCUT) ? SHORTCUT : ""}`,
-      );
-
-      fs?.exists(newPath, (exists) => {
-        if (!exists) {
-          fs.rename(path, newPath, () =>
-            updateFolder(directory, newPath, path),
-          );
-        }
-      });
+        await Promise.all(
+          dirContents.map((entry) => deletePath(join(path, entry), false)),
+        );
+        await rmdir(path);
+      }
     }
-  };
 
+    if (updatePath) updateFolder(directory, undefined, basename(path));
+  };
   const getFile = (path: string): Promise<ZipFile> =>
     new Promise((resolve) => {
       fs?.readFile(path, (_readError, contents = EMPTY_BUFFER) =>
         resolve([relative(directory, path), contents]),
       );
     });
-
   const downloadFiles = (paths: string[]): Promise<void> =>
-    findPathsRecursive(fs, paths).then((allPaths) =>
+    findPathsRecursive(paths, readdir, stat).then((allPaths) =>
       Promise.all(allPaths.map((path) => getFile(path))).then((filePaths) => {
-        const zipFiles = filePaths.filter(Boolean) as ZipFile[];
+        const zipFiles = filePaths.filter(Boolean);
 
         if (zipFiles.length === 1) {
           const [[path, contents]] = zipFiles;
@@ -231,69 +200,106 @@ const useFolder = (
       }),
     );
 
-  const newPath = (
+  const renameFile = async (path: string, name?: string): Promise<void> => {
+    const newName = name?.replace(INVALID_FILE_CHARACTERS, "").trim();
+
+    if (newName) {
+      const renamedPath = join(
+        directory,
+        `${newName}${path.endsWith(SHORTCUT) ? SHORTCUT : ""}`,
+      );
+
+      if (!(await exists(renamedPath))) {
+        await rename(path, renamedPath);
+        updateFolder(directory, renamedPath, path);
+      }
+    }
+  };
+  const newPath = async (
     name: string,
     buffer?: Buffer,
-    rename = false,
+    thenRename = false,
     iteration = 0,
-  ): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const isInternal = !buffer && isAbsolute(name);
-      const baseName = isInternal ? basename(name) : name;
-      const uniqueName = iteration
-        ? iterateFileNames(baseName, iteration)
-        : baseName;
-      const fullNewPath = join(directory, uniqueName);
+  ): Promise<string> => {
+    const isInternal = !buffer && isAbsolute(name);
+    const baseName = isInternal ? basename(name) : name;
+    const uniqueName = iteration
+      ? iterateFileNames(baseName, iteration)
+      : baseName;
+    const fullNewPath = join(directory, uniqueName);
 
-      if (isInternal) {
-        if (name !== fullNewPath) {
-          fs?.exists(fullNewPath, (exists) => {
-            if (exists) {
-              newPath(name, buffer, rename, iteration + 1).then(resolve);
-            } else {
-              fs.rename(name, fullNewPath, () => {
-                updateFolder(directory, uniqueName);
-                updateFolder(dirname(name), "", name);
-                blurEntry();
-                focusEntry(uniqueName);
-                resolve(uniqueName);
-              });
-            }
-          });
+    if (isInternal) {
+      if (name !== fullNewPath) {
+        if (await exists(fullNewPath)) {
+          return newPath(name, buffer, thenRename, iteration + 1);
         }
-      } else {
-        const checkWrite: BFSOneArgCallback = (error) => {
-          if (!error) {
-            if (!uniqueName.includes("/")) {
-              updateFolder(directory, uniqueName);
 
-              if (rename) {
-                setRenaming(uniqueName);
-              } else {
-                focusEntry(uniqueName);
-              }
-            }
+        if (await rename(name, fullNewPath)) {
+          updateFolder(directory, uniqueName);
+          updateFolder(dirname(name), "", name);
+          blurEntry();
+          focusEntry(uniqueName);
 
-            resolve(uniqueName);
-          } else if (error.code === "EEXIST") {
-            newPath(name, buffer, rename, iteration + 1).then(resolve);
-          } else {
-            reject();
-          }
-        };
-
-        if (buffer) {
-          fs?.writeFile(fullNewPath, buffer, { flag: "wx" }, checkWrite);
-        } else {
-          fs?.mkdir(fullNewPath, { flag: "wx" }, checkWrite);
+          return uniqueName;
         }
       }
-    });
+    } else {
+      try {
+        if (
+          buffer
+            ? await writeFile(fullNewPath, buffer)
+            : await mkdir(fullNewPath)
+        ) {
+          if (!uniqueName.includes("/")) {
+            updateFolder(directory, uniqueName);
 
+            if (thenRename) setRenaming(uniqueName);
+            else focusEntry(uniqueName);
+          }
+
+          return uniqueName;
+        }
+      } catch (error) {
+        if ((error as ApiError)?.code === "EEXIST") {
+          return newPath(name, buffer, thenRename, iteration + 1);
+        }
+      }
+    }
+
+    return "";
+  };
+
+  const newShortcut = (path: string, process: string): void => {
+    const pathExtension = extname(path);
+
+    if (pathExtension === SHORTCUT) {
+      fs?.readFile(path, (_readError, contents = EMPTY_BUFFER) =>
+        newPath(basename(path), contents),
+      );
+    } else {
+      const baseName = basename(path);
+      const shortcutPath = `${baseName}${SHORTCUT_APPEND}${SHORTCUT}`;
+      const shortcutData = ini.encode(
+        {
+          BaseURL: process,
+          IconFile: pathExtension
+            ? getIconByFileExtension(pathExtension)
+            : `${ICON_PATH}folder.ico`,
+          URL: path,
+        },
+        {
+          section: "InternetShortcut",
+          whitespace: false,
+        },
+      );
+
+      newPath(shortcutPath, Buffer.from(shortcutData));
+    }
+  };
   const archiveFiles = (paths: string[]): Promise<void> =>
-    findPathsRecursive(fs, paths).then((allPaths) =>
+    findPathsRecursive(paths, readdir, stat).then((allPaths) =>
       Promise.all(allPaths.map((path) => getFile(path))).then((filePaths) => {
-        const zipFiles = filePaths.filter(Boolean) as ZipFile[];
+        const zipFiles = filePaths.filter(Boolean);
 
         zip(
           Object.fromEntries(zipFiles) as AsyncZippable,
@@ -306,33 +312,42 @@ const useFolder = (
         );
       }),
     );
+  const extractFiles = async (path: string): Promise<void> => {
+    const unzippedFiles = await unzipAsync(await readFile(path));
+    const zipFolderName = basename(path, extname(path));
 
-  const extractFiles = (path: string): void => {
-    fs?.readFile(path, (readError, zipContents = EMPTY_BUFFER) => {
-      if (!readError) {
-        unzip(zipContents, (_unzipError, unzippedFiles) => {
-          const zipFolderName = basename(path, extname(path));
+    if (await mkdir(join(directory, zipFolderName))) {
+      await Promise.all(
+        Object.entries(unzippedFiles).map(
+          async ([extractPath, fileContents]): Promise<boolean> => {
+            const localPath = join(directory, zipFolderName, extractPath);
 
-          fs.mkdir(join(directory, zipFolderName), { flag: "w" }, () => {
-            Object.entries(unzippedFiles).forEach(
-              ([extactedPath, fileContents]) => {
-                if (extactedPath.endsWith("/")) {
-                  fs.mkdir(join(directory, zipFolderName, extactedPath));
-                } else {
-                  fs.writeFile(
-                    join(directory, zipFolderName, extactedPath),
-                    Buffer.from(fileContents),
-                  );
-                }
-              },
-            );
-            updateFolder(directory, zipFolderName);
-          });
-        });
-      }
-    });
+            if (fileContents.length === 0 && extractPath.endsWith("/")) {
+              return mkdir(localPath);
+            }
+
+            const fileData = Buffer.from(fileContents);
+            let created = false;
+
+            try {
+              created = await writeFile(localPath, fileData);
+            } catch (error) {
+              const { code, path: missingPath } = error as ApiError;
+
+              if (code === "ENOENT" && missingPath) {
+                return (
+                  (await mkdir(missingPath)) && writeFile(localPath, fileData)
+                );
+              }
+            }
+
+            return created;
+          },
+        ),
+      );
+      updateFolder(directory, zipFolderName);
+    }
   };
-
   const pasteToFolder = (): void =>
     Object.entries(pasteList).forEach(([pasteEntry, operation]) => {
       if (operation === "move") {
@@ -359,34 +374,6 @@ const useFolder = (
         fs?.readFile(pasteEntry, copyFiles(pasteEntry));
       }
     });
-
-  const newShortcut = (path: string, process: string): void => {
-    const pathExtension = extname(path);
-
-    if (pathExtension === SHORTCUT) {
-      fs?.readFile(path, (_readError, contents = EMPTY_BUFFER) =>
-        newPath(basename(path), contents),
-      );
-    } else {
-      const baseName = basename(path);
-      const shortcutPath = `${baseName}${SHORTCUT_APPEND}${SHORTCUT}`;
-      const shortcutData = ini.encode(
-        {
-          BaseURL: process,
-          IconFile: pathExtension
-            ? getIconByFileExtension(pathExtension)
-            : `${ICON_PATH}/folder.ico`,
-          URL: path,
-        },
-        {
-          section: "InternetShortcut",
-          whitespace: false,
-        },
-      );
-
-      newPath(shortcutPath, Buffer.from(shortcutData));
-    }
-  };
 
   useEffect(() => {
     if (sessionLoaded) {
@@ -435,23 +422,23 @@ const useFolder = (
   }, [addFsWatcher, directory, removeFsWatcher, updateFiles]);
 
   return {
-    files: files || {},
-    isLoading,
-    updateFiles,
     fileActions: {
       archiveFiles,
-      deleteFile,
+      deletePath,
       downloadFiles,
       extractFiles,
       newShortcut,
       renameFile,
     },
+    files: files || {},
     folderActions: {
       addToFolder: () => addFile(newPath),
       newPath,
       pasteToFolder,
       setSortBy: useSortBy(directory, files),
     },
+    isLoading,
+    updateFiles,
   };
 };
 

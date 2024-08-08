@@ -7,11 +7,10 @@ import type XmlHttpRequest from "browserfs/dist/node/backend/XmlHttpRequest";
 import type ZipFS from "browserfs/dist/node/backend/ZipFS";
 import type { BFSCallback } from "browserfs/dist/node/core/file_system";
 import type { FSModule } from "browserfs/dist/node/core/FS";
-import { extname, join } from "path";
+import { dirname, extname, join } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import * as BrowserFS from "@/public/System/BrowserFS/browserfs.min.js";
-import { EMPTY_BUFFER } from "@/utils/constants";
 
 import FileSystemConfig from "./config";
 import { handleFileInputEvent } from "./functions";
@@ -20,11 +19,14 @@ import type {
   FileSystemStateType,
   UpdateFiles,
 } from "./types";
+import useAsyncFs from "./useAsyncFs";
 
 const { BFSRequire, configure, FileSystem } = BrowserFS as typeof IBrowserFS;
 
 const useFileSystemState = (): FileSystemStateType => {
   const [fs, setFs] = useState<FSModule>();
+  const asyncFs = useAsyncFs(fs);
+  const { exists, mkdir, readFile } = asyncFs;
   const [fileInput, setFileInput] = useState<HTMLInputElement>();
   const [fsWatchers, setFsWatchers] = useState<Record<string, UpdateFiles[]>>(
     {},
@@ -53,7 +55,9 @@ const useFileSystemState = (): FileSystemStateType => {
         folder === "/"
           ? [folder]
           : Object.keys(fsWatchers).filter(
-              (watchedPath) => watchedPath === folder,
+              (watchedPath) =>
+                watchedPath === folder ||
+                (watchedPath !== "/" && watchedPath === dirname(folder)),
             );
 
       relevantPaths.forEach((watchedFolder) =>
@@ -86,36 +90,35 @@ const useFileSystemState = (): FileSystemStateType => {
     [],
   );
 
-  const mountFs = (url: string): Promise<void> =>
-    new Promise((resolve) => {
-      fs?.readFile(url, (_readErr, fileData = EMPTY_BUFFER) => {
-        const isISO = extname(url) === ".iso";
-        const createFs: BFSCallback<IsoFS | ZipFS> = (_createErr, newFs) => {
-          if (newFs) {
-            rootFs?.mount(url, newFs);
-            resolve();
-          }
-        };
+  const mountFs = async (url: string): Promise<void> => {
+    const fileData = await readFile(url);
 
-        if (isISO) {
-          FileSystem.IsoFS.Create({ data: fileData }, createFs);
-        } else {
-          FileSystem.ZipFS.Create({ zipData: fileData }, createFs);
+    return new Promise((resolve, reject) => {
+      const createFs: BFSCallback<IsoFS | ZipFS> = (createError, newFs) => {
+        if (createError) reject();
+        else if (newFs) {
+          rootFs?.mount(url, newFs);
+          resolve();
         }
-      });
+      };
+
+      if (extname(url) === ".iso") {
+        FileSystem.IsoFS.Create({ data: fileData }, createFs);
+      } else {
+        FileSystem.ZipFS.Create({ zipData: fileData }, createFs);
+      }
     });
+  };
 
   const unMountFs = (url: string): void => rootFs?.umount(url);
 
   const addFile = (callback: (name: string, buffer?: Buffer) => void): void => {
-    if (fileInput) {
-      fileInput.addEventListener(
-        "change",
-        (event) => handleFileInputEvent(event, callback),
-        { once: true },
-      );
-      fileInput.click();
-    }
+    fileInput?.addEventListener(
+      "change",
+      (event) => handleFileInputEvent(event, callback),
+      { once: true },
+    );
+    fileInput?.click();
   };
 
   const resetFs = (): Promise<void> =>
@@ -129,26 +132,18 @@ const useFileSystemState = (): FileSystemStateType => {
       writable.empty((apiError) => (apiError ? reject(apiError) : resolve()));
     });
 
-  const mkdirRecursive = (path: string, callback: () => void): void => {
+  const mkdirRecursive = async (path: string): Promise<void> => {
     const pathParts = path.split("/").filter(Boolean);
-    const recursePath = (position = 1): void => {
+    const recursePath = async (position = 1): Promise<void> => {
       const makePath = join("/", pathParts.slice(0, position).join("/"));
-      const nextPart = (): void =>
-        position === pathParts.length ? callback() : recursePath(position + 1);
+      const created = (await exists(makePath)) || (await mkdir(makePath));
 
-      fs?.exists(makePath, (exists) => {
-        if (exists) nextPart();
-        else {
-          fs.mkdir(makePath, { flag: "w" }, (error) => {
-            if (!error) {
-              nextPart();
-            }
-          });
-        }
-      });
+      if (created && position !== pathParts.length) {
+        await recursePath(position + 1);
+      }
     };
 
-    recursePath();
+    await recursePath();
   };
 
   useEffect(() => {
@@ -171,6 +166,7 @@ const useFileSystemState = (): FileSystemStateType => {
     setFileInput,
     unMountFs,
     updateFolder,
+    ...asyncFs,
   };
 };
 

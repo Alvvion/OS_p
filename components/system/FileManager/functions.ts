@@ -1,4 +1,4 @@
-import type { FSModule } from "browserfs/dist/node/core/FS";
+import type { Stats } from "fs";
 import { basename, extname, join } from "path";
 
 import {
@@ -201,30 +201,24 @@ export const truncateName = (
     : name;
 };
 
-export const findPathsRecursive = (
-  fs: FSModule | undefined,
+export const findPathsRecursive = async (
   paths: string[],
-): Promise<string[]> =>
-  new Promise((resolve) => {
-    Promise.all(
-      paths.map(
-        (path): Promise<string[]> =>
-          new Promise((pathResolve) => {
-            fs?.stat(path, (_statError, stats) => {
-              if (stats?.isDirectory()) {
-                fs?.readdir(path, (_readError, files = []) =>
-                  pathResolve(
-                    findPathsRecursive(
-                      fs,
-                      files.map((file) => join(path, file)),
-                    ),
-                  ),
-                );
-              } else {
-                pathResolve([path]);
-              }
-            });
-          }),
-      ),
-    ).then((newPaths) => resolve(newPaths.flat()));
-  });
+  readdir: (path: string) => Promise<string[]>,
+  stat: (path: string) => Promise<Stats>,
+): Promise<string[]> => {
+  const pathArrays = await Promise.all(
+    paths.map(async (path): Promise<string[]> => {
+      const pathStat = await stat(path);
+      const fileNames = await readdir(path);
+      return pathStat.isDirectory()
+        ? findPathsRecursive(
+            fileNames.map((file) => join(path, file)),
+            readdir,
+            stat,
+          )
+        : [path];
+    }),
+  );
+
+  return pathArrays.flat();
+};

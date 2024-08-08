@@ -1,9 +1,7 @@
-import type { FSModule } from "browserfs/dist/node/core/FS";
+import type { AsyncZipOptions, Unzipped } from "fflate";
 import { unzip, zip } from "fflate";
 import type { AsyncZippable } from "fflate/node";
 import { join } from "path";
-
-import { EMPTY_BUFFER } from "@/utils/constants";
 
 import { zipConfigFiles } from "./config";
 
@@ -32,33 +30,42 @@ export const addFileToZippable = (
   return zippableData;
 };
 
-const addFileToZip = (
+export const unzipAsync = (zipFile: Buffer): Promise<Unzipped> =>
+  new Promise((resolve, reject) => {
+    unzip(zipFile, (error, data) => (error ? reject(error) : resolve(data)));
+  });
+
+const zipAsync = (
+  data: AsyncZippable,
+  opts: AsyncZipOptions = {},
+): Promise<Uint8Array> =>
+  new Promise((resolve, reject) => {
+    zip(data, opts, (error, zipData) =>
+      error ? reject(error) : resolve(zipData),
+    );
+  });
+
+const addFileToZip = async (
   buffer: Buffer,
   filePath: string,
   zipFilePath: string,
-  fs: FSModule,
+  readFile: (path: string) => Promise<Buffer>,
 ): Promise<Buffer> =>
-  new Promise((resolve) => {
-    unzip(buffer, (_unzipError, zipData) => {
-      fs.readFile(filePath, (_readError, contents = EMPTY_BUFFER) => {
-        zip(
-          { ...zipData, ...addFileToZippable(zipFilePath, contents) },
-          (_zipError, newZipData) => {
-            resolve(Buffer.from(newZipData));
-          },
-        );
-      });
-    });
-  });
+  Buffer.from(
+    await zipAsync({
+      ...(await unzipAsync(buffer)),
+      ...addFileToZippable(zipFilePath, await readFile(filePath)),
+    }),
+  );
 
 export const addJSDOSConfig = async (
   buffer: Buffer,
-  fs: FSModule,
+  readFile: (path: string) => Promise<Buffer>,
 ): Promise<Buffer> =>
   Object.entries(zipConfigFiles).reduce(
     async (newBuffer, [zipPath, fsPath]) =>
       (await isFileInZip(await newBuffer, zipPath))
         ? newBuffer
-        : addFileToZip(await newBuffer, fsPath, zipPath, fs),
+        : addFileToZip(await newBuffer, fsPath, zipPath, readFile),
     Promise.resolve(buffer),
   );

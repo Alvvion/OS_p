@@ -12,21 +12,21 @@ import type { FileDrop, FileDropHook } from "./types";
 
 const useFileDrop = ({ callback, id }: FileDropHook): FileDrop => {
   const { url } = useProcesses();
-  const { fs, mkdirRecursive, updateFolder } = useFileSystem();
+  const { mkdirRecursive, updateFolder, writeFile } = useFileSystem();
 
-  const updateProcessUrl = (filePath: string, fileData?: Buffer): void => {
+  const updateProcessUrl = async (
+    filePath: string,
+    fileData?: Buffer,
+  ): Promise<void> => {
     if (id) {
       if (fileData) {
         const tempPath = join(TEMP_PATH, filePath);
+        await mkdirRecursive(TEMP_PATH);
 
-        mkdirRecursive(TEMP_PATH, () => {
-          fs?.writeFile(tempPath, fileData, (error) => {
-            if (!error) {
-              url(id, tempPath);
-              updateFolder(TEMP_PATH, filePath);
-            }
-          });
-        });
+        if (await writeFile(tempPath, fileData, true)) {
+          url(id, tempPath);
+          updateFolder(TEMP_PATH, filePath);
+        }
       } else {
         url(id, filePath);
       }

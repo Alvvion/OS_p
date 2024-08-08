@@ -1,15 +1,32 @@
 import type { FSModule } from "browserfs/dist/node/core/FS";
+import type { Stats } from "fs";
 
 export type UpdateFiles = (newFile?: string, oldFile?: string) => void;
 
 export type FilePasteOperations = Record<string, "copy" | "move">;
 
-export type FileSystemStateType = {
+export type AsyncFSModule = {
+  exists: (path: string) => Promise<boolean>;
+  mkdir: (path: string, overwrite?: boolean) => Promise<boolean>;
+  readFile: (path: string) => Promise<Buffer>;
+  readdir: (path: string) => Promise<string[]>;
+  rename: (oldPath: string, newPath: string) => Promise<boolean>;
+  rmdir: (path: string) => Promise<boolean>;
+  stat: (path: string) => Promise<Stats>;
+  unlink: (path: string) => Promise<boolean>;
+  writeFile: (
+    path: string,
+    data: Buffer | string,
+    overwrite?: boolean,
+  ) => Promise<boolean>;
+};
+
+export type FileSystemStateType = AsyncFSModule & {
   addFile: (callback: (name: string, buffer?: Buffer) => void) => void;
   addFsWatcher: (folder: string, updateFiles: UpdateFiles) => void;
   copyEntries: (entries: string[]) => void;
   fs?: FSModule;
-  mkdirRecursive: (path: string, callback: () => void) => void;
+  mkdirRecursive: (path: string) => Promise<void>;
   mountFs: (url: string) => Promise<void>;
   moveEntries: (entries: string[]) => void;
   pasteList: FilePasteOperations;
