@@ -1,27 +1,27 @@
-import { useCallback } from "react";
-
+import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
 import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 
+import type { WindowActions } from "./types";
 import useNextFocusable from "./useNextFocusable";
 
-const useWindowActions = (id: string) => {
+const useWindowActions = (id: string): WindowActions => {
   const { minimize, maximize, closeProcess } = useProcesses();
-  const { setStackOrder, setForegroundId } = useSession();
+  const { removeFromStack, setForegroundId } = useSession();
   const nextFocusableId = useNextFocusable(id);
 
-  const onMinimize = useCallback(() => {
+  const onMinimize = (): void => {
     setForegroundId(nextFocusableId);
     return minimize(id);
-  }, [id, minimize, nextFocusableId, setForegroundId]);
-  const onMaximize = useCallback(() => maximize(id), [id, maximize]);
-  const onClose = useCallback(() => {
-    setStackOrder((currentOrder) =>
-      currentOrder.filter((stackId) => stackId !== id)
-    );
+  };
+
+  const onMaximize = (): void => maximize(id);
+
+  const onClose = (): void => {
+    removeFromStack(id);
+    closeWithTransition(closeProcess, id);
     setForegroundId(nextFocusableId);
-    return closeProcess(id);
-  }, [setStackOrder, setForegroundId, nextFocusableId, closeProcess, id]);
+  };
 
   return { onMaximize, onMinimize, onClose };
 };

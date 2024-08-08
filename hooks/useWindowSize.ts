@@ -1,16 +1,15 @@
-import { stripUnit } from "polished";
 import { useCallback } from "react";
 
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
-import type { WindowSize } from "@/types/hooks/WindowSize";
+import { pxToNumber } from "@/utils/functions";
+
+import type { WindowSize } from "./types";
 
 const useWindowSize = (id: string): WindowSize => {
   const { setWindowStates } = useSession();
   const {
-    currentTheme: {
-      sizes: { titlebar },
-    },
+    sizes: { titlebar },
   } = useTheme();
 
   const updateWindowSize = useCallback(
@@ -18,13 +17,14 @@ const useWindowSize = (id: string): WindowSize => {
       setWindowStates((currentState) => ({
         ...currentState,
         [id]: {
+          position: currentState?.[id]?.position,
           size: {
-            height: height + Number(stripUnit(titlebar.height)),
+            height: height + pxToNumber(titlebar.height),
             width,
           },
         },
       })),
-    [id, setWindowStates, titlebar.height]
+    [id, setWindowStates, titlebar.height],
   );
 
   return { updateWindowSize };

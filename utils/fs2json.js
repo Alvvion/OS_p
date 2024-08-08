@@ -1,6 +1,14 @@
+/* eslint-disable unicorn/no-process-exit */
+/* eslint-disable unicorn/prefer-at */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { readdir, readlink, stat, writeFile } = require("fs");
-const { basename, join, relative, resolve: resolvePath } = require("path");
+const { mkdir, readdir, readlink, stat, writeFile } = require("fs");
+const {
+  basename,
+  dirname,
+  relative,
+  join,
+  resolve: resolvePath,
+} = require("path");
 
 const VERSION = 3;
 
@@ -48,7 +56,7 @@ const fs2json = (dir) => {
           reject(dirError);
         } else {
           const includedFiles = files.filter(
-            (file) => !excludedPaths.includes(file)
+            (file) => !excludedPaths.includes(file),
           );
 
           const recur = () => {
@@ -105,14 +113,16 @@ const fs2json = (dir) => {
     // eslint-disable-next-line no-console
     console.info("Creating json...");
 
-    writeFile(
-      outputPath,
-      JSON.stringify({
-        fsroot: data,
-        version: VERSION,
-        size: totalSize,
-      }),
-      () => process.exit()
+    mkdir(dirname(outputPath), { recursive: true }, () =>
+      writeFile(
+        outputPath,
+        JSON.stringify({
+          fsroot: data,
+          version: VERSION,
+          size: totalSize,
+        }),
+        () => process.exit(),
+      ),
     );
   });
 };

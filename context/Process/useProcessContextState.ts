@@ -1,61 +1,80 @@
 import { useCallback, useState } from "react";
 
-import { getProcess, PINNED_PROCESSES, STARTUP_PROCESSES } from "./directory";
+import { getProcess, STARTUP_PROCESSES } from "./directory";
 import {
   closingProcess,
   maximizeProcess,
   minimizeProcess,
   openingProcess,
+  setIcon,
   setProcessElement,
+  setTitle,
+  setUrl,
 } from "./functions";
 import type { ProcessContextType, ProcessElement, Processes } from "./types";
 
 const useProcessContextState = (): ProcessContextType => {
   const [processes, setProcesses] = useState<Processes>(
-    getProcess(STARTUP_PROCESSES)
+    getProcess(STARTUP_PROCESSES),
+  );
+
+  const icon = useCallback(
+    (id: string, newIcon: string) => setProcesses(setIcon(id, newIcon)),
+    [],
   );
 
   const closeProcess = useCallback(
-    (processId: string) => setProcesses(closingProcess(processId)),
-    []
+    (processId: string, closing?: boolean) =>
+      setProcesses(closingProcess(processId, closing)),
+    [],
   );
 
   const openProcess = useCallback(
-    (processId: string, url?: string) =>
-      setProcesses(openingProcess(processId, url)),
-    []
+    (processId: string, url: string, initialIcon?: string) =>
+      setProcesses(openingProcess(processId, url, initialIcon)),
+    [],
   );
 
-  const [pinnedProcesses] = useState<Processes>(getProcess(PINNED_PROCESSES));
-  const closePinnedProcess = () => {};
+  // const [pinnedProcesses] = useState<Processes>(getProcess(PINNED_PROCESSES));
+  // const closePinnedProcess = () => {};
 
-  const openPinnedProcess = () => {};
+  // const openPinnedProcess = () => {};
 
   const minimize = useCallback(
     (id: string) => setProcesses(minimizeProcess(id)),
-    []
+    [],
   );
   const maximize = useCallback(
     (id: string) => setProcesses(maximizeProcess(id)),
-    []
+    [],
   );
 
   const linkElement = useCallback(
     (id: string, name: keyof ProcessElement, element: HTMLElement) =>
       setProcesses(setProcessElement(id, name, element)),
-    []
+    [],
+  );
+
+  const title = useCallback(
+    (id: string, newTitle: string) => setProcesses(setTitle(id, newTitle)),
+    [],
+  );
+
+  const url = useCallback(
+    (id: string, newUrl: string) => setProcesses(setUrl(id, newUrl)),
+    [],
   );
 
   return {
     closeProcess,
-    closePinnedProcess,
-    openProcess,
-    openPinnedProcess,
-    processes,
-    pinnedProcesses,
+    icon,
+    linkElement,
     maximize,
     minimize,
-    linkElement,
+    openProcess,
+    processes,
+    title,
+    url,
   };
 };
 

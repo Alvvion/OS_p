@@ -1,20 +1,15 @@
-type FrameSizeCallback = (width: number, height: number) => void;
+import type { DosFactoryType } from "emulators-ui/dist/types/js-dos";
 
-export type DosCI = {
-  exit: () => void;
-  frameHeight: number;
-  frameWidth: number;
-  events: () => {
-    onFrameSize: (callback: FrameSizeCallback) => void;
-  };
-};
-
-export type WindowWithDos = Window &
-  typeof globalThis & {
-    Dos: (element: HTMLElement) => {
-      run: (url: string) => Promise<DosCI>;
-    };
+declare global {
+  interface Window {
+    Dos: DosFactoryType;
     emulators: {
       pathPrefix: string;
     };
-  };
+    SimpleKeyboardInstances?: {
+      emulatorKeyboard?: {
+        destroy: () => void;
+      };
+    };
+  }
+}

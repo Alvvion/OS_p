@@ -1,90 +1,113 @@
-import { useState } from "react";
-
-import { Button } from "@/components/common";
+ 
+import Button from "@/components/common/Button";
+import {
+  CloseIcon,
+  MaximizedIcon,
+  MaximizeIcon,
+  MinimizeIcon,
+} from "@/components/common/Icons";
+import type { ComponentProps } from "@/components/common/types";
 import { useProcesses } from "@/context/Process";
+import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
 
-import { CloseIcon, MaximizedIcon, MaximizeIcon, MinimizeIcon } from "./Icons";
+const _tailwind = [
+  "hover:bg-titlebar-backgroundHover",
+  "bg-titlebar-button-disabled",
+  "hover:bg-titlebar-closeHover",
+  "active:bg-titlebar-backgroundActive",
+  "active:bg-titlebar-closeActive",
+  "fill-titlebar-button-disabled",
+  "fill-titlebar-button-disabledInactive",
+  "fill-titlebar-buttonInactive",
+];
 
-const WindowActionButton = ({ id }: { id: string }) => {
+const WindowActionButton: React.FC<ComponentProps> = ({ id }) => {
   const { onMinimize, onMaximize, onClose } = useWindowActions(id);
   const {
-    processes: {
-      [id]: { autoSizing, maximized },
-    },
+    processes: { [id]: process },
   } = useProcesses();
+  const { allowResizing = true, maximized } = process || {};
+
+  const { foregroundId } = useSession();
+
+  const isForeground = id === foregroundId;
 
   const {
-    currentTheme: {
-      sizes: {
-        titlebar: { buttonWidth },
-      },
-      colors: {
-        titlebar: { backgroundHover, disabled, closeHover },
+    sizes: {
+      titlebar: { buttonWidth },
+    },
+    colors: {
+      titlebar: {
+        backgroundHover,
+        disabled,
+        closeHover,
+        backgroundActive,
+        closeActive,
+        disabledInactive,
+        buttonInactive,
       },
     },
   } = useTheme();
 
-  const [isHover, setIsHover] = useState({
-    minimize: false,
-    maximize: false,
-    close: false,
-  });
-
   return (
     <nav className="cancel flex justify-center">
       <Button
-        extraStyles="h-full flex place-content-center place-items-center"
+        extraStyles={`h-full flex place-content-center place-items-center hover:${backgroundHover} active:${backgroundActive} `}
         style={{
           width: buttonWidth,
           boxSizing: "border-box",
-          backgroundColor: isHover.minimize ? backgroundHover : "transparent",
           transition: "background-color 0.25 ease",
         }}
         onClick={onMinimize}
-        onMouseEnter={() => setIsHover((prev) => ({ ...prev, minimize: true }))}
-        onMouseLeave={() =>
-          setIsHover((prev) => ({ ...prev, minimize: false }))
-        }
       >
-        <MinimizeIcon />
+        <MinimizeIcon
+          extraStyles={`${isForeground ? "fill-white" : buttonInactive}`}
+        />
       </Button>
       <Button
-        extraStyles="h-full flex place-content-center place-items-center"
+        extraStyles={`h-full flex place-content-center place-items-center ${
+          allowResizing ? `hover:${backgroundHover}` : disabled
+        } active:${backgroundActive}`}
         style={{
           width: buttonWidth,
           boxSizing: "border-box",
-          // eslint-disable-next-line no-nested-ternary
-          backgroundColor: autoSizing
-            ? disabled
-            : isHover.maximize
-            ? backgroundHover
-            : "transparent",
           transition: "background-color 0.25 ease",
         }}
         onClick={onMaximize}
-        disabled={autoSizing}
-        onMouseEnter={() => setIsHover((prev) => ({ ...prev, maximize: true }))}
-        onMouseLeave={() =>
-          setIsHover((prev) => ({ ...prev, maximize: false }))
-        }
+        disabled={!allowResizing}
       >
-        {maximized ? <MaximizedIcon /> : <MaximizeIcon />}
+        {maximized ? (
+          <MaximizedIcon
+            extraStyles={`${isForeground ? "fill-white" : buttonInactive}`}
+          />
+        ) : (
+          <MaximizeIcon
+            extraStyles={`${
+              allowResizing
+                ? isForeground
+                  ? "fill-white"
+                  : buttonInactive
+                : isForeground
+                  ? disabled
+                  : disabledInactive
+            }`}
+          />
+        )}
       </Button>
       <Button
-        extraStyles="h-full rounded-tr-[5px] flex place-content-center place-items-center"
+        extraStyles={`h-full rounded-tr-[5px] flex place-content-center place-items-center hover:${closeHover} active:${closeActive}`}
         style={{
           width: buttonWidth,
           boxSizing: "border-box",
-          backgroundColor: isHover.close ? closeHover : "transparent",
           transition: "background-color 0.25 ease",
         }}
         onClick={onClose}
-        onMouseEnter={() => setIsHover((prev) => ({ ...prev, close: true }))}
-        onMouseLeave={() => setIsHover((prev) => ({ ...prev, close: false }))}
       >
-        <CloseIcon />
+        <CloseIcon
+          extraStyles={`${isForeground ? "fill-white" : buttonInactive}`}
+        />
       </Button>
     </nav>
   );

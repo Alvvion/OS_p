@@ -1,43 +1,42 @@
-import { useCallback } from "react";
+import { join } from "path";
 
 import { useFileSystem } from "@/context/FileSystem";
+import {
+  haltEvent,
+  handleFileInputEvent,
+} from "@/context/FileSystem/functions";
+import { useProcesses } from "@/context/Process";
+import { TEMP_PATH } from "@/utils/constants";
 
-import type { FileDrop } from "./types";
+import type { FileDrop, FileDropHook } from "./types";
 
-const haltDragEvent = (event: React.DragEvent<HTMLElement>): void => {
-  event.preventDefault();
-  event.stopPropagation();
-};
+const useFileDrop = ({ callback, id }: FileDropHook): FileDrop => {
+  const { url } = useProcesses();
+  const { mkdirRecursive, updateFolder, writeFile } = useFileSystem();
 
-const useFileDrop = (
-  directory: string,
-  updateFiles: (appendFile?: string) => void
-): FileDrop => {
-  const { fs } = useFileSystem();
-  const onDrop = useCallback(
-    (event: React.DragEvent<HTMLElement>) => {
-      haltDragEvent(event);
-      const { files: [file] = [] } = event.dataTransfer || {};
+  const updateProcessUrl = async (
+    filePath: string,
+    fileData?: Buffer,
+  ): Promise<void> => {
+    if (id) {
+      if (fileData) {
+        const tempPath = join(TEMP_PATH, filePath);
+        await mkdirRecursive(TEMP_PATH);
 
-      if (file) {
-        const reader = new FileReader();
-
-        reader.onload = ({ target }) => {
-          fs?.writeFile(
-            `${directory}/${file.name}`,
-            Buffer.from(new Uint8Array(target?.result as ArrayBuffer)),
-            (e) => !e && updateFiles(file.name)
-          );
-        };
-
-        reader.readAsArrayBuffer(file);
+        if (await writeFile(tempPath, fileData, true)) {
+          url(id, tempPath);
+          updateFolder(TEMP_PATH, filePath);
+        }
+      } else {
+        url(id, filePath);
       }
-    },
-    [directory, fs, updateFiles]
-  );
+    }
+  };
+
   return {
-    onDragOver: haltDragEvent,
-    onDrop,
+    onDragOver: haltEvent,
+    onDrop: (event) =>
+      handleFileInputEvent(event, callback || updateProcessUrl),
   };
 };
 

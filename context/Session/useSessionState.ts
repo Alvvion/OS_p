@@ -1,7 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "../FileSystem";
-import type { SessionContextType, WindowStates } from "./types";
+import type {
+  SessionContextType,
+  SessionData,
+  SortOrders,
+  WallpaperFit,
+  WindowStates,
+} from "./types";
 
 const SESSION_FILE = "/session.json";
 
@@ -11,44 +17,112 @@ const useSessionContextState = (): SessionContextType => {
   const [sessionLoaded, setSessionLoaded] = useState<boolean>(false);
   const [foregroundId, setForegroundId] = useState("");
   const [stackOrder, setStackOrder] = useState<string[]>([]);
+  const [focusedEntries, setFocusedEntries] = useState<string[]>([]);
+  const [wallpaperFit, setWallpaperFit] = useState<WallpaperFit>("fill");
+  const [wallpaperImage, setWallpaperImage] = useState("");
+  const [sortOrders, setSortOrders] = useState<SortOrders>({});
 
-  const { fs } = useFileSystem();
+  const { exists, readFile, writeFile } = useFileSystem();
+
+  const prependToStack = useCallback(
+    (id: string) =>
+      setStackOrder((currentStackOrder) => [
+        id,
+        ...currentStackOrder.filter((stackId) => stackId !== id),
+      ]),
+    [],
+  );
+
+  const removeFromStack = useCallback(
+    (id: string) =>
+      setStackOrder((currentStackOrder) =>
+        currentStackOrder.filter((stackId) => stackId !== id),
+      ),
+    [],
+  );
+
+  const blurEntry = (entry?: string): void =>
+    setFocusedEntries(
+      entry
+        ? (currentFocusedEntries) =>
+            currentFocusedEntries.filter(
+              (focusedEntry) => focusedEntry !== entry,
+            )
+        : [],
+    );
+
+  const focusEntry = (entry: string): void =>
+    setFocusedEntries((currentFocusedEntries) => [
+      ...currentFocusedEntries,
+      entry,
+    ]);
+
+  const setWallpaper = (image: string, fit: WallpaperFit): void => {
+    setWallpaperFit(fit);
+    setWallpaperImage(image);
+  };
+
+  const initSession = useCallback(async () => {
+    if (await exists(SESSION_FILE)) {
+      const sessionData = await readFile(SESSION_FILE);
+      const session = JSON.parse(sessionData.toString() || "{}") as SessionData;
+
+      setSortOrders(session.sortOrders);
+      setThemeName(session.themeName);
+      setWallpaper(session.wallpaperImage, session.wallpaperFit);
+      setWindowStates(session.windowStates);
+    }
+
+    setSessionLoaded(true);
+  }, [exists, readFile]);
 
   useEffect(() => {
     if (sessionLoaded) {
-      fs?.writeFile(
+      writeFile(
         SESSION_FILE,
         JSON.stringify({
+          sortOrders,
           themeName,
+          wallpaperFit,
+          wallpaperImage,
           windowStates,
-          foregroundId,
-          stackOrder,
-        })
+        }),
+        true,
       );
     }
-  }, [foregroundId, fs, sessionLoaded, stackOrder, themeName, windowStates]);
+  }, [
+    sessionLoaded,
+    sortOrders,
+    themeName,
+    wallpaperFit,
+    wallpaperImage,
+    windowStates,
+    writeFile,
+  ]);
 
   useEffect(() => {
-    fs?.readFile(SESSION_FILE, (_err, content) => {
-      if (content) {
-        const session = JSON.parse(content.toString() || "{}");
-        setThemeName(session.themeName);
-        setWindowStates(session.windowStates);
-      }
-
-      setSessionLoaded(true);
-    });
-  }, [fs]);
+    initSession();
+  }, [initSession]);
 
   return {
-    themeName,
-    setThemeName,
-    windowStates,
-    setWindowStates,
+    blurEntry,
+    focusEntry,
+    focusedEntries,
     foregroundId,
+    prependToStack,
+    removeFromStack,
+    sessionLoaded,
     setForegroundId,
+    setSortOrders,
+    setThemeName,
+    setWallpaper,
+    setWindowStates,
+    sortOrders,
     stackOrder,
-    setStackOrder,
+    themeName,
+    wallpaperImage,
+    wallpaperFit,
+    windowStates,
   };
 };
 

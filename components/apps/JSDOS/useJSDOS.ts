@@ -1,56 +1,73 @@
+import type { DosInstance } from "emulators-ui/dist/types/js-dos";
 import { useEffect, useState } from "react";
 
-import { useFileSystem } from "@/context/FileSystem";
+import { closeWithTransition } from "@/components/system/Window/RndWindow/functions";
+import { useProcesses } from "@/context/Process";
 import useWindowSize from "@/hooks/useWindowSize";
-import { bufferToUrl, cleanUpBufferUrl, loadFiles } from "@/utils/functions";
+import { loadFiles } from "@/utils/functions";
 
-import type { DosCI, WindowWithDos } from "./types";
+import { dosOptions, libs, pathPrefix } from "./config";
+import useDosCI from "./useDosCI";
 
 const useJSDOS = (
   id: string,
   url: string,
-  ref: React.MutableRefObject<HTMLDivElement | null>
+  containerRef: React.MutableRefObject<HTMLDivElement | null>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ): void => {
   const { updateWindowSize } = useWindowSize(id);
-  const { fs } = useFileSystem();
-
-  const [dos, setDos] = useState<DosCI | null>(null);
+  const [dosInstance, setDosInstance] = useState<DosInstance>();
+  const dosCI = useDosCI(id, url, containerRef, dosInstance);
+  const { closeProcess } = useProcesses();
 
   useEffect(() => {
-    if (!dos && fs && url && ref?.current) {
-      fs.readFile(url, (_err, contents = Buffer.from("")) =>
-        loadFiles(["/libs/jsdos/js-dos.js", "/libs/jsdos/js-dos.css"]).then(
-          () => {
-            const DosWindow = window as WindowWithDos;
-            const objectURL = bufferToUrl(contents);
+    if (!dosInstance) {
+      loadFiles(libs).then(() => {
+        if (window.emulators) window.emulators.pathPrefix = pathPrefix;
 
-            DosWindow.emulators.pathPrefix = "/libs/jsdos/";
-
-            DosWindow.Dos(ref.current as HTMLDivElement)
-              .run(objectURL)
-              .then((ci) => {
-                cleanUpBufferUrl(objectURL);
-                setDos(ci);
-              });
-          }
-        )
-      );
+        if (containerRef.current && window.Dos) {
+          setDosInstance(window.Dos(containerRef.current, dosOptions));
+          setLoading(false);
+        }
+      });
     }
-
-    return () => dos?.exit();
-  }, [dos, fs, ref, url]);
+  }, [containerRef, dosInstance, setLoading]);
 
   useEffect(() => {
-    if (dos) {
-      updateWindowSize(dos.frameHeight, dos.frameWidth);
+    if (dosCI) {
+      updateWindowSize(dosCI.height(), dosCI.width());
 
-      dos
+      dosCI
         .events()
-        .onFrameSize((width, height) =>
-          updateWindowSize(height * 2, width * 2)
+        .onMessage((_msgType, _eventType, command: string, message: string) => {
+          if (command === "LOG_EXEC") {
+            const [dosCommand] = message
+              .replace("Parsing command line: ", "")
+              .split(" ");
+
+            if (dosCommand.toUpperCase() === "EXIT") {
+              closeWithTransition(closeProcess, id);
+            }
+          }
+        });
+
+      dosCI.events().onFrameSize((width, height) => {
+        const { height: currentHeight = 0, width: currentWidth = 0 } =
+          containerRef.current?.getBoundingClientRect() || {};
+        const [frameHeight, frameWidth] = [height * 2, width * 2];
+
+        if (frameHeight !== currentHeight || frameWidth !== currentWidth) {
+          updateWindowSize(frameHeight, frameWidth);
+        }
+      });
+
+      dosCI
+        .events()
+        .onExit(() =>
+          window.SimpleKeyboardInstances?.emulatorKeyboard?.destroy(),
         );
     }
-  }, [dos, updateWindowSize]);
+  }, [closeProcess, containerRef, dosCI, id, updateWindowSize]);
 };
 
 export default useJSDOS;

@@ -1,57 +1,41 @@
-import { stripUnit } from "polished";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
-import { useTheme } from "@/context/Theme";
 import useWindowSize from "@/hooks/useWindowSize";
 
-import type { EventCallback, V86Starter } from "./types";
+import type { SizeCallback, V86Starter } from "./types";
 
 const SET_SCREEN_GFX = "screen-set-size-graphical";
 const SET_SCREEN_TXT = "screen-set-size-text";
 
 const useV86ScreenSize = (
-  emulator: V86Starter | null,
-  id: string
-): React.CSSProperties => {
-  const {
-    currentTheme: {
-      sizes: {
-        window: { lineHeight },
-      },
-    },
-  } = useTheme();
-
+  id: string,
+  screenContainer: React.MutableRefObject<HTMLDivElement | null>,
+  emulator?: V86Starter,
+): void => {
   const { updateWindowSize } = useWindowSize(id);
 
-  const setScreenGfx = useCallback<EventCallback>(
-    ([width, height]) => updateWindowSize(height, width),
-    [updateWindowSize]
-  );
-
-  const setScreenText = useCallback<EventCallback>(
-    ([cols, rows]) => {
-      updateWindowSize(
-        rows * Number(stripUnit(lineHeight)),
-        (cols / 2 + 4) * Number(stripUnit(lineHeight))
-      );
-    },
-    [lineHeight, updateWindowSize]
-  );
-
   useEffect(() => {
-    emulator?.add_listener?.(SET_SCREEN_GFX, setScreenGfx);
+    const setScreenGfx: SizeCallback = ([width, height]) =>
+      updateWindowSize(height, width);
+    const setScreenText: SizeCallback = ([, rows]) => {
+      const { height, width } =
+        screenContainer.current
+          ?.querySelector("span:last-of-type")
+          ?.getBoundingClientRect() || {};
+
+      if (height && width) {
+        updateWindowSize(rows * height, width);
+      }
+    };
+
+    emulator?.add_listener(SET_SCREEN_GFX, setScreenGfx);
     emulator?.add_listener(SET_SCREEN_TXT, setScreenText);
 
     return () => {
-      emulator?.remove_listener?.(SET_SCREEN_GFX, setScreenGfx);
-      emulator?.remove_listener?.(SET_SCREEN_GFX, setScreenGfx);
+      emulator?.remove_listener(SET_SCREEN_GFX, setScreenGfx);
+      emulator?.remove_listener(SET_SCREEN_TXT, setScreenText);
     };
-  }, [emulator, setScreenGfx, setScreenText]);
-
-  return {
-    font: `${lineHeight} monospace`,
-    lineHeight,
-  };
+  }, [emulator, screenContainer, updateWindowSize]);
 };
 
 export default useV86ScreenSize;

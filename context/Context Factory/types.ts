@@ -1,8 +1,8 @@
-import type { ChildrenProp } from "@/types/common";
+import type { ChildrenProp } from "@/components/common/types";
 
 export type ContextFactory = <T>(
-  initialContextState: T,
-  useContextState: () => T
+  useContextState: () => T,
+  ContextComponent?: React.ComponentType,
 ) => {
   Provider: React.FC<ChildrenProp>;
   useContext: () => T;

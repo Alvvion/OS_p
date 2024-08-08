@@ -1,38 +1,49 @@
 import { extname } from "path";
+import { stripUnit } from "polished";
+
+import { ONE_TIME_PASSIVE_EVENT } from "./constants";
 
 export const cleanUpBufferUrl = (url: string): void => URL.revokeObjectURL(url);
 
-export const loadScripts = (src: string): Promise<Event> =>
+export const loadScript = (src: string): Promise<Event> =>
   new Promise<Event>((resolve, reject) => {
     const loadedScripts = [...document.scripts];
 
-    if (loadedScripts.find((script) => script.src.endsWith(src))) {
+    if (loadedScripts.some((script) => script.src.endsWith(src))) {
       resolve(new Event("Already loaded."));
     } else {
       const script = document.createElement("script");
 
       script.async = false;
       script.src = src;
-      script.onerror = (event) => reject(event);
-      script.onload = (event) => resolve(event);
+      script.addEventListener(
+        "error",
+        (event) => reject(event),
+        ONE_TIME_PASSIVE_EVENT,
+      );
+      script.addEventListener(
+        "load",
+        (event) => resolve(event),
+        ONE_TIME_PASSIVE_EVENT,
+      );
 
       document.head.appendChild(script);
     }
   });
 
-export const loadStyles = (href: string): Promise<Event> =>
-  new Promise<Event>((resolve, reject) => {
-    const loadedLinks = [...document.getElementsByTagName("link")];
+export const loadStyle = (href: string): Promise<Event> =>
+  new Promise((resolve, reject) => {
+    const loadedStyles = [...document.querySelectorAll("link")];
 
-    if (loadedLinks.find((link) => link.href.endsWith(href))) {
+    if (loadedStyles.some((link) => link.href.endsWith(href))) {
       resolve(new Event("Already loaded."));
     } else {
       const link = document.createElement("link");
 
       link.rel = "stylesheet";
       link.href = href;
-      link.onerror = (event) => reject(event);
-      link.onload = (event) => resolve(event);
+      link.addEventListener("error", reject, ONE_TIME_PASSIVE_EVENT);
+      link.addEventListener("load", resolve, ONE_TIME_PASSIVE_EVENT);
 
       document.head.appendChild(link);
     }
@@ -40,18 +51,50 @@ export const loadStyles = (href: string): Promise<Event> =>
 
 export const loadFiles = (files: string[]): Promise<Event[]> =>
   Promise.all(
-    files.reduce((filesToLoad: Promise<Event>[], file) => {
-      const ext = extname(file).toLowerCase();
-
-      if (ext === ".css") filesToLoad.push(loadStyles(file));
-      else if (ext === ".js") filesToLoad.push(loadScripts(file));
-
-      return filesToLoad;
-    }, [])
+    files.map((file) =>
+      extname(file) === ".css"
+        ? loadStyle(encodeURI(file))
+        : loadScript(encodeURI(file)),
+    ),
   );
 
-export const bufferToUrl = (buffer: Buffer): string =>
-  URL.createObjectURL(new Blob([new Uint8Array(buffer)]));
+export const bufferToBlob = (buffer: Buffer): Blob =>
+  new Blob([new Uint8Array(buffer)]);
 
-export const pxToNumber = (px: string): number =>
-  parseInt(px.slice(0, px.length - 2), 10);
+export const bufferToUrl = (buffer: Buffer): string =>
+  URL.createObjectURL(bufferToBlob(buffer));
+
+export const pxToNumber = (value: string | number = 0): number =>
+  Number(stripUnit(value));
+
+export const cleanUpGlobals = (globals: string[]): void =>
+  globals.forEach((global) => delete (window as never)[global]);
+
+export const viewHeight = (): number =>
+  Math.min(window.innerHeight, window.screen.height);
+
+export const viewWidth = (): number =>
+  Math.min(window.innerWidth, window.screen.width);
+
+const bytesInKB = 1024;
+const bytesInMB = 1024 * 999;
+const bytesInGB = 1024 * 1024 * 999;
+const bytesInTB = 1024 * 1024 * 1024 * 999;
+
+const formatNumber = (number: number): string =>
+  new Intl.NumberFormat("en-US", {
+    maximumSignificantDigits: number < 1 ? 2 : 3,
+    minimumSignificantDigits: number < 1 ? 2 : 3,
+  }).format(Number(number.toFixed(4).slice(0, -2)));
+
+export const getFormattedSize = (size = 0): string => {
+  if (size === 1) return "1 byte";
+  if (size < bytesInKB) return `${size} bytes`;
+  if (size < bytesInMB) return `${formatNumber(size / bytesInKB)} KB`;
+  if (size < bytesInGB)
+    return `${formatNumber(size / bytesInKB / bytesInKB)} MB`;
+  if (size < bytesInTB)
+    return `${formatNumber(size / bytesInKB / bytesInKB / bytesInKB)} GB`;
+
+  return `${size} bytes`;
+};

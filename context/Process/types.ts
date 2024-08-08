@@ -1,25 +1,29 @@
-import type { ComponentProps } from "@/types/common";
+import type { ComponentProps, Size } from "@/components/common/types";
 
 export type ProcessElement = {
   taskbarEntry?: HTMLElement;
+  componentWindow?: HTMLElement;
+  peekElement?: HTMLElement;
 };
 
-export type ProcessToggle = {
+export type Process = ProcessElement & {
+  allowResizing?: boolean;
+  autoSizing?: boolean;
+  backgroundColor?: string;
+  closing?: boolean;
+  Component: React.ComponentType<ComponentProps>;
+  defaultSize?: Size;
+  hasWindow?: boolean;
+  icon: string;
+  lockAspectRatio?: boolean;
   maximized?: boolean;
   minimized?: boolean;
+  prependTaskbarTitle?: boolean;
+  singleton?: boolean;
+  title: string;
+  titlebarStyle?: "File Explorer" | "Default";
+  url?: string;
 };
-
-export type Process = ProcessElement &
-  ProcessToggle & {
-    Component: React.ComponentType<ComponentProps>;
-    hasWindow?: boolean;
-    icon: string;
-    autoSizing?: boolean;
-    title: string;
-    url?: string;
-    backgroundColor?: string;
-    titlebarStyle?: "File Explorer" | "Default";
-  };
 
 export type Processes = {
   [id: string]: Process;
@@ -27,23 +31,23 @@ export type Processes = {
 
 export type ProcessMap = (
   callback: ([id, process]: [string, Process]) => React.FC,
-  processesObj: Processes
+  processesObj: Processes,
 ) => React.FC[];
 
 export type ProcessContextType = {
-  processes: Processes | Record<string, never>;
-  pinnedProcesses: Processes | Record<string, never>;
-  openProcess: (processId: string, url?: string) => void;
-  closeProcess: (processId: string) => void;
-  closePinnedProcess: (processId: string) => void;
-  openPinnedProcess: (processId: string) => void;
-  maximize: (id: string) => void;
-  minimize: (id: string) => void;
+  closeProcess: (processId: string, closing?: boolean) => void;
+  icon: (id: string, newIcon: string) => void;
   linkElement: (
     id: string,
     name: keyof ProcessElement,
-    element: HTMLElement
+    element: HTMLElement,
   ) => void;
+  maximize: (id: string) => void;
+  minimize: (id: string) => void;
+  openProcess: (processId: string, url: string, icon?: string) => void;
+  processes: Processes | Record<string, never>;
+  title: (id: string, newTitle: string) => void;
+  url: (id: string, newUrl: string) => void;
 };
 
 export type ProcessProviderProps = {

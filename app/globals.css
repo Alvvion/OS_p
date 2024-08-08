@@ -3,8 +3,18 @@
 @tailwind utilities;
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
   user-select: none !important;
   overflow: hidden;
 }
@@ -12,4 +22,220 @@ body {
 ol,
 ul {
   list-style: none;
+}
+
+@layer components {
+  .tinymce {
+    [role="application"] {
+      height: 100% !important;
+    }
+
+    [role="application"] button:disabled {
+      pointer-events: none;
+    }
+
+    [role="application"][aria-disabled="true"] .tox-editor-header {
+      cursor: pointer;
+      position: relative;
+      &::before {
+        background-color: rgba(255, 255, 255, 0.8);
+        content: "Click to switch to design mode.";
+        display: flex;
+        height: calc(100% - 1px);
+        place-content: center;
+        place-items: center;
+        position: absolute;
+        text-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+        width: 100%;
+      }
+    }
+  }
+  .custom-scrollbar {
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 #1f2937;
+    scrollbar-gutter: stable;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 5px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #1f2937;
+  }
+  .custom-scrollbar::-webkit-scrollbar-button {
+    display: none;
+  }
+  .custom-scrollbar:hover::-webkit-scrollbar-button {
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #4b5563; /* Custom scrollbar button color */
+  }
+  .custom-scrollbar:hover::-webkit-scrollbar-button:increment {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSJ3aGl0ZSIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEyIDE1LjVsLTUtNSAxLjQxMS0xLjQxMUwxMiAxMi42MTUgMTUuNTg5IDkuMDg5IDE3IDEwLjV6Ii8+PC9zdmc+"); /* Custom SVG for down arrow */
+  }
+  .video-player .video-js {
+    height: 100%;
+    width: 100%;
+  }
+  .video-player .video-js .vjs-big-play-button {
+    display: none;
+  }
+  .video-player .video-js .vjs-control-bar {
+    background-color: rgb(240, 240, 240);
+    display: flex !important;
+    opacity: 1 !important;
+    padding: 0 1px;
+  }
+
+  .video-js.vjs-fullscreen.vjs-user-inactive .vjs-control-bar {
+    opacity: 0 !important;
+  }
+  .video-player .video-js .vjs-button {
+    color: rgb(116, 116, 116);
+    height: 28px;
+    position: relative;
+    width: 28px;
+    z-index: 0;
+  }
+
+  .video-player .video-js .vjs-button::after {
+    background-color: rgb(225, 225, 225);
+    border: 1px solid rgb(173, 173, 173);
+    content: "";
+    height: calc(100% - 4px);
+    left: 0;
+    margin: 2px 0 0 2px;
+    position: absolute;
+    top: 1px;
+    width: calc(100% - 4px);
+    z-index: -1;
+  }
+
+  .video-player .video-js .vjs-button:hover::after {
+    background-color: rgb(229, 241, 251);
+    border-color: rgb(0, 120, 215);
+  }
+  .video-player .video-js .vjs-button:active::after {
+    background-color: rgb(204, 228, 247);
+    border-color: rgb(0, 84, 153);
+  }
+  .video-player .video-js .vjs-current-time,
+  .video-player .video-js .vjs-duration {
+    display: block;
+  }
+  .video-player .video-js .vjs-current-time {
+    padding-left: 8px;
+    padding-right: 2px;
+  }
+  .video-player .video-js .vjs-duration {
+    padding-left: 2px;
+    padding-right: 8px;
+  }
+  .video-player .video-js .vjs-current-time-display,
+  .video-player .video-js .vjs-duration-display {
+    color: #000;
+    font-family: Sans-Serif;
+    font-size: 11px;
+  }
+  .video-player .video-js .vjs-picture-in-picture-control {
+    margin: 0 -2px;
+  }
+
+  .video-player .video-js .vjs-load-progress {
+    border-radius: 5px;
+  }
+
+  .video-player .video-js .vjs-load-progress div {
+    background: linear-gradient(
+      180deg,
+      rgb(189, 189, 189) 0%,
+      rgb(219, 219, 219) 100%
+    );
+    border-radius: 5px;
+  }
+
+  .video-player .video-js .vjs-play-progress {
+    background: linear-gradient(
+      180deg,
+      rgb(44, 137, 224) 0%,
+      rgb(40, 125, 204) 100%
+    );
+    border-radius: 5px;
+  }
+  .video-player .video-js .vjs-play-progress {
+    background: linear-gradient(
+      180deg,
+      rgb(44, 137, 224) 0%,
+      rgb(40, 125, 204) 100%
+    );
+    border-radius: 5px;
+  }
+
+  .video-player .video-js .vjs-play-progress::before {
+    color: rgb(237, 237, 237);
+    text-shadow: 1px 2px 3px rgb(160, 160, 160);
+    -webkit-text-stroke: 1px rgba(164, 164, 164, 0.8);
+    top: -3px;
+  }
+
+  .video-player .video-js .vjs-progress-holder {
+    border-radius: 5px;
+    font-size: 1.7em !important;
+    height: 9px;
+  }
+
+  .video-player .video-js .vjs-volume-control {
+    background-color: rgb(240, 240, 240);
+    border-radius: 5px 5px 0 0;
+    left: -28px !important;
+    position: relative;
+  }
+
+  .video-player .video-js .vjs-volume-control .vjs-volume-bar {
+    height: 5.5em;
+    margin: 1.5em auto;
+  }
+  .video-player .video-js .vjs-volume-control .vjs-volume-level {
+    background: linear-gradient(
+      180deg,
+      rgb(247, 76, 100) 0%,
+      rgb(125, 210, 125) 50%
+    );
+    border-radius: 5px;
+    color: rgb(237, 237, 237);
+    font-size: 1.5em;
+    text-shadow: 1px 2px 3px rgb(160, 160, 160);
+    -webkit-text-stroke: 1px rgba(164, 164, 164, 0.8);
+  }
+
+  .video-player .video-js .vjs-volume-panel {
+    width: 28px !important;
+  }
+
+  .video-player .video-js .vjs-fullscreen-control .vjs-icon-placeholder::before,
+  .video-player .video-js .vjs-play-control .vjs-icon-placeholder::before {
+    font-size: 2.4em;
+    top: -5px;
+  }
+
+  .video-player .video-js .vjs-poster {
+    background-size: contain;
+  }
+
+  .video-player .video-js video {
+    background-image: url("/System/Icons/vlc.png");
+    background-position: center calc(50% - 15px);
+    background-repeat: no-repeat;
+    padding-bottom: 30px;
+  }
+
+  .shortcut:not(:first-of-type) {
+    position: absolute;
+    top: -1px;
+  }
 }

@@ -1,4 +1,4 @@
-/* eslint-disable linebreak-style */
+ 
 import "./globals.css";
 
 import type { Metadata } from "next";
@@ -12,7 +12,7 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>): JSX.Element {
   return (
     <html lang="en">
       <body>{children}</body>

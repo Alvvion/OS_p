@@ -1,20 +1,18 @@
 import { adjustHue } from "polished";
 
-type ColorCycle = {
-  onDestroy: () => void;
-};
+import type { ColorCycle } from "./types";
 
 const colorCycle = (
   initialColor: number,
   callback: (newColor: number) => void,
-  fps = 15
+  fps = 15,
 ): ColorCycle => {
   const timePerFrame = 1000 / fps;
   let lastFrameTime = Date.now();
   let degree = 0;
   let animationFrameId: number;
 
-  const updateColor = () => {
+  const updateColor = (): void => {
     const currentFrameTime = Date.now();
     const timeSinceLastFrame = currentFrameTime - lastFrameTime;
 
@@ -24,8 +22,8 @@ const colorCycle = (
 
       callback(
         Number(
-          adjustHue(degree, `#${initialColor.toString(16)}`).replace("#", "0x")
-        )
+          adjustHue(degree, `#${initialColor.toString(16)}`).replace("#", "0x"),
+        ),
       );
     }
 
@@ -34,9 +32,9 @@ const colorCycle = (
 
   animationFrameId = requestAnimationFrame(updateColor);
 
-  const onDestroy = () => cancelAnimationFrame(animationFrameId);
+  const stop = (): void => cancelAnimationFrame(animationFrameId);
 
-  return { onDestroy };
+  return { stop };
 };
 
 export default colorCycle;
