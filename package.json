@@ -39,6 +39,11 @@
     "react-icons": "^5.1.0",
     "react-rnd": "^10.4.1"
   },
+  "lint-staged": {
+    "*": "prettier --ignore-unknown --write",
+    "*.ts": "stylelint --fix",
+    "*.{js,ts,tsx}": "eslint --fix"
+  },
   "devDependencies": {
     "@types/ini": "^4.1.0",
     "@types/node": "^20.14.11",
