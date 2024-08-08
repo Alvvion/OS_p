@@ -17,6 +17,7 @@ body {
     sans-serif;
   user-select: none !important;
   overflow: hidden;
+  height: 100%;
 }
 
 ol,

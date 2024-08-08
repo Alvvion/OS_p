@@ -13,7 +13,7 @@ const Desktop: React.FC<ChildrenProp> = ({ children }) => {
   useWallpaper(desktopRef);
   return (
     <main
-      className={`overflow-hidden h-[100vh] w-[100vw] bg-center absolute inset-0 bg-[${colors.desktopBgColor}] [&>ol]:pb-6
+      className={`overflow-hidden h-full w-[100vw] bg-center absolute inset-0 bg-[${colors.desktopBgColor}] [&>ol]:pb-6
       `}
       ref={desktopRef}
     >
