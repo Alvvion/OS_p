@@ -76,8 +76,8 @@ export type FileDropHook = {
 };
 
 export type FileDrop = {
-  onDragOver: (event: React.DragEvent<HTMLElement>) => void;
-  onDrop: (event: React.DragEvent<HTMLElement>) => void;
+  onDragOver: (event: React.DragEvent<HTMLElement> | DragEvent) => void;
+  onDrop: (event: React.DragEvent<HTMLElement> | DragEvent) => void;
 };
 
 export type RenameBoxProps = {
