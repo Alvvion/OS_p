@@ -25,7 +25,6 @@ const FileManager: React.FC<FileManagerProps> = ({
 }) => {
   const {
     sizes: {
-      taskbar: { height },
       fileManager: {
         gridEntryWidth,
         gridEntryHeight,
@@ -68,15 +67,23 @@ const FileManager: React.FC<FileManagerProps> = ({
   ) : (
     <ol
       ref={fileManagerRef}
-      className={`grid grid-flow-col [main>&]:pb-5 [section_&]:grid-flow-row ${view === "default" && scrollable ? "custom-scrollbar" : "overflow-hidden"}`}
+      className={
+        view === "default"
+          ? `grid grid-flow-col w-full h-full [main>&]:pb-5 [section_&]:grid-flow-row ${scrollable ? "custom-scrollbar" : "overflow-hidden"}`
+          : "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
+      }
       style={{
-        height: view === "default" ? `calc(100% - ${height})` : "100%",
-        gridTemplateColumns: `repeat(auto-fill, ${gridEntryWidth})`,
-        gridTemplateRows: `repeat(auto-fill, ${gridEntryHeight})`,
-        padding,
-        rowGap,
-        columnGap,
-        pointerEvents: isSelecting ? "auto" : undefined,
+        gridTemplateColumns:
+          view === "default"
+            ? `repeat(auto-fill, ${gridEntryWidth})`
+            : undefined,
+        gridTemplateRows:
+          view === "default"
+            ? `repeat(auto-fill, ${gridEntryHeight})`
+            : undefined,
+        padding: view === "default" ? padding : undefined,
+        rowGap: view === "default" ? rowGap : undefined,
+        columnGap: view === "default" ? columnGap : undefined,
       }}
       {...selectionEvents}
       {...fileDrop}

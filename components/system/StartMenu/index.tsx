@@ -42,7 +42,7 @@ const StartMenu: React.FC<StartMenuProps> = ({
       onBlurCapture={maybeCloseMenu}
       {...animateStartMenu}
     >
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center h-full">
         <SearchBar startMenuVisible={startMenuVisible} />
         <AppBox />
       </div>

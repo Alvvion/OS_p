@@ -147,6 +147,7 @@ export const getInfoWithExtension = (
   } else if (IMAGE_FILE_EXTENSION.has(extension)) {
     getInfoByFileExtension(`${ICON_PATH}ICON132_1.ico`);
     fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
+      console.log(bufferToUrl(contents));
       if (!error) getInfoByFileExtension(bufferToUrl(contents));
     });
   } else if (VIDEO_FILE_EXTENSIONS.has(extension)) {
