@@ -1,5 +1,5 @@
 import { basename, extname } from "path";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import Button from "@/components/common/Button";
 import {
@@ -14,7 +14,6 @@ import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
 import useDoubleClick from "@/hooks/useDoubleClick";
 import useTitle from "@/hooks/useTitle";
-import { EMPTY_BUFFER } from "@/utils/constants";
 import { bufferToUrl, cleanUpBufferUrl } from "@/utils/functions";
 
 import { overrideSubMenuStyling } from "../MonacoEditor/functions";
@@ -27,7 +26,7 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
   const { closing = false, url = "" } = process || {};
   const [src, setSrc] = useState<Record<string, string>>({});
   const { appendFileToTitle } = useTitle(id);
-  const { fs } = useFileSystem();
+  const { readFile } = useFileSystem();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const imageContainerRef = useRef<HTMLDivElement | null>(null);
@@ -38,25 +37,24 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
     imageContainerRef.current,
   );
   const { fullscreen, toggleFullscreen } = useFullscreen(containerRef);
+  const loadPhoto = useCallback(async () => {
+    const fileContents = await readFile(url);
+
+    setSrc((currentSrc) => {
+      const [currentUrl] = Object.keys(currentSrc);
+
+      if (currentUrl) cleanUpBufferUrl(currentUrl);
+
+      return { [url]: bufferToUrl(fileContents) };
+    });
+    appendFileToTitle(basename(url));
+  }, [appendFileToTitle, readFile, url]);
 
   useEffect(() => {
-    if (fs && url && !src[url] && !closing) {
-      fs?.readFile(url, (error, contents = EMPTY_BUFFER) => {
-        if (!error) {
-          setSrc((currentSrc) => {
-            const [currentUrl] = Object.keys(currentSrc);
-
-            if (currentUrl) cleanUpBufferUrl(currentUrl);
-
-            return { [url]: bufferToUrl(contents) };
-          });
-          appendFileToTitle(basename(url));
-        }
-      });
-    }
+    if (url && !src[url] && !closing) loadPhoto();
 
     return () => cleanUpBufferUrl(src[url]);
-  }, [appendFileToTitle, closing, fs, src, url]);
+  }, [closing, loadPhoto, src, url]);
 
   return (
     <div
