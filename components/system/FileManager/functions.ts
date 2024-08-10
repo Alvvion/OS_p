@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-await-expression-member */
 import type { Stats } from "fs";
 import { basename, extname, join } from "path";
 
@@ -207,17 +208,16 @@ export const findPathsRecursive = async (
   stat: (path: string) => Promise<Stats>,
 ): Promise<string[]> => {
   const pathArrays = await Promise.all(
-    paths.map(async (path): Promise<string[]> => {
-      const pathStat = await stat(path);
-      const fileNames = await readdir(path);
-      return pathStat.isDirectory()
-        ? findPathsRecursive(
-            fileNames.map((file) => join(path, file)),
-            readdir,
-            stat,
-          )
-        : [path];
-    }),
+    paths.map(
+      async (path): Promise<string[]> =>
+        (await stat(path)).isDirectory()
+          ? findPathsRecursive(
+              (await readdir(path)).map((file) => join(path, file)),
+              readdir,
+              stat,
+            )
+          : [path],
+    ),
   );
 
   return pathArrays.flat();

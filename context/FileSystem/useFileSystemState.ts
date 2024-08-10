@@ -95,7 +95,7 @@ const useFileSystemState = (): FileSystemStateType => {
 
     return new Promise((resolve, reject) => {
       const createFs: BFSCallback<IsoFS | ZipFS> = (createError, newFs) => {
-        if (createError) reject();
+        if (createError) reject(createError);
         else if (newFs) {
           rootFs?.mount(url, newFs);
           resolve();
