@@ -125,6 +125,12 @@ const esLint = [
       "jsx-a11y/control-has-associated-label": "off",
       "jsx-a11y/no-static-element-interactions": "off",
       "linebreak-style": ["error", "windows"],
+      "no-restricted-syntax": [
+        "error",
+        "ForInStatement",
+        "LabeledStatement",
+        "WithStatement",
+      ],
       "no-underscore-dangle": "off",
       "no-unsafe-optional-chaining": "error",
       quotes: ["error", "double"],
