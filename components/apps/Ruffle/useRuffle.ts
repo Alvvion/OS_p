@@ -1,9 +1,8 @@
 import { basename, extname } from "path";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useFileSystem } from "@/context/FileSystem";
 import useTitle from "@/hooks/useTitle";
-import { EMPTY_BUFFER } from "@/utils/constants";
 import { loadFiles } from "@/utils/functions";
 
 import type { RufflePlayer } from "./types";
@@ -17,8 +16,13 @@ const useRuffle = (
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ): void => {
   const { appendFileToTitle } = useTitle(id);
-  const { fs } = useFileSystem();
+  const { readFile } = useFileSystem();
   const [player, setPlayer] = useState<RufflePlayer>();
+
+  const loadFlash = useCallback(async () => {
+    await player?.load({ data: await readFile(url) });
+    appendFileToTitle(basename(url, extname(url)));
+  }, [appendFileToTitle, player, readFile, url]);
 
   useEffect(() => {
     loadFiles(libs).then(() => {
@@ -43,16 +47,8 @@ const useRuffle = (
   }, [containerRef, player, setLoading]);
 
   useEffect(() => {
-    if (containerRef.current && player && url) {
-      fs?.readFile(url, (error, contents = EMPTY_BUFFER) => {
-        if (!error) {
-          player.load({ data: contents }).then(() => {
-            appendFileToTitle(basename(url, extname(url)));
-          });
-        }
-      });
-    }
-  }, [appendFileToTitle, containerRef, fs, player, url]);
+    if (containerRef.current && player && url) loadFlash();
+  }, [containerRef, loadFlash, player, url]);
 };
 
 export default useRuffle;
