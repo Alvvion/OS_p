@@ -4,6 +4,8 @@ import { basename, extname, join } from "path";
 
 import {
   BASE_2D_CONTEXT_OPTIONS,
+  NON_BREAKING_HYPHEN,
+  NON_BREAKING_SPACE,
   SYSTEM_FILES,
   SYSTEM_PATHS,
 } from "@/utils/constants";
@@ -196,7 +198,15 @@ export const truncateName = (
   fontFamily: string,
   maxWidth: number,
 ): string => {
-  const { lines } = getTextWrapData(name, fontSize, fontFamily, maxWidth);
+  const nonBreakingName = name
+    .replaceAll("-", NON_BREAKING_HYPHEN)
+    .replaceAll(" ", NON_BREAKING_SPACE);
+  const { lines } = getTextWrapData(
+    nonBreakingName,
+    fontSize,
+    fontFamily,
+    maxWidth,
+  );
 
   if (lines.length > 2) {
     const text = name.includes(" ") ? lines.slice(0, 2).join("") : lines[0];
@@ -204,7 +214,7 @@ export const truncateName = (
     return `${text.slice(0, -3)}...`;
   }
 
-  return name;
+  return nonBreakingName;
 };
 
 export const findPathsRecursive = async (

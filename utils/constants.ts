@@ -144,3 +144,7 @@ export const INVALID_FILE_CHARACTERS = /["*/:<>?\\|]/g;
 export const MAX_FILE_NAME_LENGTH = 223;
 
 export const EMPTY_BUFFER = Buffer.from("");
+
+export const NON_BREAKING_HYPHEN = "\u2011";
+
+export const NON_BREAKING_SPACE = "\u00A0";
