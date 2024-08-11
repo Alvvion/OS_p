@@ -1,18 +1,12 @@
-import type * as IBrowserFS from "browserfs";
 import type IndexedDBFileSystem from "browserfs/dist/node/backend/IndexedDB";
-import type IsoFS from "browserfs/dist/node/backend/IsoFS";
-import type MountableFileSystem from "browserfs/dist/node/backend/MountableFileSystem";
+import type IIsoFS from "browserfs/dist/node/backend/IsoFS";
 import type OverlayFS from "browserfs/dist/node/backend/OverlayFS";
 import type XmlHttpRequest from "browserfs/dist/node/backend/XmlHttpRequest";
-import type ZipFS from "browserfs/dist/node/backend/ZipFS";
+import type IZipFS from "browserfs/dist/node/backend/ZipFS";
 import type { BFSCallback } from "browserfs/dist/node/core/file_system";
-import type { FSModule } from "browserfs/dist/node/core/FS";
 import { dirname, extname, join } from "path";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-import * as BrowserFS from "@/public/System/BrowserFS/browserfs.min.js";
-
-import FileSystemConfig from "./config";
 import { handleFileInputEvent } from "./functions";
 import type {
   FilePasteOperations,
@@ -21,11 +15,8 @@ import type {
 } from "./types";
 import useAsyncFs from "./useAsyncFs";
 
-const { BFSRequire, configure, FileSystem } = BrowserFS as typeof IBrowserFS;
-
 const useFileSystemState = (): FileSystemStateType => {
-  const [fs, setFs] = useState<FSModule>();
-  const asyncFs = useAsyncFs(fs);
+  const { rootFs, IsoFS, ZipFS, ...asyncFs } = useAsyncFs();
   const { exists, mkdir, readFile } = asyncFs;
   const [fileInput, setFileInput] = useState<HTMLInputElement>();
   const [fsWatchers, setFsWatchers] = useState<Record<string, UpdateFiles[]>>(
@@ -46,8 +37,6 @@ const useFileSystemState = (): FileSystemStateType => {
 
   const moveEntries = (entries: string[]): void =>
     updatePasteEntries(entries, "move");
-
-  const rootFs = fs?.getRootFS() as MountableFileSystem;
 
   const updateFolder = useCallback(
     (folder: string, newFile?: string, oldFile?: string): void => {
@@ -94,23 +83,23 @@ const useFileSystemState = (): FileSystemStateType => {
     const fileData = await readFile(url);
 
     return new Promise((resolve, reject) => {
-      const createFs: BFSCallback<IsoFS | ZipFS> = (createError, newFs) => {
+      const createFs: BFSCallback<IIsoFS | IZipFS> = (createError, newFs) => {
         if (createError) reject(createError);
         else if (newFs) {
-          rootFs?.mount(url, newFs);
+          rootFs?.mount?.(url, newFs);
           resolve();
         }
       };
 
       if (extname(url) === ".iso") {
-        FileSystem.IsoFS.Create({ data: fileData }, createFs);
+        IsoFS?.Create({ data: fileData }, createFs);
       } else {
-        FileSystem.ZipFS.Create({ zipData: fileData }, createFs);
+        ZipFS?.Create({ zipData: fileData }, createFs);
       }
     });
   };
 
-  const unMountFs = (url: string): void => rootFs?.umount(url);
+  const unMountFs = (url: string): void => rootFs?.umount?.(url);
 
   const addFile = (callback: (name: string, buffer?: Buffer) => void): void => {
     fileInput?.addEventListener(
@@ -123,7 +112,7 @@ const useFileSystemState = (): FileSystemStateType => {
 
   const resetFs = (): Promise<void> =>
     new Promise((resolve, reject) => {
-      const overlayFs = rootFs._getFs("/").fs as OverlayFS;
+      const overlayFs = rootFs?._getFs("/")?.fs as OverlayFS;
       const overlayedFileSystems = overlayFs.getOverlayedFileSystems();
       const readable = overlayedFileSystems.readable as XmlHttpRequest;
       const writable = overlayedFileSystems.writable as IndexedDBFileSystem;
@@ -146,17 +135,10 @@ const useFileSystemState = (): FileSystemStateType => {
     await recursePath();
   };
 
-  useEffect(() => {
-    if (!fs) {
-      configure(FileSystemConfig, () => setFs(BFSRequire("fs")));
-    }
-  }, [fs]);
-
   return {
     addFile,
     addFsWatcher,
     copyEntries,
-    fs,
     mkdirRecursive,
     mountFs,
     moveEntries,

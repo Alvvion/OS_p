@@ -5,7 +5,7 @@ export type UpdateFiles = (newFile?: string, oldFile?: string) => void;
 
 export type FilePasteOperations = Record<string, "copy" | "move">;
 
-export type AsyncFSModule = {
+export type AsyncFS = {
   exists: (path: string) => Promise<boolean>;
   mkdir: (path: string, overwrite?: boolean) => Promise<boolean>;
   readFile: (path: string) => Promise<Buffer>;
@@ -21,7 +21,7 @@ export type AsyncFSModule = {
   ) => Promise<boolean>;
 };
 
-export type FileSystemStateType = AsyncFSModule & {
+export type FileSystemStateType = AsyncFS & {
   addFile: (callback: (name: string, buffer?: Buffer) => void) => void;
   addFsWatcher: (folder: string, updateFiles: UpdateFiles) => void;
   copyEntries: (entries: string[]) => void;
