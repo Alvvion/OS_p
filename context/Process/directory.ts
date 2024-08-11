@@ -51,6 +51,18 @@ export const processDir: Processes = {
     icon: `${ICON_PATH}ruffle.png`,
     title: "Ruffle",
   },
+  SpaceCadet: {
+    Component: dynamic(() => import("@/components/apps/SpaceCadet")),
+    backgroundColor: "#000",
+    defaultSize: {
+      height: 440,
+      width: 600,
+    },
+    icon: `${ICON_PATH}pinball.png`,
+    lockAspectRatio: true,
+    singleton: true,
+    title: "Space Cadet",
+  },
   TinyMCE: {
     backgroundColor: "#fff",
     Component: dynamic(() => import("@/components/apps/TinyMCE")),
