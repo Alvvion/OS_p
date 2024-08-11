@@ -60,9 +60,11 @@ export type FileEntryProps = FocusableEntry &
     setRenaming: React.Dispatch<React.SetStateAction<string>>;
     stats: FileStat;
     view: "default" | "start";
+    visible?: boolean;
   };
 
 export type FileInfo = {
+  getIcon?: () => void;
   icon: string;
   pid: string;
   subIcons?: string[];

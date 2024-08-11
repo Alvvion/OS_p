@@ -92,11 +92,12 @@ export const getInfoWithoutExtension = (
   callback: (value: FileInfo) => void,
 ): void => {
   if (isDirectory) {
-    const setFolderInfo = (icon: string): void =>
-      callback({ icon, pid: "FileExplorer", url: path });
+    const setFolderInfo = (icon: string, getIcon?: () => void): void =>
+      callback({ getIcon, icon, pid: "FileExplorer", url: path });
 
-    setFolderInfo(`${ICON_PATH}folder.ico`);
-    getIconFromIni(fs, path).then(setFolderInfo);
+    setFolderInfo(`${ICON_PATH}folder.ico`, () =>
+      getIconFromIni(fs, path).then(setFolderInfo),
+    );
   } else {
     callback({ icon: `${ICON_PATH}ICON2_1.ico`, pid: "", url: "" });
   }
@@ -109,8 +110,9 @@ export const getInfoWithExtension = (
   callback: (value: FileInfo) => void,
 ): void => {
   const subIcons: string[] = [];
-  const getInfoByFileExtension = (icon?: string): void =>
+  const getInfoByFileExtension = (icon?: string, getIcon?: () => void): void =>
     callback({
+      getIcon,
       icon: icon || getIconByFileExtension(extension),
       pid: getProcessByFileExtension(extension),
       subIcons,
@@ -125,75 +127,85 @@ export const getInfoWithExtension = (
         const { icon, pid, url } = getShortcutInfo(contents);
         const urlExt = extname(url);
 
-        callback({ icon, pid, subIcons, url });
-
         if (pid === "FileExplorer") {
-          getIconFromIni(fs, url).then((iniIcon) =>
-            callback({ icon: iniIcon, pid, subIcons, url }),
-          );
+          const getIcon = (): void => {
+            getIconFromIni(fs, url).then((iniIcon) =>
+              callback({ getIcon, icon: iniIcon, pid, subIcons, url }),
+            );
+          };
+
+          callback({ getIcon, icon, pid, subIcons, url });
         } else if (
           IMAGE_FILE_EXTENSION.has(urlExt) ||
           VIDEO_FILE_EXTENSIONS.has(urlExt) ||
           urlExt === ".mp3"
         ) {
-          getInfoWithExtension(fs, url, urlExt, ({ icon: urlIcon }) => {
+          getInfoWithExtension(fs, url, urlExt, (fileInfo) => {
+            const { icon: urlIcon, getIcon } = fileInfo;
             if (urlIcon && urlIcon !== icon) {
-              callback({ icon: urlIcon, pid, subIcons, url });
+              callback({ getIcon, icon: urlIcon, pid, subIcons, url });
             }
           });
+        } else {
+          callback({ icon, pid, subIcons, url });
         }
       }
     });
   } else if (IMAGE_FILE_EXTENSION.has(extension)) {
-    getInfoByFileExtension(`${ICON_PATH}ICON132_1.ico`);
-    fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
-      console.log(bufferToUrl(contents));
-      if (!error) getInfoByFileExtension(bufferToUrl(contents));
+    getInfoByFileExtension(`${ICON_PATH}ICON132_1.ico`, () => {
+      fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
+        if (!error) getInfoByFileExtension(bufferToUrl(contents));
+      });
     });
   } else if (VIDEO_FILE_EXTENSIONS.has(extension)) {
-    getInfoByFileExtension(`${ICON_PATH}vlc.png`);
-    fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
-      if (!error) {
-        const video = document.createElement("video");
+    getInfoByFileExtension(`${ICON_PATH}vlc.png`, () =>
+      fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
+        if (!error) {
+          const video = document.createElement("video");
 
-        video.currentTime = PREVIEW_FRAME_SECOND;
-        video.addEventListener(
-          "loadeddata",
-          () => {
-            const canvas = document.createElement("canvas");
+          video.currentTime = PREVIEW_FRAME_SECOND;
+          video.addEventListener(
+            "loadeddata",
+            () => {
+              const canvas = document.createElement("canvas");
 
-            canvas
-              .getContext("2d", BASE_2D_CONTEXT_OPTIONS)
-              ?.drawImage(video, 0, 0, canvas.width, canvas.height);
-            canvas.toBlob((blob) => {
-              if (blob instanceof Blob) {
-                getInfoByFileExtension(URL.createObjectURL(blob));
-              }
-            });
-          },
-          ONE_TIME_PASSIVE_EVENT,
-        );
-
-        video.src = bufferToUrl(contents);
-        video.load();
-      }
-    });
+              canvas.height = video.videoHeight;
+              canvas.width = video.videoWidth;
+              canvas
+                .getContext("2d", BASE_2D_CONTEXT_OPTIONS)
+                ?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+              canvas.toBlob((blob) => {
+                if (blob instanceof Blob) {
+                  getInfoByFileExtension(URL.createObjectURL(blob));
+                }
+              });
+            },
+            ONE_TIME_PASSIVE_EVENT,
+          );
+          video.src = bufferToUrl(contents);
+          video.load();
+        }
+      }),
+    );
   } else if (extension === ".mp3") {
-    getInfoByFileExtension(`${ICON_PATH}music_48.png`);
-    fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
-      if (!error) {
-        import("music-metadata-browser").then(({ parseBuffer, selectCover }) =>
-          parseBuffer(
-            contents,
-            { mimeType: MP3_MIME_TYPE, size: contents.length },
-            { skipPostHeaders: true },
-          ).then(({ common: { picture } = {} }) => {
-            const { data: coverPicture } = selectCover(picture) || {};
-            if (coverPicture) getInfoByFileExtension(bufferToUrl(coverPicture));
-          }),
-        );
-      }
-    });
+    getInfoByFileExtension(`${ICON_PATH}music_48.png`, () =>
+      fs.readFile(path, (error, contents = EMPTY_BUFFER) => {
+        if (!error) {
+          import("music-metadata-browser").then(
+            ({ parseBuffer, selectCover }) =>
+              parseBuffer(
+                contents,
+                { mimeType: MP3_MIME_TYPE, size: contents.length },
+                { skipPostHeaders: true },
+              ).then(({ common: { picture } = {} }) => {
+                const { data: coverPicture } = selectCover(picture) || {};
+                if (coverPicture)
+                  getInfoByFileExtension(bufferToUrl(coverPicture));
+              }),
+          );
+        }
+      }),
+    );
   } else getInfoByFileExtension();
 };
 

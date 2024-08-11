@@ -111,6 +111,7 @@ const FileManager: React.FC<FileManagerProps> = ({
           setRenaming={setRenaming}
           stats={files[file]}
           view={view}
+          visible={!isLoading}
           {...focusableEntry(file)}
           {...(renaming !== file && draggableEntry(url, file))}
         />

@@ -47,9 +47,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
   setRenaming,
   stats,
   view,
+  visible,
   ...events
 }) => {
-  const { icon, pid, subIcons, url } = useFileInfo(path, stats.isDirectory());
+  const { getIcon, icon, pid, subIcons, url } = useFileInfo(
+    path,
+    stats.isDirectory(),
+  );
   const { pasteList = {} } = useFileSystem();
 
   const { blurEntry, focusEntry, focusedEntries } = useSession();
@@ -167,11 +171,17 @@ const FileEntry: React.FC<FileEntryProps> = ({
     return `${toolTip}\nDate modified: ${dateModified}`;
   };
 
+  useEffect(() => {
+    if (visible && getIcon && !icon.startsWith("blob:")) {
+      getIcon();
+    }
+  }, [getIcon, icon, visible]);
+
   return (
     <li
       className={
         view === "default"
-          ? `flex justify-center h-min hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px ${isDragging ? "" : `hover:${background} hover:before:${border} hover:before:border`} ${isSelected ? extraStyles : "p-0.5"}`
+          ? `${visible ? "flex" : "hidden"} justify-center h-min hover:border-2 hover:border-transparent hover:p-0 hover:relative hover:before:-bottom-px hover:before:-left-px hover:before:absolute hover:before:-right-px hover:before:-top-px ${isDragging ? "" : `hover:${background} hover:before:${border} hover:before:border`} ${isSelected ? extraStyles : "p-0.5"}`
           : "hover:bg-[#313131] flex justify-center rounded-md p-2"
       }
       {...events}
