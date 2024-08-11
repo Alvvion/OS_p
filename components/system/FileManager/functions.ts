@@ -198,9 +198,13 @@ export const truncateName = (
 ): string => {
   const { lines } = getTextWrapData(name, fontSize, fontFamily, maxWidth);
 
-  return lines.length > 2
-    ? `${lines.slice(0, 2).join("").slice(0, -3)}...`
-    : name;
+  if (lines.length > 2) {
+    const text = name.includes(" ") ? lines.slice(0, 2).join("") : lines[0];
+
+    return `${text.slice(0, -3)}...`;
+  }
+
+  return name;
 };
 
 export const findPathsRecursive = async (

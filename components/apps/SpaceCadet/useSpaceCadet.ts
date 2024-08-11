@@ -30,7 +30,6 @@ const useSpaceCadet = (
   useEffect(() => {
     if (canvas) {
       loadFiles(["/Program Files/SpaceCadet/SpaceCadetPinball.js"]).then(() => {
-        console.log("Hello");
         setLoading(false);
       });
     }
