@@ -93,6 +93,7 @@ ul {
     padding: 0 1px;
   }
 
+  .video-js.vjs-youtube,
   .video-js.vjs-fullscreen.vjs-user-inactive .vjs-control-bar {
     opacity: 0 !important;
   }
