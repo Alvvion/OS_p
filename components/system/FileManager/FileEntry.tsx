@@ -1,4 +1,4 @@
-import { basename, extname } from "path";
+import { basename, dirname, extname } from "path";
 import { useEffect, useRef } from "react";
 
 import Icon from "@/components/common/Icon";
@@ -146,11 +146,12 @@ const FileEntry: React.FC<FileEntryProps> = ({
     const extension = extname(path);
     const isShortcut = extension === SHORTCUT;
 
-    if (
-      isShortcut ||
-      (stats.isDirectory() && !MOUNTABLE_EXTENSIONS.has(extension))
-    ) {
+    if (stats.isDirectory() && !MOUNTABLE_EXTENSIONS.has(extension)) {
       return undefined;
+    }
+
+    if (isShortcut) {
+      return `Location: ${basename(url, extname(url))} (${dirname(url)})`;
     }
 
     const type =

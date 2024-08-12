@@ -123,10 +123,12 @@ const useFolder = (
         setLoading(true);
 
         try {
-          const dirContents = await readdir(directory);
-          const sortedFiles = await dirContents
-            .filter(filterSystemFiles(directory))
-            .reduce(async (processedFiles, file) => {
+          // eslint-disable-next-line unicorn/no-await-expression-member
+          const dirContents = (await readdir(directory)).filter(
+            filterSystemFiles(directory),
+          );
+          const sortedFiles = await dirContents.reduce(
+            async (processedFiles, file) => {
               const newFiles = sortContents(
                 {
                   ...(await processedFiles),
@@ -141,12 +143,16 @@ const useFolder = (
               setFiles(newFiles);
 
               return newFiles;
-            }, {});
+            },
+            {},
+          );
 
-          setSortOrders((currentSortOrder) => ({
-            ...currentSortOrder,
-            [directory]: Object.keys(sortedFiles),
-          }));
+          if (dirContents.length > 0) {
+            setSortOrders((currentSortOrder) => ({
+              ...currentSortOrder,
+              [directory]: Object.keys(sortedFiles),
+            }));
+          }
         } catch (error) {
           if ((error as ApiError).code === "ENOENT") {
             closeWithTransition(
