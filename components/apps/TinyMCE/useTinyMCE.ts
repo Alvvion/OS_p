@@ -42,13 +42,16 @@ const useTinyMCE = (
     [url, writeFile],
   );
   const loadFile = useCallback(async () => {
-    const fileContents = await readFile(url);
+    if (editor) {
+      const fileContents = await readFile(url);
+      if (fileContents.length > 0 && editor) setReadOnlyMode(editor);
+      editor.setContent(fileContents.toString());
+      // eslint-disable-next-line dot-notation
+      editor.settings["save_onsavecallback"] = onSave;
 
-    if (fileContents.length > 0 && editor) setReadOnlyMode(editor);
-
-    editor?.setContent(fileContents.toString());
-    appendFileToTitle(basename(url, extname(url)));
-  }, [appendFileToTitle, editor, readFile, url]);
+      appendFileToTitle(basename(url, extname(url)));
+    }
+  }, [appendFileToTitle, editor, onSave, readFile, url]);
 
   useEffect(() => {
     if (!editor) {
@@ -56,7 +59,6 @@ const useTinyMCE = (
         if (containerRef.current && window.tinymce) {
           window.tinymce
             .init({
-              save_onsavecallback: onSave,
               selector: `.${[...containerRef.current.classList].join(".")} div`,
               ...config,
             })
@@ -74,7 +76,7 @@ const useTinyMCE = (
         }
       });
     }
-  }, [containerRef, editor, onDragOver, onDrop, onSave, setLoading]);
+  }, [containerRef, editor, onDragOver, onDrop, setLoading]);
 
   useEffect(() => {
     if (url && editor) loadFile();
