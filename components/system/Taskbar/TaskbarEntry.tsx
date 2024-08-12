@@ -57,7 +57,13 @@ const TaskbarEntry: React.FC<TaskbarEntryProps> = ({
   } = useTheme();
 
   return (
-    <div onClick={hidePeek} onMouseEnter={showPeek} onMouseLeave={hidePeek}>
+    <div
+      onClick={hidePeek}
+      onMouseEnter={showPeek}
+      onMouseLeave={hidePeek}
+      className="
+    relative"
+    >
       <AnimatePresence>
         {PeekWindow && <PeekWindow id={id} isPeekVisible={isPeekVisible} />}
       </AnimatePresence>

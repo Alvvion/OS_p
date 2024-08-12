@@ -5,7 +5,6 @@ import { basename, extname, join } from "path";
 import {
   BASE_2D_CONTEXT_OPTIONS,
   NON_BREAKING_HYPHEN,
-  NON_BREAKING_SPACE,
   SYSTEM_FILES,
   SYSTEM_PATHS,
 } from "@/utils/constants";
@@ -144,7 +143,7 @@ const measureText = (
   text: string,
   fontSize: string,
   fontFamily: string,
-): TextMetrics => {
+): number => {
   const font = `${fontSize} ${fontFamily}`;
 
   if (!canvasContexts[font]) {
@@ -158,7 +157,9 @@ const measureText = (
     canvasContexts[font] = context;
   }
 
-  return canvasContexts[font].measureText(text);
+  const { actualBoundingBoxLeft, actualBoundingBoxRight } =
+    canvasContexts[font].measureText(text);
+  return Math.abs(actualBoundingBoxLeft) + Math.abs(actualBoundingBoxRight);
 };
 
 export const getTextWrapData = (
@@ -169,20 +170,33 @@ export const getTextWrapData = (
 ): WrapData => {
   const lines = [""];
 
-  const { width: totalWidth } = measureText(text, fontSize, fontFamily);
+  const totalWidth = measureText(text, fontSize, fontFamily);
 
   if (!maxWidth) return { lines: [text], width: totalWidth };
 
   if (totalWidth > maxWidth) {
+    const words = text.split(" ");
     [...text].forEach((character) => {
-      const lineCount = lines.length - 1;
-      const lineText = `${lines[lineCount]}${character}`;
-      const { width: lineWidth } = measureText(lineText, fontSize, fontFamily);
+      const lineIndex = lines.length - 1;
+      const lineText = `${lines[lineIndex]}${character}`;
+      const lineWidth = measureText(lineText, fontSize, fontFamily);
 
       if (lineWidth > maxWidth) {
-        lines.push(character);
+        const spacesInLine = lineText.split(" ").length - 1;
+        const lineWithWords = words.splice(0, spacesInLine).join(" ");
+
+        if (
+          lines.length === 1 &&
+          spacesInLine > 0 &&
+          lines[0] !== lineWithWords
+        ) {
+          lines[0] = lineText.slice(0, lineWithWords.length);
+          lines.push(lineText.slice(lineWithWords.length));
+        } else {
+          lines.push(character);
+        }
       } else {
-        lines[lineCount] = lineText;
+        lines[lineIndex] = lineText;
       }
     });
   }
@@ -198,9 +212,8 @@ export const truncateName = (
   fontFamily: string,
   maxWidth: number,
 ): string => {
-  const nonBreakingName = name
-    .replaceAll("-", NON_BREAKING_HYPHEN)
-    .replaceAll(" ", NON_BREAKING_SPACE);
+  // eslint-disable-next-line unicorn/prefer-string-replace-all
+  const nonBreakingName = name.replace(/-/g, NON_BREAKING_HYPHEN);
   const { lines } = getTextWrapData(
     nonBreakingName,
     fontSize,
@@ -211,7 +224,7 @@ export const truncateName = (
   if (lines.length > 2) {
     const text = name.includes(" ") ? lines.slice(0, 2).join("") : lines[0];
 
-    return `${text.slice(0, -3)}...`;
+    return `${text.slice(0, -3).trim()}...`;
   }
 
   return nonBreakingName;
