@@ -1,9 +1,11 @@
-import { basename, extname } from "path";
+import { basename, extname, relative } from "path";
 import { useCallback, useEffect, useState } from "react";
 import type { Editor, NotificationSpec } from "tinymce";
 
 import useFileDrop from "@/components/system/FileManager/useFileDrop";
 import { useFileSystem } from "@/context/FileSystem";
+import { getProcessByFileExtension } from "@/context/FileSystem/functions";
+import { useProcesses } from "@/context/Process";
 import useTitle from "@/hooks/useTitle";
 import { loadFiles } from "@/utils/functions";
 
@@ -20,6 +22,7 @@ const useTinyMCE = (
   const { appendFileToTitle } = useTitle(id);
   const { readFile, writeFile } = useFileSystem();
   const { onDragOver, onDrop } = useFileDrop({ id });
+  const { openProcess } = useProcesses();
 
   const onSave = useCallback(
     async (activeEditor: Editor) => {
@@ -41,6 +44,30 @@ const useTinyMCE = (
     },
     [url, writeFile],
   );
+  const linksToProcesses = useCallback(() => {
+    const iframe = containerRef.current?.querySelector("iframe");
+
+    if (iframe?.contentWindow) {
+      [...iframe.contentWindow.document.links].forEach((link) =>
+        link.addEventListener("click", (event) => {
+          const isRelative =
+            // eslint-disable-next-line dot-notation
+            relative(link.dataset["mceHref"] || "", link.pathname) === "";
+
+          if (isRelative) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            const defaultProcess = getProcessByFileExtension(
+              extname(link.pathname),
+            );
+
+            if (defaultProcess) openProcess(defaultProcess, link.pathname);
+          }
+        }),
+      );
+    }
+  }, [containerRef, openProcess]);
   const loadFile = useCallback(async () => {
     if (editor) {
       const fileContents = await readFile(url);
@@ -49,9 +76,11 @@ const useTinyMCE = (
       // eslint-disable-next-line dot-notation
       editor.settings["save_onsavecallback"] = onSave;
 
+      linksToProcesses();
+
       appendFileToTitle(basename(url, extname(url)));
     }
-  }, [appendFileToTitle, editor, onSave, readFile, url]);
+  }, [appendFileToTitle, editor, linksToProcesses, onSave, readFile, url]);
 
   useEffect(() => {
     if (!editor) {
