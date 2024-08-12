@@ -6,6 +6,7 @@ import useFileContextMenu from "@/components/system/Menu/ContextMenu/useFileCont
 import { useFileSystem } from "@/context/FileSystem";
 import type { ExtensionType } from "@/context/FileSystem/extensions";
 import extensions from "@/context/FileSystem/extensions";
+import { get9pModifiedTime } from "@/context/FileSystem/functions";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useDoubleClick from "@/hooks/useDoubleClick";
@@ -157,14 +158,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
       `${extension.toUpperCase().replace(".", "")} File`;
     const { atimeMs, ctimeMs, mtimeMs, size: sizeInBytes } = stats;
     const unknownTime = atimeMs === ctimeMs && ctimeMs === mtimeMs;
+    const modifiedTime = unknownTime ? get9pModifiedTime(path) : mtimeMs;
     const size = getFormattedSize(sizeInBytes);
     const toolTip = `Type: ${type}\nSize: ${size}`;
 
-    if (unknownTime) return toolTip;
-
-    const date = new Date(mtimeMs).toISOString().slice(0, 10);
+    const date = new Date(modifiedTime).toISOString().slice(0, 10);
     const time = new Intl.DateTimeFormat("en", formats.dateModified).format(
-      mtimeMs,
+      modifiedTime,
     );
     const dateModified = `${date} ${time}`;
 

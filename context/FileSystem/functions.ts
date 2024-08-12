@@ -5,6 +5,7 @@ import { dirname, extname, join } from "path";
 import { monacoExtensions } from "@/components/apps/MonacoEditor/config";
 import { MP3_MIME_TYPE } from "@/components/apps/Webamp/constants";
 import type { FileInfo } from "@/components/system/FileManager/types";
+import index from "@/public/.index/fs.9p.json";
 import {
   BASE_2D_CONTEXT_OPTIONS,
   EMPTY_BUFFER,
@@ -20,7 +21,7 @@ import { bufferToUrl } from "@/utils/functions";
 import { processDir } from "../Process/directory";
 import type { ExtensionType } from "./extensions";
 import extensions from "./extensions";
-import type { InternetShortcut, ShellClassInfo } from "./types";
+import type { FS9P, InternetShortcut, ShellClassInfo } from "./types";
 
 const getDefaultFileViewer = (extension: string): string => {
   if (monacoExtensions.has(extension)) return "MonacoEditor";
@@ -28,6 +29,30 @@ const getDefaultFileViewer = (extension: string): string => {
   if (VIDEO_FILE_EXTENSIONS.has(extension)) return "VideoPlayer";
 
   return "";
+};
+
+const IDX_MTIME = 2;
+const IDX_TARGET = 6;
+
+export const get9pModifiedTime = (path: string): number => {
+  let fsPath = index.fsroot as FS9P[];
+  let mTime = 0;
+
+  path
+    .split("/")
+    .filter(Boolean)
+    .forEach((pathPart) => {
+      const pathBranch = fsPath.find(([name]) => name === pathPart);
+
+      if (pathBranch) {
+        const isBranch = Array.isArray(pathBranch[IDX_TARGET]);
+
+        if (!isBranch) mTime = pathBranch[IDX_MTIME];
+        fsPath = isBranch ? (pathBranch[IDX_TARGET] as FS9P[]) : [];
+      }
+    });
+
+  return mTime;
 };
 
 export const getIconByFileExtension = (extension: string): string => {

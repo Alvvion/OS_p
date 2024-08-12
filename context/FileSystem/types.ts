@@ -59,3 +59,13 @@ export type ShellClassInfo = {
     IconFile: string;
   };
 };
+
+export type FS9P = [
+  string,
+  number,
+  number,
+  number,
+  number,
+  number,
+  FS9P[] | string,
+];
