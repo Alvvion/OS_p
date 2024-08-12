@@ -246,8 +246,8 @@ const useFolder = (
         }
 
         if (await rename(name, fullNewPath)) {
-          updateFolder(directory, uniqueName);
           updateFolder(dirname(name), "", name);
+          updateFolder(directory, uniqueName);
           blurEntry();
           focusEntry(uniqueName);
 
