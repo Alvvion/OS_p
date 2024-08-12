@@ -14,7 +14,7 @@ const V86: React.FC<ComponentProps> = ({ id }) => (
       }}
       className="whitespace-pre"
     />
-    <canvas className="bg-[#000]" />
+    <canvas className="bg-[#000] !h-auto !w-auto" />
   </AppContianer>
 );
 
