@@ -19,6 +19,7 @@ import useSelection from "./useSelection";
 const FileManager: React.FC<FileManagerProps> = ({
   closing,
   hideLoading,
+  id,
   scrollable,
   url,
   view = "default",
@@ -103,6 +104,7 @@ const FileManager: React.FC<FileManagerProps> = ({
       {Object.keys(files).map((file) => (
         <FileEntry
           fileActions={fileActions}
+          fileManagerId={id}
           fileManagerRef={fileManagerRef}
           hideShortcutIcon={view === "start"}
           key={file}

@@ -7,6 +7,7 @@ import { useFileSystem } from "@/context/FileSystem";
 import type { ExtensionType } from "@/context/FileSystem/extensions";
 import extensions from "@/context/FileSystem/extensions";
 import { get9pModifiedTime } from "@/context/FileSystem/functions";
+import { useProcesses } from "@/context/Process";
 import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useDoubleClick from "@/hooks/useDoubleClick";
@@ -37,6 +38,7 @@ const _tailwind = [
 
 const FileEntry: React.FC<FileEntryProps> = ({
   fileActions,
+  fileManagerId,
   fileManagerRef,
   hideShortcutIcon,
   isDragging,
@@ -58,6 +60,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const { pasteList = {} } = useFileSystem();
 
   const { blurEntry, focusEntry, focusedEntries } = useSession();
+  const { url: changeUrl } = useProcesses();
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -99,10 +102,13 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const singleClick = view === "start";
 
-  const { onClick } = useDoubleClick(
-    () => openFile(pid, isDynamicIcon ? undefined : icon),
-    singleClick,
-  );
+  const { onClick } = useDoubleClick(() => {
+    if (pid === "FileExplorer" && fileManagerId) {
+      changeUrl(fileManagerId, url);
+    } else {
+      openFile(pid, isDynamicIcon ? undefined : icon);
+    }
+  }, singleClick);
 
   const extraStyles = `border-2 border-transparent p-0 relative before:-bottom-px before:-left-px before:absolute before:-right-px before:-top-px ${isDragging ? "" : `${backgroundFocused} before:border before:${borderFocused} hover:${backgroundFocusedHover} hover:before:border hover:before:${borderFocusedHover}`}`;
 
@@ -193,7 +199,14 @@ const FileEntry: React.FC<FileEntryProps> = ({
         className="relative cursor-context-menu outline-none"
         onClick={onClick}
         title={createTooltip()}
-        {...useFileContextMenu(url, pid, path, setRenaming, fileActions)}
+        {...useFileContextMenu(
+          url,
+          pid,
+          path,
+          setRenaming,
+          fileActions,
+          fileManagerId,
+        )}
       >
         <figure className="flex flex-col place-items-center mb-[-3px] relative">
           {[icon, ...(filteredSubIcons || [])].map((entryIcon) => (

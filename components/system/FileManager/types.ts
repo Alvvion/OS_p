@@ -6,6 +6,7 @@ import type { Size } from "@/components/common/types";
 export type FileManagerProps = {
   closing?: boolean;
   hideLoading?: boolean;
+  id?: string;
   scrollable: boolean;
   url: string;
   view?: "default" | "start";
@@ -51,6 +52,7 @@ export type Files = Record<string, FileStat>;
 export type FileEntryProps = FocusableEntry &
   DraggableEntry & {
     fileActions: FileActions;
+    fileManagerId?: string;
     fileManagerRef: React.MutableRefObject<HTMLOListElement | null>;
     hideShortcutIcon?: boolean;
     name: string;

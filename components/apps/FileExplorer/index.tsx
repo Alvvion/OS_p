@@ -1,5 +1,5 @@
 import { basename } from "path";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaArrowUp } from "react-icons/fa6";
 import { IoMdRefresh } from "react-icons/io";
 
@@ -24,6 +24,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
   } = useProcesses();
   const { closing = false, icon = "", url = "" } = process || {};
   const { fs } = useFileSystem();
+  const [currentUrl, setCurrentUrl] = useState(url);
 
   const {
     sizes: {
@@ -60,7 +61,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
     if (url) {
       title(id, directoryName || "This PC");
 
-      if (fs && !icon) {
+      if (fs && (!icon || url !== currentUrl)) {
         setProcessIcon(
           id,
           `${ICON_PATH}${directoryName ? "folder" : "This PC"}.ico`,
@@ -68,9 +69,10 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
         getIconFromIni(fs, url).then((iconFile) =>
           setProcessIcon(id, iconFile),
         );
+        setCurrentUrl(url);
       }
     }
-  }, [fs, icon, id, setProcessIcon, title, url]);
+  }, [currentUrl, fs, icon, id, setProcessIcon, title, url]);
 
   return url ? (
     <div className="w-full h-full">
@@ -87,7 +89,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
           </Button>
         ))}
       </header>
-      <FileManager url={url} closing={closing} scrollable />
+      <FileManager url={url} id={id} closing={closing} scrollable />
     </div>
   ) : undefined;
 };

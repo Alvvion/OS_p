@@ -31,6 +31,7 @@ const useFileContextMenu = (
     extractFiles,
     newShortcut,
   }: FileActions,
+  fileManagerId?: string,
 ): ContextMenu => {
   const openFile = useFile(url);
   const { icon: pidIcon } = processDir[pid] || {};
@@ -162,6 +163,13 @@ const useFileContextMenu = (
       menuItems.unshift({
         label: `Open ${isFolder ? "folder" : "file"} location`,
         action: () => openProcess("FileExplorer", dirname(url), ""),
+      });
+    }
+
+    if (fileManagerId && pid === "FileExplorer") {
+      menuItems.unshift({
+        action: () => openFile(pid, pidIcon),
+        label: "Open in new window",
       });
     }
 

@@ -40,6 +40,7 @@ const useFolder = (
   directory: string,
   setRenaming: React.Dispatch<React.SetStateAction<string>>,
 ): Folder => {
+  const [currentDirectory, setCurrentDirectory] = useState(directory);
   const [files, setFiles] = useState<Files>();
   const [downloadLink, setDownloadLink] = useState("");
   const [isLoading, setLoading] = useState(true);
@@ -384,7 +385,10 @@ const useFolder = (
 
   useEffect(() => {
     if (sessionLoaded) {
-      if (files) {
+      if (!files || directory !== currentDirectory) {
+        updateFiles(undefined, undefined, sortOrder);
+        setCurrentDirectory(directory);
+      } else {
         const fileNames = Object.keys(files);
 
         if (sortOrder && fileNames.length === sortOrder.length) {
@@ -412,11 +416,17 @@ const useFolder = (
             );
           }
         }
-      } else {
-        updateFiles(undefined, undefined, sortOrder);
       }
     }
-  }, [directory, files, sessionLoaded, setSortOrders, sortOrder, updateFiles]);
+  }, [
+    currentDirectory,
+    directory,
+    files,
+    sessionLoaded,
+    setSortOrders,
+    sortOrder,
+    updateFiles,
+  ]);
 
   useEffect(
     () => () => {
