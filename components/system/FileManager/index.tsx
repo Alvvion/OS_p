@@ -23,10 +23,10 @@ const FileManager: React.FC<FileManagerProps> = ({
   scrollable,
   url,
   view = "default",
+  isExplorerer,
 }) => {
   const {
     sizes: {
-      taskbar: { height },
       fileManager: {
         gridEntryWidth,
         gridEntryHeight,
@@ -71,11 +71,12 @@ const FileManager: React.FC<FileManagerProps> = ({
       ref={fileManagerRef}
       className={
         view === "default"
-          ? `grid grid-flow-col h-full [main>&]:pb-5 [section_&]:grid-flow-row ${scrollable ? "custom-scrollbar" : "overflow-hidden"}`
+          ? `grid ${isExplorerer ? "grid-flow-row" : "pb-5 grid-flow-col h-full"} ${scrollable ? "custom-scrollbar" : "overflow-hidden"}`
           : "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
       }
       style={{
-        height: view === "default" ? `calc(100% - ${height})` : undefined,
+        height:
+          view === "default" && isExplorerer ? "calc(100% - 76px)" : undefined,
         gridTemplateColumns:
           view === "default"
             ? `repeat(auto-fill, ${gridEntryWidth})`

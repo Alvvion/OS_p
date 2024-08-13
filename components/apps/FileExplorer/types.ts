@@ -12,3 +12,7 @@ export type ButtonOnNavType = {
   iconHover: keyof HoverState;
   size?: number;
 };
+
+export type NavigationProps = {
+  id: string;
+};

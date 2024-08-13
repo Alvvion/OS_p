@@ -42,3 +42,7 @@ export interface ContainerProps extends React.ComponentPropsWithoutRef<"div"> {
   id: string;
   useHook: ContainerHook;
 }
+
+export type NavigationIcons = {
+  fill?: string;
+};

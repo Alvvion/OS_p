@@ -10,6 +10,7 @@ export type FileManagerProps = {
   scrollable: boolean;
   url: string;
   view?: "default" | "start";
+  isExplorerer?: boolean;
 };
 
 export type FileActions = {
