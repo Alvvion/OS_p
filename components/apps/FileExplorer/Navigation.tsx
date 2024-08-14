@@ -12,6 +12,7 @@ import {
 } from "@/components/common/Icons";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
+import { useSession } from "@/context/Session";
 
 import { ROOT_NAME } from "./config";
 import type { NavigationProps } from "./types";
@@ -23,11 +24,13 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
   } = useProcesses();
   const { url = "" } = process || {};
   const { exists, updateFolder } = useFileSystem();
+  const { windowStates } = useSession();
   const [currentUrl, setCurrentUrl] = useState(url);
   const [history, setHistory] = useState<string[]>([url]);
   const [position, setPosition] = useState<number>(0);
   const [showInputBox, setShowInputBox] = useState(false);
-  const [addressBar, setAddressBar] = useState(url);
+  const [inputBar, setInputBar] = useState(url);
+  const [addressBar, setAddressBar] = useState<string[]>([""]);
 
   const moveHistory = (step: number): void => {
     const newPosition = position + step;
@@ -41,6 +44,7 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
   const upTo = url === "/" ? undefined : basename(dirname(url));
   const inputBarRef = useRef<HTMLInputElement | null>(null);
   const addressBarRef = useRef<HTMLButtonElement | null>(null);
+  const breadcrumbsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (url !== currentUrl) {
@@ -57,10 +61,28 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
     }
   }, [showInputBox]);
 
+  // useEffect(() => {
+  //   if (addressBarRef.current && !showInputBox && breadcrumbsRef.current) {
+  //     const addressList = currentUrl.split("/").slice(1);
+  //     const addressBarWidth =
+  //       addressBarRef.current.getBoundingClientRect().width;
+  //     const breadcrumbsWidth =
+  //       breadcrumbsRef.current.getBoundingClientRect().width;
+  //     const roundedOff = Math.round(addressBarWidth / breadcrumbsWidth);
+  //     if (roundedOff <= addressList.length) {
+  //       setAddressBar((prev) =>
+  //         addressList.slice(2 + addressList.length - roundedOff),
+  //       );
+  //     } else setAddressBar(addressList);
+  //   }
+  // }, [currentUrl, showInputBox, windowStates]);
+
+  // console.log(addressBar);
+
   return (
     <nav className="bg-[#2C2C2C] flex h-[43px] -mt-px items-center">
       <Button
-        className="p-2 rounded-md m-1 hover:bg-titlebar-backgroundHover"
+        extraStyles={`p-2 rounded-md m-1 ${canGoBack ? "hover:bg-titlebar-backgroundHover" : ""}`}
         disabled={!canGoBack}
         onClick={() => moveHistory(-1)}
         title={
@@ -69,10 +91,10 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
             : "Back"
         }
       >
-        <Back />
+        <Back fill={canGoBack ? undefined : "#8C8C8C"} />
       </Button>
       <Button
-        extraStyles="p-2 rounded-md m-1 hover:bg-titlebar-backgroundHover"
+        extraStyles={`p-2 rounded-md m-1 ${canGoForward ? "hover:bg-titlebar-backgroundHover" : ""}`}
         disabled={!canGoForward}
         onClick={() => moveHistory(1)}
         title={
@@ -81,10 +103,10 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
             : "Forward"
         }
       >
-        <Forward />
+        <Forward fill={canGoForward ? undefined : "#8C8C8C"} />
       </Button>
       <Button
-        extraStyles="p-2 rounded-md m-1 hover:bg-titlebar-backgroundHover"
+        extraStyles={`p-2 rounded-md m-1 ${url === "/" ? "" : "hover:bg-titlebar-backgroundHover"}`}
         disabled={url === "/"}
         onClick={() => changeUrl(id, dirname(url))}
         title={
@@ -93,7 +115,7 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
             : `Up to "${upTo === "" ? ROOT_NAME : upTo}"`
         }
       >
-        <Up />
+        <Up fill={url === "/" ? "#8C8C8C" : undefined} />
       </Button>
       <Button
         onClick={() => updateFolder(url)}
@@ -107,7 +129,7 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
         className={`bg-[#383838] outline-none h-[30px] w-full text-white text-sm font-normal ${showInputBox ? "visible" : "hidden"} rounded-md`}
         type="text"
         onBlur={() => setShowInputBox(false)}
-        onChange={({ target }) => setAddressBar(target.value)}
+        onChange={({ target }) => setInputBar(target.value)}
         onKeyDown={async ({ key }) => {
           if (key === "Enter" && inputBarRef.current) {
             const { value } = inputBarRef.current || {};
@@ -119,7 +141,7 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
             inputBarRef.current.blur();
           }
         }}
-        value={addressBar}
+        value={inputBar}
       />
       <button
         type="button"
@@ -132,7 +154,11 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
           .split("/")
           .slice(1)
           .map((dir) => (
-            <div key={dir} className="flex items-center gap-2">
+            <div
+              key={dir}
+              ref={breadcrumbsRef}
+              className="flex items-center gap-2"
+            >
               <RightArrow extraStyles="mt-0.5 ml-2" />
               <span className="text-white text-xs font-normal">{dir}</span>
             </div>
@@ -141,7 +167,7 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
       <input
         type="search"
         placeholder="Search"
-        className="bg-[#383838] h-[30px] mx-3"
+        className="bg-[#383838] h-[30px] mx-3 w-full max-w-[200px]"
       />
     </nav>
   );

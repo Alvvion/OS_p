@@ -60,6 +60,15 @@ const RndWindow: React.FC<RndWindowProps> = ({ children, id, style }) => {
   return (
     <Rnd
       style={{ ...style, pointerEvents: minimized ? "none" : undefined }}
+      onResize={(_e, _d, ref) =>
+        setWindowStates((currentState) => ({
+          ...currentState,
+          [id]: {
+            ...currentState[id],
+            size: { height: ref.style.height, width: ref.style.width },
+          },
+        }))
+      }
       ref={rndRef}
       {...rndProps}
     >
