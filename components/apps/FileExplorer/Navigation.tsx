@@ -12,7 +12,6 @@ import {
 } from "@/components/common/Icons";
 import { useFileSystem } from "@/context/FileSystem";
 import { useProcesses } from "@/context/Process";
-import { useSession } from "@/context/Session";
 
 import { ROOT_NAME } from "./config";
 import type { NavigationProps } from "./types";
@@ -24,13 +23,11 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
   } = useProcesses();
   const { url = "" } = process || {};
   const { exists, updateFolder } = useFileSystem();
-  const { windowStates } = useSession();
   const [currentUrl, setCurrentUrl] = useState(url);
   const [history, setHistory] = useState<string[]>([url]);
   const [position, setPosition] = useState<number>(0);
   const [showInputBox, setShowInputBox] = useState(false);
   const [inputBar, setInputBar] = useState(url);
-  const [addressBar, setAddressBar] = useState<string[]>([""]);
 
   const moveHistory = (step: number): void => {
     const newPosition = position + step;
@@ -44,7 +41,6 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
   const upTo = url === "/" ? undefined : basename(dirname(url));
   const inputBarRef = useRef<HTMLInputElement | null>(null);
   const addressBarRef = useRef<HTMLButtonElement | null>(null);
-  const breadcrumbsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (url !== currentUrl) {
@@ -61,23 +57,29 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
     }
   }, [showInputBox]);
 
-  // useEffect(() => {
-  //   if (addressBarRef.current && !showInputBox && breadcrumbsRef.current) {
-  //     const addressList = currentUrl.split("/").slice(1);
-  //     const addressBarWidth =
-  //       addressBarRef.current.getBoundingClientRect().width;
-  //     const breadcrumbsWidth =
-  //       breadcrumbsRef.current.getBoundingClientRect().width;
-  //     const roundedOff = Math.round(addressBarWidth / breadcrumbsWidth);
-  //     if (roundedOff <= addressList.length) {
-  //       setAddressBar((prev) =>
-  //         addressList.slice(2 + addressList.length - roundedOff),
-  //       );
-  //     } else setAddressBar(addressList);
-  //   }
-  // }, [currentUrl, showInputBox, windowStates]);
+  const getBreadcrumbsList = (): string[] => {
+    if (!addressBarRef.current || showInputBox) return [""];
 
-  // console.log(addressBar);
+    const items = currentUrl.split("/").slice(1);
+    const addressBarWidth = addressBarRef.current.getBoundingClientRect().width;
+    const padding = 45; // Padding around each breadcrumb item
+    const charWidth = 5.8; // Average width per character in pixels
+
+    let totalWidth = 0;
+    let count = 0;
+
+    items.reverse().forEach((item) => {
+      const itemWidth = item.length * charWidth + padding;
+      if (totalWidth + itemWidth <= addressBarWidth) {
+        totalWidth += itemWidth;
+        // eslint-disable-next-line no-plusplus
+        count++;
+      }
+    });
+
+    // Reverse back to maintain original order and slice to get the visible items
+    return items.reverse().slice(-count);
+  };
 
   return (
     <nav className="bg-[#2C2C2C] flex h-[43px] -mt-px items-center">
@@ -150,19 +152,12 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
         onClick={() => setShowInputBox(true)}
       >
         <PC extraStyles="ml-2" />
-        {currentUrl
-          .split("/")
-          .slice(1)
-          .map((dir) => (
-            <div
-              key={dir}
-              ref={breadcrumbsRef}
-              className="flex items-center gap-2"
-            >
-              <RightArrow extraStyles="mt-0.5 ml-2" />
-              <span className="text-white text-xs font-normal">{dir}</span>
-            </div>
-          ))}
+        {getBreadcrumbsList().map((dir) => (
+          <div key={dir} className="flex items-center gap-2 whitespace-nowrap">
+            <RightArrow extraStyles="mt-0.5 ml-2" />
+            <span className="text-white text-xs font-normal">{dir}</span>
+          </div>
+        ))}
       </button>
       <input
         type="search"
