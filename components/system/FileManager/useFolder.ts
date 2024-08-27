@@ -40,7 +40,6 @@ const useFolder = (
   directory: string,
   setRenaming: React.Dispatch<React.SetStateAction<string>>,
 ): Folder => {
-  const [currentDirectory, setCurrentDirectory] = useState(directory);
   const [files, setFiles] = useState<Files>();
   const [downloadLink, setDownloadLink] = useState("");
   const [isLoading, setLoading] = useState(true);
@@ -136,10 +135,7 @@ const useFolder = (
                     await stat(join(directory, file)),
                   ),
                 },
-                customSortOrder ||
-                  (directory === currentDirectory && files
-                    ? Object.keys(files)
-                    : []),
+                customSortOrder || Object.keys(files || {}),
               );
 
               setFiles(newFiles);
@@ -172,7 +168,6 @@ const useFolder = (
     [
       blurEntry,
       closeProcess,
-      currentDirectory,
       directory,
       exists,
       files,
@@ -391,10 +386,7 @@ const useFolder = (
 
   useEffect(() => {
     if (sessionLoaded) {
-      if (!files || directory !== currentDirectory) {
-        updateFiles(undefined, undefined, sortOrder);
-        setCurrentDirectory(directory);
-      } else {
+      if (files) {
         const fileNames = Object.keys(files);
 
         if (sortOrder && fileNames.length === sortOrder.length) {
@@ -422,17 +414,11 @@ const useFolder = (
             );
           }
         }
+      } else {
+        updateFiles(undefined, undefined, sortOrder);
       }
     }
-  }, [
-    currentDirectory,
-    directory,
-    files,
-    sessionLoaded,
-    setSortOrders,
-    sortOrder,
-    updateFiles,
-  ]);
+  }, [directory, files, sessionLoaded, setSortOrders, sortOrder, updateFiles]);
 
   useEffect(
     () => () => {
@@ -461,6 +447,7 @@ const useFolder = (
       addToFolder: () => addFile(newPath),
       newPath,
       pasteToFolder,
+      resetFiles: () => setFiles(undefined),
       setSortBy: useSortBy(directory, files),
     },
     isLoading,

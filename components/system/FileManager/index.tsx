@@ -42,6 +42,7 @@ const FileManager: React.FC<FileManagerProps> = ({
   const { mountFs, unMountFs } = useFileSystem();
   const { focusedEntries } = useSession();
   const [renaming, setRenaming] = useState("");
+  const [currentUrl, setCurrentUrl] = useState(url);
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
 
   const { files, fileActions, folderActions, isLoading, updateFiles } =
@@ -68,7 +69,14 @@ const FileManager: React.FC<FileManagerProps> = ({
     };
   }, [closing, mountFs, mounted, unMountFs, updateFiles, url]);
 
-  return !hideLoading && isLoading ? (
+  useEffect(() => {
+    if (url !== currentUrl) {
+      folderActions.resetFiles();
+      setCurrentUrl(url);
+    }
+  }, [currentUrl, folderActions, url]);
+
+  return (!hideLoading && isLoading) || url !== currentUrl ? (
     <Loading />
   ) : (
     <>

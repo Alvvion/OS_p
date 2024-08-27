@@ -102,6 +102,7 @@ export type FolderActions = {
   addToFolder: () => void;
   newPath: (path: string, fileBuffer?: Buffer, isRenaming?: boolean) => void;
   pasteToFolder: () => void;
+  resetFiles: () => void;
   setSortBy: SetSortBy;
 };
 
