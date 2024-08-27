@@ -171,10 +171,11 @@ const FileEntry: React.FC<FileEntryProps> = ({
     const toolTip = `Type: ${type}\nSize: ${size}`;
 
     const date = new Date(modifiedTime).toISOString().slice(0, 10);
-    const time = new Intl.DateTimeFormat("en", formats.dateModified).format(
-      modifiedTime,
-    );
-    const dateModified = `${date} ${time}`;
+    // const time = new Intl.DateTimeFormat("en", formats.dateModified).format(
+    //   modifiedTime,
+    // );
+    // console.log(time);
+    const dateModified = date;
 
     return `${toolTip}\nDate modified: ${dateModified}`;
   };
