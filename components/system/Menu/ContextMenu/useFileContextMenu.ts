@@ -43,7 +43,7 @@ const useFileContextMenu = (
   const { openProcess } = useProcesses();
   const { contextMenu } = useMenu();
   const { blurEntry, focusEntry, focusedEntries, setWallpaper } = useSession();
-  const { copyEntries, moveEntries } = useFileSystem();
+  const { copyEntries, moveEntries, stat } = useFileSystem();
   const baseName = basename(path);
   const isFocusedEntry = focusedEntries.includes(baseName);
 
@@ -73,9 +73,14 @@ const useFileContextMenu = (
     menuItems.push({
       label: "Create shortcut",
       action: () =>
-        absoluteEntries().forEach((entry) =>
-          newShortcut(entry, defaultProcess || "FileExplorer"),
-        ),
+        absoluteEntries().forEach(async (entry) => {
+          const shortcutProcess =
+            defaultProcess && !(await stat(entry)).isDirectory()
+              ? defaultProcess
+              : "FileExplorer";
+
+          newShortcut(entry, shortcutProcess);
+        }),
     });
   }
 

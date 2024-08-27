@@ -152,6 +152,7 @@ const esLint = [
       "unicorn/import-style": "off",
       "unicorn/no-array-for-each": "off",
       "unicorn/no-array-reduce": "off",
+      "unicorn/no-await-expression-member": "off",
       "unicorn/numeric-separators-style": "off",
       "unicorn/prefer-dom-node-append": "off",
       "unicorn/prefer-module": "off",

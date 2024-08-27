@@ -124,7 +124,6 @@ const useFolder = (
         setLoading(true);
 
         try {
-          // eslint-disable-next-line unicorn/no-await-expression-member
           const dirContents = (await readdir(directory)).filter(
             filterSystemFiles(directory),
           );
@@ -300,9 +299,10 @@ const useFolder = (
       const shortcutData = ini.encode(
         {
           BaseURL: process,
-          IconFile: pathExtension
-            ? getIconByFileExtension(pathExtension)
-            : `${ICON_PATH}folder.ico`,
+          IconFile:
+            process !== "FileExplorer" && pathExtension
+              ? getIconByFileExtension(pathExtension)
+              : `${ICON_PATH}folder.ico`,
           URL: path,
         },
         {
