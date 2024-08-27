@@ -137,7 +137,10 @@ const useFolder = (
                     await stat(join(directory, file)),
                   ),
                 },
-                customSortOrder || (files ? Object.keys(files) : []),
+                customSortOrder ||
+                  (directory === currentDirectory && files
+                    ? Object.keys(files)
+                    : []),
               );
 
               setFiles(newFiles);
@@ -167,6 +170,7 @@ const useFolder = (
     },
     [
       closeProcess,
+      currentDirectory,
       directory,
       exists,
       files,
