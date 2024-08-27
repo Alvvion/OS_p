@@ -43,13 +43,11 @@ const useFileSystemState = (): FileSystemStateType => {
       const relevantPaths =
         folder === "/"
           ? [folder]
-          : Object.keys(fsWatchers).filter(
-              (watchedPath) =>
-                watchedPath === folder ||
-                (watchedPath !== "/" && watchedPath === dirname(folder)),
-            );
+          : Object.keys(fsWatchers).filter((fsPath) => fsPath === folder);
 
-      relevantPaths.forEach((watchedFolder) =>
+      const parentPath = fsWatchers[folder] ? [] : [dirname(folder)];
+
+      [...parentPath, ...relevantPaths].forEach((watchedFolder) =>
         fsWatchers[watchedFolder]?.forEach((updateFiles) =>
           watchedFolder === folder
             ? updateFiles(newFile, oldFile)
