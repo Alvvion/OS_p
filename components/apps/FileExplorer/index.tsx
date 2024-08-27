@@ -48,6 +48,7 @@ const FileExplorer: React.FC<ComponentProps> = ({ id }) => {
         closing={closing}
         scrollable
         isExplorerer
+        showStatusBar
       />
     </div>
   ) : undefined;

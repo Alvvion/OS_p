@@ -7,10 +7,11 @@ export type FileManagerProps = {
   closing?: boolean;
   hideLoading?: boolean;
   id?: string;
+  isExplorerer?: boolean;
   scrollable: boolean;
+  showStatusBar?: boolean;
   url: string;
   view?: "default" | "start";
-  isExplorerer?: boolean;
 };
 
 export type FileActions = {
@@ -133,4 +134,10 @@ export type SortFunction = (a: FileStats, b: FileStats) => number;
 export type WrapData = {
   lines: string[];
   width: number;
+};
+
+export type StatusBarProps = {
+  count: number;
+  directory: string;
+  selected: string[];
 };

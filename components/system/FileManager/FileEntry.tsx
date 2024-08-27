@@ -105,6 +105,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
   const { onClick } = useDoubleClick(() => {
     if (pid === "FileExplorer" && fileManagerId) {
       changeUrl(fileManagerId, url);
+      blurEntry();
     } else {
       openFile(pid, isDynamicIcon ? undefined : icon);
     }

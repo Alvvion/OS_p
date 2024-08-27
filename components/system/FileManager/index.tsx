@@ -5,10 +5,12 @@ import Loading from "@/components/common/Loading";
 import NoPointersEvents from "@/components/common/NoPointersEvents";
 import useFolderContextMenu from "@/components/system/Menu/ContextMenu/useFolderContextMenu";
 import { useFileSystem } from "@/context/FileSystem";
+import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import { MOUNTABLE_EXTENSIONS, SHORTCUT } from "@/utils/constants";
 
 import FileEntry from "./FileEntry";
+import StatusBar from "./StatusBar";
 import type { FileManagerProps } from "./types";
 import useDraggableEntries from "./useDraggableEntries";
 import useFileDrop from "./useFileDrop";
@@ -20,10 +22,11 @@ const FileManager: React.FC<FileManagerProps> = ({
   closing,
   hideLoading,
   id,
+  isExplorerer,
   scrollable,
+  showStatusBar,
   url,
   view = "default",
-  isExplorerer,
 }) => {
   const {
     sizes: {
@@ -37,6 +40,7 @@ const FileManager: React.FC<FileManagerProps> = ({
     },
   } = useTheme();
   const { mountFs, unMountFs } = useFileSystem();
+  const { focusedEntries } = useSession();
   const [renaming, setRenaming] = useState("");
   const fileManagerRef = useRef<HTMLOListElement | null>(null);
 
@@ -67,61 +71,72 @@ const FileManager: React.FC<FileManagerProps> = ({
   return !hideLoading && isLoading ? (
     <Loading />
   ) : (
-    <ol
-      ref={fileManagerRef}
-      className={
-        view === "default"
-          ? `grid ${isExplorerer ? "grid-flow-row" : "pb-5 grid-flow-col h-full"} ${scrollable ? "custom-scrollbar" : "overflow-hidden"}`
-          : "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
-      }
-      style={{
-        height:
-          view === "default" && isExplorerer ? "calc(100% - 76px)" : undefined,
-        gridTemplateColumns:
+    <>
+      <ol
+        ref={fileManagerRef}
+        className={
           view === "default"
-            ? `repeat(auto-fill, ${gridEntryWidth})`
-            : undefined,
-        gridTemplateRows:
-          view === "default"
-            ? `repeat(auto-fill, ${gridEntryHeight})`
-            : undefined,
-        padding: view === "default" ? padding : undefined,
-        rowGap: view === "default" ? rowGap : undefined,
-        columnGap: view === "default" ? columnGap : undefined,
-      }}
-      {...selectionEvents}
-      {...fileDrop}
-      {...folderContextMenu}
-    >
-      {isSelecting && view === "default" && (
-        <>
-          <NoPointersEvents />
-          <span
-            className="bg-highlightBackground absolute z-[1000] border-highlight !pointer-events-auto"
-            style={selectionStyling}
+            ? `grid ${isExplorerer ? "grid-flow-row items-stretch" : "pb-5 grid-flow-col h-full"} ${scrollable ? "custom-scrollbar" : "overflow-hidden"}`
+            : "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
+        }
+        style={{
+          height:
+            view === "default" && isExplorerer
+              ? "calc(100% - 65px)"
+              : undefined,
+          gridTemplateColumns:
+            view === "default"
+              ? `repeat(auto-fill, ${gridEntryWidth})`
+              : undefined,
+          gridTemplateRows:
+            view === "default"
+              ? `repeat(auto-fill, ${gridEntryHeight})`
+              : undefined,
+          padding: view === "default" ? padding : undefined,
+          rowGap: view === "default" ? rowGap : undefined,
+          columnGap: view === "default" ? columnGap : undefined,
+        }}
+        {...selectionEvents}
+        {...fileDrop}
+        {...folderContextMenu}
+      >
+        {isSelecting && view === "default" && (
+          <>
+            <NoPointersEvents />
+            <span
+              className="bg-highlightBackground absolute z-[1000] border-highlight !pointer-events-auto"
+              style={selectionStyling}
+            />
+          </>
+        )}
+        {Object.keys(files).map((file) => (
+          <FileEntry
+            fileActions={fileActions}
+            fileManagerId={id}
+            fileManagerRef={fileManagerRef}
+            hideShortcutIcon={view === "start"}
+            key={file}
+            name={basename(file, SHORTCUT)}
+            path={join(url, file)}
+            renaming={renaming === file}
+            selectionRect={selectionRect}
+            setRenaming={setRenaming}
+            stats={files[file]}
+            view={view}
+            visible={!isLoading}
+            {...focusableEntry(file)}
+            {...(renaming !== file && draggableEntry(url, file))}
           />
-        </>
-      )}
-      {Object.keys(files).map((file) => (
-        <FileEntry
-          fileActions={fileActions}
-          fileManagerId={id}
-          fileManagerRef={fileManagerRef}
-          hideShortcutIcon={view === "start"}
-          key={file}
-          name={basename(file, SHORTCUT)}
-          path={join(url, file)}
-          renaming={renaming === file}
-          selectionRect={selectionRect}
-          setRenaming={setRenaming}
-          stats={files[file]}
-          view={view}
-          visible={!isLoading}
-          {...focusableEntry(file)}
-          {...(renaming !== file && draggableEntry(url, file))}
+        ))}
+      </ol>
+      {showStatusBar && (
+        <StatusBar
+          count={Object.keys(files).length}
+          directory={url}
+          selected={focusedEntries}
         />
-      ))}
-    </ol>
+      )}
+    </>
   );
 };
 
