@@ -167,8 +167,8 @@ const useFolder = (
         setLoading(false);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
+      blurEntry,
       closeProcess,
       currentDirectory,
       directory,

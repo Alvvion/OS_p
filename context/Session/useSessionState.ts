@@ -41,21 +41,26 @@ const useSessionContextState = (): SessionContextType => {
     [],
   );
 
-  const blurEntry = (entry?: string): void =>
-    setFocusedEntries(
-      entry
-        ? (currentFocusedEntries) =>
-            currentFocusedEntries.filter(
-              (focusedEntry) => focusedEntry !== entry,
-            )
-        : [],
-    );
-
-  const focusEntry = (entry: string): void =>
-    setFocusedEntries((currentFocusedEntries) => [
-      ...currentFocusedEntries,
-      entry,
-    ]);
+  const blurEntry = useCallback(
+    (entry?: string): void =>
+      setFocusedEntries(
+        entry
+          ? (currentFocusedEntries) =>
+              currentFocusedEntries.filter(
+                (focusedEntry) => focusedEntry !== entry,
+              )
+          : [],
+      ),
+    [],
+  );
+  const focusEntry = useCallback(
+    (entry: string): void =>
+      setFocusedEntries((currentFocusedEntries) => [
+        ...currentFocusedEntries,
+        entry,
+      ]),
+    [],
+  );
 
   const setWallpaper = (image: string, fit: WallpaperFit): void => {
     setWallpaperFit(fit);
