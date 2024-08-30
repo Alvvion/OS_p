@@ -43,12 +43,15 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
     setSrc((currentSrc) => {
       const [currentUrl] = Object.keys(currentSrc);
 
-      if (currentUrl) cleanUpBufferUrl(currentUrl);
+      if (currentUrl) {
+        cleanUpBufferUrl(currentUrl);
+        reset?.();
+      }
 
       return { [url]: bufferToUrl(fileContents) };
     });
     appendFileToTitle(basename(url));
-  }, [appendFileToTitle, readFile, url]);
+  }, [appendFileToTitle, readFile, reset, url]);
 
   useEffect(() => {
     if (url && !src[url] && !closing) loadPhoto();
@@ -97,13 +100,12 @@ const Photos: React.FC<ComponentProps> = ({ id }) => {
           }
         })}
       >
-        {src[url] && (
-          <img
-            alt={basename(url, extname(url))}
-            ref={imageRef}
-            src={src[url]}
-          />
-        )}
+        <img
+          alt={basename(url, extname(url))}
+          ref={imageRef}
+          src={src[url]}
+          style={{ visibility: src[url] ? "visible" : "hidden" }}
+        />
       </figure>
       <nav className="flex h-12 place-content-center place-items-center absolute bottom-0 right-0">
         <Button
