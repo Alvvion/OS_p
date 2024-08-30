@@ -1,5 +1,4 @@
-import { basename, extname } from "path";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { Options } from "webamp";
 
 import { useProcesses } from "@/context/Process";
@@ -7,14 +6,12 @@ import { useSession } from "@/context/Session";
 import { useTheme } from "@/context/Theme";
 import useWindowActions from "@/hooks/useWindowActions";
 import { DEFAULT_WINDOW_TRANSITION_DURATION } from "@/utils/constants";
-import { bufferToUrl } from "@/utils/functions";
 
 import { BASE_WEBAMP_SKINS, MAIN_WINDOW } from "./constants";
 import {
   cleanBufferOnSkinLoad,
   closeEqualizer,
   getWebampElement,
-  parseTrack,
   updateWebampPostion,
 } from "./functions";
 import type { WebampCI, WebampHook } from "./types";
@@ -42,12 +39,11 @@ const useWebamp = (id: string): WebampHook => {
 
   const [webampCI, setWebampCI] = useState<WebampCI>();
 
-  const loadWebamp = (
-    element: HTMLDivElement | null,
-    url: string,
-    file?: Buffer,
-  ): void => {
-    if (element && window.Webamp && !webampCI) {
+  const initWebamp = useCallback(
+    async (
+      containerElement: HTMLDivElement,
+      { initialSkin, initialTracks }: Options,
+    ) => {
       const butterChurn = {
         __butterchurnOptions: {
           importButterchurn: () => Promise.resolve(window.butterchurn),
@@ -62,81 +58,172 @@ const useWebamp = (id: string): WebampHook => {
           butterchurnOpen: true,
         },
       };
-      const runWebamp = (options?: Options): void => {
-        const webamp = new window.Webamp({
-          ...butterChurn,
-          ...BASE_WEBAMP_SKINS,
-          ...options,
-        }) as WebampCI;
+      const webamp = new window.Webamp({
+        ...butterChurn,
+        ...BASE_WEBAMP_SKINS,
+        initialSkin,
+        initialTracks,
+      }) as WebampCI;
+      const setupElement = (): void => {
+        const webampElement = getWebampElement();
 
-        const setupElement = (): void => {
-          const webampElement = getWebampElement();
-          if (webampElement) {
-            const mainWindow =
-              webampElement.querySelector<HTMLDivElement>(MAIN_WINDOW);
+        if (webampElement) {
+          const mainWindow =
+            webampElement.querySelector<HTMLDivElement>(MAIN_WINDOW);
 
-            if (process && !componentWindow && mainWindow) {
-              linkElement(id, "componentWindow", element);
-              linkElement(id, "peekElement", mainWindow);
-            }
-            element.appendChild(webampElement);
+          if (process && !componentWindow && mainWindow) {
+            linkElement(id, "componentWindow", containerElement);
+            linkElement(id, "peekElement", mainWindow);
           }
-        };
 
-        const subscriptions = [
-          webamp.onWillClose((cancel) => {
-            cancel();
-            const mainWindow =
-              getWebampElement()?.querySelector<HTMLDivElement>(MAIN_WINDOW);
-            const { x = 0, y = 0 } = mainWindow?.getBoundingClientRect() || {};
-
-            onClose();
-            setWindowStates((currentWindowStates) => ({
-              ...currentWindowStates,
-              [id]: {
-                position: { x, y },
-              },
-            }));
-
-            setTimeout(() => {
-              subscriptions.forEach((unsubscribe) => unsubscribe());
-              webamp.close();
-            }, DEFAULT_WINDOW_TRANSITION_DURATION);
-          }),
-          webamp.onMinimize(() => onMinimize()),
-        ];
-
-        if (options?.initialSkin?.url) {
-          cleanBufferOnSkinLoad(webamp, options.initialSkin.url);
+          containerElement.appendChild(webampElement);
         }
-
-        webamp.renderWhenReady(element).then(() => {
-          closeEqualizer(webamp);
-          updateWebampPostion(webamp, taskbarHeight, position);
-          setupElement();
-          if (options?.initialTracks) {
-            webamp.play();
-          }
-        });
-
-        setWebampCI(webamp);
       };
 
-      if (file && url) {
-        const extension = extname(url);
+      const subscriptions = [
+        webamp.onWillClose((cancel) => {
+          cancel();
 
-        if (extension === ".mp3") {
-          parseTrack(file, basename(url)).then((track) =>
-            runWebamp({ initialTracks: [track] }),
-          );
-        } else if (extension === ".wsz")
-          runWebamp({ initialSkin: { url: bufferToUrl(file) } });
-        else runWebamp();
-      } else runWebamp();
-    }
-  };
+          const mainWindow =
+            getWebampElement()?.querySelector<HTMLDivElement>(MAIN_WINDOW);
+          const { x = 0, y = 0 } = mainWindow?.getBoundingClientRect() || {};
 
-  return { loadWebamp, webampCI };
+          onClose();
+          setWindowStates((currentWindowStates) => ({
+            ...currentWindowStates,
+            [id]: {
+              position: { x, y },
+            },
+          }));
+
+          setTimeout(() => {
+            subscriptions.forEach((unsubscribe) => unsubscribe());
+            webamp.close();
+          }, DEFAULT_WINDOW_TRANSITION_DURATION);
+        }),
+        webamp.onMinimize(() => onMinimize()),
+      ];
+
+      if (initialSkin) cleanBufferOnSkinLoad(webamp, initialSkin.url);
+
+      webamp.renderWhenReady(containerElement).then(() => {
+        closeEqualizer(webamp);
+        updateWebampPostion(webamp, taskbarHeight, position);
+        setupElement();
+
+        if (initialTracks) webamp.play();
+      });
+
+      setWebampCI(webamp);
+    },
+    [
+      componentWindow,
+      id,
+      linkElement,
+      onClose,
+      onMinimize,
+      position,
+      process,
+      setWindowStates,
+      taskbarHeight,
+    ],
+  );
+
+  // const loadWebamp = (
+  //   element: HTMLDivElement | null,
+  //   url: string,
+  //   file?: Buffer,
+  // ): void => {
+  //   if (element && window.Webamp && !webampCI) {
+  //     const butterChurn = {
+  //       __butterchurnOptions: {
+  //         importButterchurn: () => Promise.resolve(window.butterchurn),
+  //         getPresets: () => {
+  //           const presets = window.butterchurnPresets.getPresets();
+
+  //           return Object.keys(presets).map((name) => ({
+  //             name,
+  //             butterchurnPresetObject: presets[name],
+  //           }));
+  //         },
+  //         butterchurnOpen: true,
+  //       },
+  //     };
+  //     const runWebamp = (options?: Options): void => {
+  //       const webamp = new window.Webamp({
+  //         ...butterChurn,
+  //         ...BASE_WEBAMP_SKINS,
+  //         ...options,
+  //       }) as WebampCI;
+
+  //       const setupElement = (): void => {
+  //         const webampElement = getWebampElement();
+  //         if (webampElement) {
+  //           const mainWindow =
+  //             webampElement.querySelector<HTMLDivElement>(MAIN_WINDOW);
+
+  //           if (process && !componentWindow && mainWindow) {
+  //             linkElement(id, "componentWindow", element);
+  //             linkElement(id, "peekElement", mainWindow);
+  //           }
+  //           element.appendChild(webampElement);
+  //         }
+  //       };
+
+  //       const subscriptions = [
+  //         webamp.onWillClose((cancel) => {
+  //           cancel();
+  //           const mainWindow =
+  //             getWebampElement()?.querySelector<HTMLDivElement>(MAIN_WINDOW);
+  //           const { x = 0, y = 0 } = mainWindow?.getBoundingClientRect() || {};
+
+  //           onClose();
+  //           setWindowStates((currentWindowStates) => ({
+  //             ...currentWindowStates,
+  //             [id]: {
+  //               position: { x, y },
+  //             },
+  //           }));
+
+  //           setTimeout(() => {
+  //             subscriptions.forEach((unsubscribe) => unsubscribe());
+  //             webamp.close();
+  //           }, DEFAULT_WINDOW_TRANSITION_DURATION);
+  //         }),
+  //         webamp.onMinimize(() => onMinimize()),
+  //       ];
+
+  //       if (options?.initialSkin?.url) {
+  //         cleanBufferOnSkinLoad(webamp, options.initialSkin.url);
+  //       }
+
+  //       webamp.renderWhenReady(element).then(() => {
+  //         closeEqualizer(webamp);
+  //         updateWebampPostion(webamp, taskbarHeight, position);
+  //         setupElement();
+  //         if (options?.initialTracks) {
+  //           webamp.play();
+  //         }
+  //       });
+
+  //       setWebampCI(webamp);
+  //     };
+
+  //     if (file && url) {
+  //       const extension = extname(url);
+
+  //       if (extension === ".mp3") {
+  //         parseTrack(file, basename(url)).then((track) =>
+  //           runWebamp({ initialTracks: [track] }),
+  //         );
+  //       } else if (extension === ".wsz")
+  //         runWebamp({ initialSkin: { url: bufferToUrl(file) } });
+  //       else runWebamp();
+  //     } else runWebamp();
+  //   }
+  // };
+
+  return { initWebamp, webampCI };
 };
 
 export default useWebamp;

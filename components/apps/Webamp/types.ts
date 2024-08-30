@@ -1,5 +1,6 @@
 import type { Position } from "react-rnd";
 import type Webamp from "webamp";
+import type { Options } from "webamp";
 
 export type CloseWindow = {
   type: "CLOSE_WINDOW";
@@ -39,10 +40,6 @@ declare global {
 }
 
 export type WebampHook = {
-  loadWebamp: (
-    containerElement: HTMLDivElement | null,
-    url: string,
-    file?: Buffer,
-  ) => void;
+  initWebamp: (containerElement: HTMLDivElement, options: Options) => void;
   webampCI?: WebampCI;
 };
