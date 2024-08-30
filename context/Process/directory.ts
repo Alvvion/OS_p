@@ -71,6 +71,7 @@ export const processDir: Processes = {
       width: 400,
     },
     icon: `${ICON_PATH}tinymce.png`,
+    singleton: true,
     title: "TinyMCE",
   },
   V86: {
