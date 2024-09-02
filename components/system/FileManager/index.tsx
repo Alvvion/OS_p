@@ -64,9 +64,6 @@ const FileManager: React.FC<FileManagerProps> = ({
         return true;
       });
     }
-    return () => {
-      if (mounted && closing) unMountFs(url);
-    };
   }, [closing, mountFs, mounted, unMountFs, updateFiles, url]);
 
   useEffect(() => {

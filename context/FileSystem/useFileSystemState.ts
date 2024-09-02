@@ -5,7 +5,7 @@ import type XmlHttpRequest from "browserfs/dist/node/backend/XmlHttpRequest";
 import type IZipFS from "browserfs/dist/node/backend/ZipFS";
 import type { BFSCallback } from "browserfs/dist/node/core/file_system";
 import { dirname, extname, join } from "path";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { handleFileInputEvent } from "./functions";
 import type {
@@ -132,6 +132,23 @@ const useFileSystemState = (): FileSystemStateType => {
 
     await recursePath();
   };
+
+  useEffect(() => {
+    const watchedPaths = Object.keys(fsWatchers).filter(
+      (watchedPath) => fsWatchers[watchedPath].length > 0,
+    );
+    const mountedPaths = Object.keys(rootFs?.mntMap || {}).filter(
+      (mountedPath) => mountedPath !== "/",
+    );
+
+    mountedPaths.forEach((mountedPath) => {
+      if (
+        !watchedPaths.some((watchedPath) => watchedPath.startsWith(mountedPath))
+      ) {
+        rootFs?.umount?.(mountedPath);
+      }
+    });
+  }, [fsWatchers, rootFs]);
 
   return {
     addFile,
