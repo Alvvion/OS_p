@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
- 
+
 import { useEffect, useRef, useState } from "react";
 import type { Position } from "react-rnd";
 
 import Icon from "@/components/common/Icon";
-import { ChevronRight } from "@/components/common/Icons";
+import { ChevronRight, Circle } from "@/components/common/Icons";
 import { useTheme } from "@/context/Theme";
 
 import Menu from ".";
@@ -19,6 +19,7 @@ const MenuItemEntry: React.FC<MenuItemProps> = ({
   menu,
   primary,
   separator,
+  toggle,
 }) => {
   const entryRef = useRef<HTMLLIElement | null>(null);
   const [subMenuOffset, setSubMenuOffset] = useState<Position>({ x: 0, y: 0 });
@@ -68,6 +69,9 @@ const MenuItemEntry: React.FC<MenuItemProps> = ({
         >
           {icon && (
             <Icon className="-mr-6 ml-2" src={icon} alt={label} size={16} />
+          )}
+          {toggle && (
+            <Circle extraStyles="h-[13px] absolute w-[13px] left-2 mt-px" />
           )}
           <figcaption
             className={`relative ml-8 mr-16 -top-px w-max text-nowrap ${

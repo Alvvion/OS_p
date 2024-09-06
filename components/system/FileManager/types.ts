@@ -92,11 +92,10 @@ export type RenameBoxProps = {
   renameFile: (path: string, name?: string) => void;
 };
 
-export type SortTypes = "name" | "size" | "type" | "date";
+export type SortBy = "date" | "name" | "size" | "type";
+export type SortByOrder = [SortBy, boolean];
 
-export type SortBy = SortTypes | `!${SortTypes}`;
-
-export type SetSortBy = (value: SortTypes) => void;
+export type SetSortBy = (sortBy: (current: SortByOrder) => SortByOrder) => void;
 
 export type FolderActions = {
   addToFolder: () => void;
@@ -107,7 +106,7 @@ export type FolderActions = {
   ) => Promise<void>;
   pasteToFolder: () => void;
   resetFiles: () => void;
-  setSortBy: SetSortBy;
+  sortByOrder: [SortByOrder, SetSortBy];
 };
 
 export type Folder = {

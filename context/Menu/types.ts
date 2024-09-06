@@ -6,6 +6,7 @@ export type MenuItem = {
   menu?: MenuItem[];
   primary?: boolean;
   separator?: boolean;
+  toggle?: boolean;
 };
 
 export type MenuState = {

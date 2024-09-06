@@ -6,10 +6,16 @@ import type { MenuItem } from "@/context/Menu/types";
 import { EMPTY_BUFFER, ICON_PATH } from "@/utils/constants";
 
 import type { ContextMenu } from "../types";
+import { updateSortBy } from "./functions";
 
 const useFolderContextMenu = (
   url: string,
-  { addToFolder, newPath, pasteToFolder, setSortBy }: FolderActions,
+  {
+    addToFolder,
+    newPath,
+    pasteToFolder,
+    sortByOrder: [[sortBy, isAscending], setSortBy],
+  }: FolderActions,
 ): ContextMenu => {
   const { contextMenu } = useMenu();
   const { pasteList = {}, updateFolder } = useFileSystem();
@@ -19,19 +25,34 @@ const useFolderContextMenu = (
       menu: [
         {
           label: "Name",
-          action: () => setSortBy("name"),
+          action: () => setSortBy(updateSortBy("name", true)),
+          toggle: sortBy === "name",
         },
         {
           label: "Size",
-          action: () => setSortBy("size"),
+          action: () => setSortBy(updateSortBy("size", false)),
+          toggle: sortBy === "size",
         },
         {
           label: "Item type",
-          action: () => setSortBy("type"),
+          action: () => setSortBy(updateSortBy("type", true)),
+          toggle: sortBy === "type",
         },
         {
           label: "Date modified",
-          action: () => setSortBy("date"),
+          action: () => setSortBy(updateSortBy("date", false)),
+          toggle: sortBy === "date",
+        },
+        { separator: true },
+        {
+          action: () => setSortBy(([value]) => [value, true]),
+          label: "Ascending",
+          toggle: isAscending,
+        },
+        {
+          action: () => setSortBy(([value]) => [value, false]),
+          label: "Descending",
+          toggle: !isAscending,
         },
       ],
     },

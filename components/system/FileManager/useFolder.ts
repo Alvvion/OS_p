@@ -417,7 +417,7 @@ const useFolder = (
       newPath,
       pasteToFolder,
       resetFiles: () => setFiles(undefined),
-      setSortBy: useSortBy(directory, files),
+      sortByOrder: useSortBy(directory, files),
     },
     isLoading,
     updateFiles,
