@@ -96,10 +96,17 @@ const useFolder = (
         if (!(await exists(join(directory, oldFile)))) {
           const oldName = basename(oldFile);
           if (newFile) {
-            setFiles(({ [oldName]: fileStats, ...currentFiles } = {}) => ({
-              ...currentFiles,
-              [basename(newFile)]: fileStats,
-            }));
+            setFiles((currentFiles = {}) =>
+              // eslint-disable-next-line unicorn/prefer-object-from-entries
+              Object.entries(currentFiles).reduce<Files>(
+                (newFiles, [fileName, fileStats]) => ({
+                  ...newFiles,
+                  [fileName === oldName ? basename(newFile) : fileName]:
+                    fileStats,
+                }),
+                {},
+              ),
+            );
           } else {
             blurEntry(oldName);
             setFiles(

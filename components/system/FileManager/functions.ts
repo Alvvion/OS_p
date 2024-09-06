@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-await-expression-member */
 import type { Stats } from "fs";
 import { basename, extname, join } from "path";
 

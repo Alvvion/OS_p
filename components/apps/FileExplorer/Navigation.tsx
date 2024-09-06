@@ -129,6 +129,7 @@ const Navigation: React.FC<NavigationProps> = ({ id }) => {
       <input
         ref={inputBarRef}
         className={`bg-[#383838] outline-none h-[30px] w-full text-white text-sm font-normal ${showInputBox ? "visible" : "hidden"} rounded-md`}
+        spellCheck={false}
         type="text"
         onBlur={() => setShowInputBox(false)}
         onChange={({ target }) => setInputBar(target.value)}

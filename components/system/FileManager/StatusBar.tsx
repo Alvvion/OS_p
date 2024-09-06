@@ -45,7 +45,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
   }, [selected, updateSelectedSize]);
 
   return (
-    <footer className="items-center bg-[#333333] text-white flex text-xs font-thin h-[23px] w-full px-[5px] absolute bottom-0">
+    <footer className="items-center bg-[#333333] text-white flex text-xs font-thin h-[23px] w-full px-[5px] absolute bottom-0 whitespace-nowrap">
       <div
         title="Total item count"
         className="-mt-px px-[10px] flex items-center"
@@ -56,7 +56,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
       {selected.length > 0 && (
         <div
           title="Selected item count and size"
-          className="-mt-px px-[10px] flex items-center"
+          className="-mt-px px-[10px] flex items-center mr-[10px] overflow-hidden"
         >
           {selected.length} item{selected.length === 1 ? "" : "s"} selected
           {selectedSize > -1

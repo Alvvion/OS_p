@@ -100,7 +100,11 @@ export type SetSortBy = (value: SortTypes) => void;
 
 export type FolderActions = {
   addToFolder: () => void;
-  newPath: (path: string, fileBuffer?: Buffer, isRenaming?: boolean) => void;
+  newPath: (
+    path: string,
+    buffer?: Buffer,
+    thenRename?: boolean,
+  ) => Promise<void>;
   pasteToFolder: () => void;
   resetFiles: () => void;
   setSortBy: SetSortBy;
