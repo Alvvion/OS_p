@@ -25,6 +25,7 @@ import { isSelectionIntersecting, truncateName } from "./functions";
 import RenameBox from "./RenameBox";
 import type { FileEntryProps } from "./types";
 import useFile from "./useFile";
+import useFileDrop from "./useFileDrop";
 import useFileInfo from "./useFileInfo";
 
 const _tailwind = [
@@ -57,7 +58,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
     path,
     stats.isDirectory(),
   );
-  const { pasteList = {} } = useFileSystem();
+  const { createPath, pasteList, updateFolder } = useFileSystem();
 
   const { blurEntry, focusEntry, focusedEntries } = useSession();
   const { url: changeUrl } = useProcesses();
@@ -113,6 +114,17 @@ const FileEntry: React.FC<FileEntryProps> = ({
 
   const extraStyles = `border-2 border-transparent p-0 relative before:-bottom-px before:-left-px before:absolute before:-right-px before:-top-px ${isDragging ? "" : `${backgroundFocused} before:border before:${borderFocused} hover:${backgroundFocusedHover} hover:before:border hover:before:${borderFocusedHover}`}`;
 
+  const extension = extname(path);
+  const isShortcut = extension === SHORTCUT;
+  const fileDrop = useFileDrop({
+    callback: async (fileDropName, data) => {
+      const directory = isShortcut ? url : path;
+      const uniqueName = await createPath(fileDropName, directory, data);
+
+      if (uniqueName) updateFolder(directory, uniqueName);
+    },
+  });
+
   useEffect(() => {
     if (buttonRef.current) {
       const isFocused = focusedEntries.includes(fileName);
@@ -150,9 +162,6 @@ const FileEntry: React.FC<FileEntryProps> = ({
   ]);
 
   const createTooltip = (): string | undefined => {
-    const extension = extname(path);
-    const isShortcut = extension === SHORTCUT;
-
     if (stats.isDirectory() && !MOUNTABLE_EXTENSIONS.has(extension)) {
       return undefined;
     }
@@ -201,6 +210,7 @@ const FileEntry: React.FC<FileEntryProps> = ({
         className="relative cursor-context-menu outline-none"
         onClick={onClick}
         title={createTooltip()}
+        {...(pid === "FileExplorer" && fileDrop)}
         {...useFileContextMenu(
           url,
           pid,

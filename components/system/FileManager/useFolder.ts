@@ -4,7 +4,7 @@ import type { AsyncZippable } from "fflate";
 import { zip } from "fflate";
 import type { Stats } from "fs";
 import ini from "ini";
-import { basename, dirname, extname, isAbsolute, join, relative } from "path";
+import { basename, dirname, extname, join, relative } from "path";
 import { useCallback, useEffect, useState } from "react";
 
 import { unzipAsync } from "@/components/apps/JSDOS/functions";
@@ -30,7 +30,6 @@ import {
   createLink,
   filterSystemFiles,
   findPathsRecursive,
-  iterateFileNames,
   sortContents,
 } from "./functions";
 import type { Files, FileStat, Folder, ZipFile } from "./types";
@@ -47,6 +46,7 @@ const useFolder = (
     addFile,
     addFsWatcher,
     copyEntries,
+    createPath,
     exists,
     fs,
     mkdir,
@@ -237,54 +237,18 @@ const useFolder = (
     name: string,
     buffer?: Buffer,
     thenRename = false,
-    iteration = 0,
-  ): Promise<string> => {
-    const isInternal = !buffer && isAbsolute(name);
-    const baseName = isInternal ? basename(name) : name;
-    const uniqueName = iteration
-      ? iterateFileNames(baseName, iteration)
-      : baseName;
-    const fullNewPath = join(directory, uniqueName);
+  ): Promise<void> => {
+    const uniqueName = await createPath(name, directory, buffer);
 
-    if (isInternal) {
-      if (name !== fullNewPath) {
-        if (await exists(fullNewPath)) {
-          return newPath(name, buffer, thenRename, iteration + 1);
-        }
+    if (uniqueName && !uniqueName.includes("/")) {
+      updateFolder(directory, uniqueName);
 
-        if (await rename(name, fullNewPath)) {
-          updateFolder(dirname(name), "", name);
-          updateFolder(directory, uniqueName);
-          blurEntry();
-          focusEntry(uniqueName);
-
-          return uniqueName;
-        }
-      }
-    } else {
-      try {
-        if (
-          buffer
-            ? await writeFile(fullNewPath, buffer)
-            : await mkdir(fullNewPath)
-        ) {
-          if (!uniqueName.includes("/")) {
-            updateFolder(directory, uniqueName);
-
-            if (thenRename) setRenaming(uniqueName);
-            else focusEntry(uniqueName);
-          }
-
-          return uniqueName;
-        }
-      } catch (error) {
-        if ((error as ApiError)?.code === "EEXIST") {
-          return newPath(name, buffer, thenRename, iteration + 1);
-        }
+      if (thenRename) setRenaming(uniqueName);
+      else {
+        blurEntry();
+        focusEntry(uniqueName);
       }
     }
-
-    return "";
   };
 
   const newShortcut = (path: string, process: string): void => {
@@ -361,19 +325,17 @@ const useFolder = (
     const copyFiles =
       (entry: string, basePath = ""): BFSCallback<Buffer> =>
       (readError, fileContents) =>
-        newPath(join(basePath, basename(entry)), fileContents).then(
-          (uniquePath) => {
-            if (readError?.code === "EISDIR") {
-              fs?.readdir(entry, (_dirError, dirContents) =>
-                dirContents?.forEach((dirEntry) => {
-                  const dirPath = join(entry, dirEntry);
+        newPath(join(basePath, basename(entry)), fileContents).then(() => {
+          if (readError?.code === "EISDIR") {
+            fs?.readdir(entry, (_dirError, dirContents) =>
+              dirContents?.forEach((dirEntry) => {
+                const dirPath = join(entry, dirEntry);
 
-                  fs.readFile(dirPath, copyFiles(dirPath, uniquePath));
-                }),
-              );
-            }
-          },
-        );
+                fs.readFile(dirPath, copyFiles(dirPath));
+              }),
+            );
+          }
+        });
 
     pasteEntries.forEach(([pasteEntry]) =>
       moving

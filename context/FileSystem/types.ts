@@ -25,6 +25,11 @@ export type FileSystemStateType = AsyncFS & {
   addFile: (callback: (name: string, buffer?: Buffer) => void) => void;
   addFsWatcher: (folder: string, updateFiles: UpdateFiles) => void;
   copyEntries: (entries: string[]) => void;
+  createPath: (
+    name: string,
+    directory: string,
+    buffer?: Buffer,
+  ) => Promise<string>;
   fs?: FSModule;
   mkdirRecursive: (path: string) => Promise<void>;
   mountFs: (url: string) => Promise<void>;
