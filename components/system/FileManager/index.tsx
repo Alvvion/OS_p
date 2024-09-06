@@ -100,6 +100,7 @@ const FileManager: React.FC<FileManagerProps> = ({
           padding: view === "default" ? padding : undefined,
           rowGap: view === "default" ? rowGap : undefined,
           columnGap: view === "default" ? columnGap : undefined,
+          pointerEvents: isSelecting ? "auto" : undefined,
         }}
         {...selectionEvents}
         {...fileDrop}
