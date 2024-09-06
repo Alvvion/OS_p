@@ -12,9 +12,9 @@ const StatusBar: React.FC<StatusBarProps> = ({
   selected,
 }) => {
   const { exists, stat } = useFileSystem();
-  const [selectedSize, setSelectedSize] = useState(-1);
+  const [selectedSize, setSelectedSize] = useState(0);
   const updateSelectedSize = useCallback(async (): Promise<void> => {
-    let totalSize = 0;
+    let totalSize = -1;
 
     for (const file of selected) {
       const path = join(directory, file);
@@ -28,7 +28,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
           break;
         }
 
-        totalSize += stats.size;
+        totalSize = totalSize === -1 ? stats.size : totalSize + stats.size;
       }
       /* eslint-enable no-await-in-loop */
     }
